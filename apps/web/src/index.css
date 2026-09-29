@@ -1,0 +1,128 @@
+@import './design-system/tokens.css';
+
+/* Selection styling from craft floor */
+::selection {
+  background-color: #dcfce7;
+  color: #065f46;
+}
+
+/* Accessible focus visibility for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 2px !important;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[tabindex="0"]:focus-visible {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 2px !important;
+}
+
+/* Utility typography & surface classes */
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.text-main {
+  color: var(--text-main);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.bg-surface {
+  background-color: var(--bg-surface);
+}
+
+.bg-surface-elevated {
+  background-color: var(--bg-surface-elevated);
+}
+
+.border-subtle {
+  border: 1px solid var(--border-subtle);
+}
+
+.border-medium {
+  border: 1px solid var(--border-medium);
+}
+
+/* Interactive transitions */
+.transition-smooth {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Table Hover effect */
+.hover\:bg-slate-50:hover {
+  background-color: #f8fafc !important;
+}
+
+/* Interactive Card Surfaces */
+.card-interactive {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-interactive:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 6px 16px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04) !important;
+  transform: translateY(-2px);
+}
+
+/* Responsive helpers & Mobile Navigation */
+@media (max-width: 900px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+  .mobile-nav-toggle {
+    display: flex !important;
+  }
+  .shell-main-canvas {
+    padding: 1.25rem 1rem !important;
+    padding-bottom: 5.5rem !important;
+  }
+  .shell-top-header {
+    padding: 0 1rem !important;
+  }
+}
+
+@media (min-width: 901px) {
+  .mobile-nav-toggle {
+    display: none !important;
+  }
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    display: grid !important;
+  }
+}
+
+/* Premium Button & Interactive Micro-Interactions */
+button:not(:disabled) {
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:not(:disabled):active {
+  transform: scale(0.985) translateY(0) !important;
+}
+

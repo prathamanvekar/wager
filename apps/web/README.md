@@ -1,32 +1,29 @@
-# React + TypeScript + Vite
+# Wager web portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React, TypeScript and Vite frontend for transactions, disputes, support inquiries,
+shared case messages and the CJEP event inspector. Includes light/dark themes.
 
-Currently, two official plugins are available:
+From the project root:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```powershell
+npm.cmd --prefix apps/web ci
+npm.cmd run web
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Open the URL printed by Vite, normally `http://localhost:5173`.
+Start the shared API first using [the setup guide](../../SETUP_AND_RUN.md).
+The default API is `http://127.0.0.1:8000/api/v1`; set `VITE_API_URL` in
+`apps/web/.env` before starting Vite to override it.
+
+The portal imports contracts and transport directly from `packages/`.
+Customer case views are scoped to the active session/customer. The inspector
+shows demo-wide synthetic event data and attribution history.
+
+From the project root:
+
+```powershell
+npm.cmd run check:web
+npm.cmd --prefix apps/web run lint
+```
+
+See [the demo walkthrough](../../HOW_TO_USE.md) for web, mobile and call continuity.

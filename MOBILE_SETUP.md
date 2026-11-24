@@ -1,10 +1,11 @@
-# Wager Mobile Setup Guide — Windows + Android
+# Wager Mobile Setup Guide - Windows + Android
 
 This guide starts with no Android tools installed and ends with Wager running on
 **your own phone**, sharing conversations with the web portal.
 
-Use **PowerShell** throughout. The **project root** is the `major project` folder
-containing this guide. You will use three terminals: backend, mobile and web.
+Use **PowerShell** throughout. The **project root** is the folder containing this
+guide and `package.json`. Development uses three terminals: backend, Metro and
+web. The optional call simulator runs in a fourth terminal.
 The local workflow does not require an Expo account or cloud build service.
 
 ## 1. Install the PC tools (once)
@@ -132,17 +133,17 @@ Keep USB connected for the first build.
 
 ## 4. Start the shared backend
 
-Open **terminal 1** in the project root. For this checkout:
+Open **terminal 1** in your project root:
 
 ```powershell
-cd "C:\Users\prath\Desktop\LOCKIN\dev\major project"
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 .\.venv\Scripts\python.exe -m uvicorn services.api.main:app --host 0.0.0.0 --port 8000
 ```
 
-If your project is elsewhere, replace the first path. Reuse `.venv` if it already
-exists. These commands use it directly, so activation is unnecessary.
+Skip `python -m venv .venv` if the environment already exists. These commands
+use it directly, so activation is unnecessary. If port 8000 is already occupied,
+reuse the running backend or stop it in its original terminal before restarting.
 
 **Check:** open [the API health page](http://127.0.0.1:8000/api/v1/health) on your
 PC. Expect a JSON response. Leave this terminal running.
@@ -183,8 +184,9 @@ In Wager:
 2. Connect and select **Alex Mercer** as the demo persona.
 3. Check that **Home, Conversations, Support and Account** open.
 
-Keep the backend and Metro terminals running. The backend address is separate
-from Metro's development-server address.
+Keep the backend and Metro terminals running. Metro sends JavaScript to the
+development app, usually on port 8081. The backend serves customer data on port
+8000. They are separate addresses; the app's connection screen needs the backend.
 
 ## 6. Verify that both channels work together
 
@@ -212,8 +214,10 @@ Handoff codes expire after five minutes and can only be used once.
 
 ## Next time: start these three terminals
 
-Dependency installation and the USB build are one-time steps unless dependencies
-or native configuration change. Open the installed Wager app after starting Metro.
+For the development build, reuse the installed app and start Metro. Reinstall
+dependencies when the lockfile changes and rebuild when native dependencies or
+configuration change. A release APK instead bundles its JavaScript and must be
+rebuilt/reinstalled to include code changes.
 
 | Folder | Command |
 | --- | --- |
@@ -221,8 +225,24 @@ or native configuration change. Open the installed Wager app after starting Metr
 | `apps/mobile` | `npm.cmd start` |
 | `apps/web` | `npm.cmd run dev` |
 
-Most UI edits refresh automatically. For native changes, rerun
-`npm.cmd run android`. If your PC's Wi-Fi IP changes, update Wager's backend URL.
+Most UI edits refresh automatically in a development build. For native changes,
+rerun `npm.cmd run android`. If your PC's Wi-Fi IP changes, update Wager's backend URL.
+If you use the release APK, only the backend and any browser channels need to run.
+
+## Optional: include the call channel
+
+From a fourth terminal in the project root:
+
+```powershell
+npm.cmd --prefix apps/call ci
+npm.cmd run call
+```
+
+Open `http://localhost:5174`. Verify as customer **1041** with demo PIN **1234**,
+select Alex's existing inquiry, request a follow-up and end the call. Refresh the
+case on web/mobile to see its call activity. Restart the backend after updating
+its code if the call endpoints are unavailable. See the
+[call guide](apps/call/README.md) and [full walkthrough](HOW_TO_USE.md) for details.
 
 ## Optional: build an APK that works without Metro
 
@@ -237,7 +257,8 @@ adb install -r .\app\build\outputs\apk\release\app-release.apk
 
 The APK is in `apps/mobile/android/app/build/outputs/apk/release/`. You can also
 copy it to the phone and open it to install. Stop Metro and verify Wager still
-opens; keep the backend running for sign-in and shared conversations.
+opens. You can unplug USB after installation; keep the backend running and the
+phone connected to a network that can reach it.
 
 This is a **local testing APK**. Check the generated `android/app/build.gradle`
 signing settings before distribution; production needs your own release key.
@@ -268,10 +289,11 @@ to restart. No separate database service is needed; run one backend process.
 This is a local demo with persona sign-in and synthetic data, not production
 authentication. Keep it off the public internet.
 
-**Verification status:** the arm64 Android debug APK now builds successfully
-with CMake 4.1.2 (24 November 2026). Typecheck and lint pass. JavaScript
-bundling and browser integration were checked earlier. Installation and native
-phone behavior still need the device checks above.
+**Verification status:** the Android development build was installed on a physical
+phone, and the user reported the step 6 manual checks passed. A release APK was
+also built and reported working without Metro or USB. Source checks and automated
+API/client tests have passed. These reports cover the local demo, not production
+signing, every Android device or a complete accessibility assessment.
 
 Tool references: [Expo local builds](https://docs.expo.dev/guides/local-app-development/),
 [Android Studio installation](https://developer.android.com/studio/install),

@@ -1,22 +1,31 @@
 # Wager mobile
 
-React Native / Expo SDK 58, with native Android UI, Expo Router navigation,
-light and dark color schemes, shared event contracts and API transport.
+React Native with Expo SDK 58 and Expo Router. The Android app provides shared
+inquiries and messages, support forms, account views, QR/manual web-session
+linking and light/dark themes through the existing FastAPI backend.
 
-See [the phone setup and APK guide](../../MOBILE_SETUP.md) for installation,
-local networking, development builds, standalone APKs and the two-channel demo.
+Follow [the phone setup and APK guide](../../MOBILE_SETUP.md) for Android tools,
+networking, development builds and release APKs. From the project root, once
+those tools are configured:
 
 ```powershell
-npm install
-npm run android
-# Later development sessions
-npm start
+cd apps/mobile
+npm.cmd ci
+npm.cmd run android
 ```
 
-`npm run android` needs the Android SDK/JDK and a connected USB-debugging device.
-`npm run web` is a browser convenience for UI/integration checking, not an
-Android device simulator. Set the API address in the connection screen.
+This installs a development build on a USB-debugging Android device. For later
+development sessions, run `npm.cmd start` here and open the installed app.
+Metro serves development JavaScript; it is separate from the backend URL entered
+on the connection screen. Release APKs do not require Metro or USB after installation.
+Both builds need network access to the shared API for sign-in and synchronization.
 
-No cloud subscription is required for local builds. No Expo project ID or
-cloud credentials are committed. The preview EAS profile outputs an APK;
+`npm.cmd run web` provides a browser preview for UI/integration checks; it does
+not replace native device checks. Run `npm.cmd run typecheck` and
+`npm.cmd run lint` from this folder for source checks.
+
+Local builds need no Expo account or cloud subscription. EAS cloud builds are
+optional and require an Expo account. The preview profile outputs an APK;
 production signing and a hosted HTTPS API are separate deployment work.
+
+See [the demo walkthrough](../../HOW_TO_USE.md) for the three-channel flow.

@@ -4,9 +4,12 @@ A separate browser app for the third channel. It uses the same FastAPI service,
 SQLite event store and customer inquiries as web and mobile. No Android build,
 phone number, paid service or microphone permission is needed.
 
-## 1. Restart the backend
+## 1. Start the shared backend
 
-In the existing backend terminal, press Ctrl+C, then run from the project root:
+Use the running backend if it already has the call routes. After backend code
+changes, stop it with Ctrl+C in its original terminal and restart. For a fresh
+setup, first follow [the project setup guide](../../SETUP_AND_RUN.md).
+From the project root:
 
 ```powershell
 .\.venv\Scripts\python.exe -m uvicorn services.api.main:app --host 0.0.0.0 --port 8000
@@ -78,17 +81,13 @@ callback or change the inquiry's resolution status.
 
 ## Connection and recovery
 
-- **Call endpoints unavailable:** restart the backend from the updated project.
-- **No inquiries:** use the same backend and persona on both channels. Create an
-  inquiry, or explicitly link the original anonymous session, then refresh.
-- **Backend interrupted:** no action is shown as saved without acknowledgement.
-  Retry after restarting it. Ending stops the call locally; its summary retries
-  while this tab remains open, or when restored in the same browser session.
-- **Session unavailable:** choose Start new session. Previously confirmed history
-  remains saved, but unconfirmed actions or the final summary may not be saved.
-- **Reload:** the same tab restores the call and confirmed transcript. Closing
-  the browser session can discard its local access credentials; saved backend
-  history remains. Avoid duplicating an active call tab.
+| Situation | Action |
+| --- | --- |
+| Call endpoints unavailable | Restart the backend from the updated project. |
+| No inquiries | Use the same backend and persona across channels. Create an inquiry or explicitly link the original anonymous session, then refresh. |
+| Backend interrupted | Retry after restarting it. Ending stops the call locally; its summary retries while this tab is open or restored in the same browser session. Actions require backend acknowledgement before they are shown as saved. |
+| Session unavailable | Choose Start new session. Confirmed history remains saved, but unconfirmed actions or the final summary may not be saved. |
+| Reload | The same tab restores confirmed call state. Closing the browser session can discard its access credentials; backend history remains. Avoid duplicating an active call tab. |
 
 ## Developer checks
 

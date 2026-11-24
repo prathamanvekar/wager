@@ -9,7 +9,7 @@ import type { ChannelType } from '../types/protocol';
 interface NewTransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddTransaction: (txn: TransactionItem) => void;
+  onAddTransaction: (txn: TransactionItem) => Promise<void>;
 }
 
 const CATEGORIES = [
@@ -28,6 +28,7 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
   onClose,
   onAddTransaction,
 }) => {
+  const [busy, setBusy] = useState(false);
   const [merchant, setMerchant] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
@@ -37,7 +38,7 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
   const [cycle, setCycle] = useState<'current' | 'previous'>('current');
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!merchant.trim()) {
       setError('Please provide a merchant name.');
@@ -49,7 +50,7 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
       return;
     }
 
-    const randomId = `txn_${Math.floor(10000 + Math.random() * 90000)}`;
+    const randomId = `txn_${crypto.randomUUID()}`;
     const now = new Date();
     const formattedDate = `${now.toLocaleDateString('en-US', { weekday: 'short' })} ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
 
@@ -67,7 +68,10 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
       cycle,
     };
 
-    onAddTransaction(newTxn);
+    setBusy(true);
+    try { await onAddTransaction(newTxn); }
+    catch (error) { setError(error instanceof Error ? error.message : 'Could not record this transaction.'); return; }
+    finally { setBusy(false); }
     // Reset fields
     setMerchant('');
     setAmount('');
@@ -88,7 +92,7 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="primary" leftIcon={<PlusCircle size={15} />} onClick={handleSubmit}>
+          <Button variant="primary" isLoading={busy} leftIcon={<PlusCircle size={15} />} onClick={handleSubmit}>
             Record Transaction
           </Button>
         </div>
@@ -99,10 +103,10 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
           <div
             style={{
               padding: '0.625rem 0.875rem',
-              backgroundColor: '#fff1f2',
-              border: '1px solid #fecdd3',
+              backgroundColor: 'var(--state-retracted-bg)',
+              border: '1px solid var(--state-retracted-border)',
               borderRadius: 'var(--radius-sm)',
-              color: '#be123c',
+              color: 'var(--state-retracted)',
               fontSize: '0.8125rem',
             }}
           >
@@ -112,7 +116,7 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
 
         {/* Merchant Name */}
         <div>
-          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.375rem' }}>
+          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.375rem' }}>
             Merchant Name *
           </label>
           <Input
@@ -122,7 +126,7 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
               setMerchant(e.target.value);
               if (error) setError(null);
             }}
-            leftIcon={<Store size={15} color="#94a3b8" />}
+            leftIcon={<Store size={15} color="var(--text-subtle)" />}
             required
           />
         </div>
@@ -130,7 +134,7 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
         {/* Amount & Currency */}
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '0.75rem' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.375rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.375rem' }}>
               Amount (USD) *
             </label>
             <Input
@@ -143,13 +147,13 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
                 setAmount(e.target.value);
                 if (error) setError(null);
               }}
-              leftIcon={<DollarSign size={15} color="#94a3b8" />}
+              leftIcon={<DollarSign size={15} color="var(--text-subtle)" />}
               required
             />
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.375rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.375rem' }}>
               Billing Cycle
             </label>
             <select
@@ -159,10 +163,10 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
                 width: '100%',
                 padding: '0.5625rem 0.75rem',
                 fontSize: '0.875rem',
-                border: '1px solid #cbd5e1',
+                border: '1px solid var(--border-medium)',
                 borderRadius: 'var(--radius-md)',
-                backgroundColor: '#ffffff',
-                color: '#0f172a',
+                backgroundColor: 'var(--bg-surface)',
+                color: 'var(--text-main)',
                 outline: 'none',
               }}
             >
@@ -175,7 +179,7 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
         {/* Category & Channel */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.375rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.375rem' }}>
               Category
             </label>
             <select
@@ -185,10 +189,10 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
                 width: '100%',
                 padding: '0.5625rem 0.75rem',
                 fontSize: '0.875rem',
-                border: '1px solid #cbd5e1',
+                border: '1px solid var(--border-medium)',
                 borderRadius: 'var(--radius-md)',
-                backgroundColor: '#ffffff',
-                color: '#0f172a',
+                backgroundColor: 'var(--bg-surface)',
+                color: 'var(--text-main)',
                 outline: 'none',
               }}
             >
@@ -201,7 +205,7 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.375rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.375rem' }}>
               Channel Origin
             </label>
             <select
@@ -211,10 +215,10 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
                 width: '100%',
                 padding: '0.5625rem 0.75rem',
                 fontSize: '0.875rem',
-                border: '1px solid #cbd5e1',
+                border: '1px solid var(--border-medium)',
                 borderRadius: 'var(--radius-md)',
-                backgroundColor: '#ffffff',
-                color: '#0f172a',
+                backgroundColor: 'var(--bg-surface)',
+                color: 'var(--text-main)',
                 outline: 'none',
               }}
             >
@@ -229,7 +233,7 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
 
         {/* Initial Status */}
         <div>
-          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.375rem' }}>
+          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.375rem' }}>
             Initial Transaction Status
           </label>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
@@ -245,16 +249,16 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
                 style={{
                   padding: '0.625rem 0.5rem',
                   borderRadius: 'var(--radius-md)',
-                  border: status === st.id ? '2px solid #2563eb' : '1px solid #e2e8f0',
-                  backgroundColor: status === st.id ? '#eff6ff' : '#f8fafc',
+                  border: status === st.id ? '2px solid var(--color-primary)' : '1px solid var(--border-subtle)',
+                  backgroundColor: status === st.id ? 'var(--color-primary-light)' : 'var(--bg-app)',
                   cursor: 'pointer',
                   textAlign: 'center',
                 }}
               >
-                <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: status === st.id ? '#1d4ed8' : '#0f172a' }}>
+                <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: status === st.id ? 'var(--color-primary-hover)' : 'var(--text-main)' }}>
                   {st.label}
                 </div>
-                <div style={{ fontSize: '0.6875rem', color: '#64748b', marginTop: '0.1rem' }}>
+                <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>
                   {st.hint}
                 </div>
               </button>
@@ -264,14 +268,14 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
 
         {/* Location / Billing Method Description */}
         <div>
-          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.375rem' }}>
+          <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.375rem' }}>
             Location / Terminal Detail
           </label>
           <Input
             placeholder="e.g. Downtown POS Terminal 4, Stripe Billing ACH"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            leftIcon={<MapPin size={15} color="#94a3b8" />}
+            leftIcon={<MapPin size={15} color="var(--text-subtle)" />}
           />
         </div>
       </form>

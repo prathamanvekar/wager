@@ -1,0 +1,1257 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-24T17:40:40.200336+00:00",
+  "title": "Design System: Wager",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "displayName": "Primary",
+        "role": "primary",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "primary-hover": {
+        "displayName": "Primary Hover",
+        "role": "primary",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "primary-light": {
+        "displayName": "Primary Light",
+        "role": "primary",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "primary-border": {
+        "displayName": "Primary Border",
+        "role": "primary",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "app": {
+        "displayName": "App",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "surface": {
+        "displayName": "Surface",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "surface-hover": {
+        "displayName": "Surface Hover",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "sidebar": {
+        "displayName": "Sidebar",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "sidebar-hover": {
+        "displayName": "Sidebar Hover",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "landing": {
+        "displayName": "Landing",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "text-main": {
+        "displayName": "Text Main",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "text-secondary": {
+        "displayName": "Text Secondary",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "text-muted": {
+        "displayName": "Text Muted",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "border-subtle": {
+        "displayName": "Border Subtle",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "border-medium": {
+        "displayName": "Border Medium",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "border-strong": {
+        "displayName": "Border Strong",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "orphan-bg": {
+        "displayName": "Orphan Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "orphan-text": {
+        "displayName": "Orphan Text",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "orphan-border": {
+        "displayName": "Orphan Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "orphan-dot": {
+        "displayName": "Orphan Dot",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "provisional-dot": {
+        "displayName": "Provisional Dot",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "resolved-dot": {
+        "displayName": "Resolved Dot",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "late-bg": {
+        "displayName": "Late Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "late-text": {
+        "displayName": "Late Text",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "late-border": {
+        "displayName": "Late Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "late-dot": {
+        "displayName": "Late Dot",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "retracted-bg": {
+        "displayName": "Retracted Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "retracted-text": {
+        "displayName": "Retracted Text",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "retracted-border": {
+        "displayName": "Retracted Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "retracted-dot": {
+        "displayName": "Retracted Dot",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "error": {
+        "displayName": "Error",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "danger-bg": {
+        "displayName": "Danger Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "danger-text": {
+        "displayName": "Danger Text",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "danger-border": {
+        "displayName": "Danger Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-web": {
+        "displayName": "Channel Web",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-web-text": {
+        "displayName": "Channel Web Text",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-web-bg": {
+        "displayName": "Channel Web Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-web-border": {
+        "displayName": "Channel Web Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-mobile": {
+        "displayName": "Channel Mobile",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-call": {
+        "displayName": "Channel Call",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-call-text": {
+        "displayName": "Channel Call Text",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-call-bg": {
+        "displayName": "Channel Call Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-call-border": {
+        "displayName": "Channel Call Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-branch": {
+        "displayName": "Channel Branch",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-branch-text": {
+        "displayName": "Channel Branch Text",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-branch-bg": {
+        "displayName": "Channel Branch Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "channel-branch-border": {
+        "displayName": "Channel Branch Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "mobile-light-subtle": {
+        "displayName": "Mobile Light Subtle",
+        "role": "neutral",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-light-border": {
+        "displayName": "Mobile Light Border",
+        "role": "neutral",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-light-warning": {
+        "displayName": "Mobile Light Warning",
+        "role": "semantic",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-light-warning-bg": {
+        "displayName": "Mobile Light Warning Bg",
+        "role": "semantic",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-light-error": {
+        "displayName": "Mobile Light Error",
+        "role": "semantic",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-background": {
+        "displayName": "Mobile Dark Background",
+        "role": "neutral",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-surface": {
+        "displayName": "Mobile Dark Surface",
+        "role": "neutral",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-subtle": {
+        "displayName": "Mobile Dark Subtle",
+        "role": "neutral",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-text": {
+        "displayName": "Mobile Dark Text",
+        "role": "neutral",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-secondary": {
+        "displayName": "Mobile Dark Secondary",
+        "role": "neutral",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-muted": {
+        "displayName": "Mobile Dark Muted",
+        "role": "neutral",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-border": {
+        "displayName": "Mobile Dark Border",
+        "role": "neutral",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-primary": {
+        "displayName": "Mobile Dark Primary",
+        "role": "primary",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-on-primary": {
+        "displayName": "Mobile Dark On Primary",
+        "role": "primary",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-warning": {
+        "displayName": "Mobile Dark Warning",
+        "role": "semantic",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-warning-bg": {
+        "displayName": "Mobile Dark Warning Bg",
+        "role": "semantic",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "mobile-dark-error": {
+        "displayName": "Mobile Dark Error",
+        "role": "semantic",
+        "purpose": "Native OS palette role extracted from apps/mobile/src/components/ui.tsx."
+      },
+      "surface-elevated": {
+        "displayName": "Surface Elevated",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "surface-subtle": {
+        "displayName": "Surface Subtle",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "active": {
+        "displayName": "Active",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "border-control": {
+        "displayName": "Border Control",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "on-primary": {
+        "displayName": "On Primary",
+        "role": "primary",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "selection-bg": {
+        "displayName": "Selection Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "selection-text": {
+        "displayName": "Selection Text",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "code-bg": {
+        "displayName": "Code Bg",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "code-text": {
+        "displayName": "Code Text",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-bg-app": {
+        "displayName": "Web Dark Bg App",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-bg-sidebar": {
+        "displayName": "Web Dark Bg Sidebar",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-bg-surface": {
+        "displayName": "Web Dark Bg Surface",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-bg-surface-elevated": {
+        "displayName": "Web Dark Bg Surface Elevated",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-bg-surface-hover": {
+        "displayName": "Web Dark Bg Surface Hover",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-bg-surface-subtle": {
+        "displayName": "Web Dark Bg Surface Subtle",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-bg-sidebar-hover": {
+        "displayName": "Web Dark Bg Sidebar Hover",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-bg-active": {
+        "displayName": "Web Dark Bg Active",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-bg-landing": {
+        "displayName": "Web Dark Bg Landing",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-border-subtle": {
+        "displayName": "Web Dark Border Subtle",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-border-medium": {
+        "displayName": "Web Dark Border Medium",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-border-strong": {
+        "displayName": "Web Dark Border Strong",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-border-control": {
+        "displayName": "Web Dark Border Control",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-border-focus": {
+        "displayName": "Web Dark Border Focus",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-text-main": {
+        "displayName": "Web Dark Text Main",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-text-secondary": {
+        "displayName": "Web Dark Text Secondary",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-text-muted": {
+        "displayName": "Web Dark Text Muted",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-text-subtle": {
+        "displayName": "Web Dark Text Subtle",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-text-inverse": {
+        "displayName": "Web Dark Text Inverse",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-color-primary": {
+        "displayName": "Web Dark Color Primary",
+        "role": "primary",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-color-primary-hover": {
+        "displayName": "Web Dark Color Primary Hover",
+        "role": "primary",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-on-primary": {
+        "displayName": "Web Dark On Primary",
+        "role": "primary",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-color-primary-light": {
+        "displayName": "Web Dark Color Primary Light",
+        "role": "primary",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-color-primary-border": {
+        "displayName": "Web Dark Color Primary Border",
+        "role": "primary",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-color-emerald": {
+        "displayName": "Web Dark Color Emerald",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-color-emerald-hover": {
+        "displayName": "Web Dark Color Emerald Hover",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-color-emerald-light": {
+        "displayName": "Web Dark Color Emerald Light",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-orphan": {
+        "displayName": "Web Dark State Orphan",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-orphan-bg": {
+        "displayName": "Web Dark State Orphan Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-orphan-border": {
+        "displayName": "Web Dark State Orphan Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-orphan-dot": {
+        "displayName": "Web Dark State Orphan Dot",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-resolved": {
+        "displayName": "Web Dark State Resolved",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-resolved-bg": {
+        "displayName": "Web Dark State Resolved Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-resolved-border": {
+        "displayName": "Web Dark State Resolved Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-resolved-dot": {
+        "displayName": "Web Dark State Resolved Dot",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-provisional": {
+        "displayName": "Web Dark State Provisional",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-provisional-bg": {
+        "displayName": "Web Dark State Provisional Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-provisional-border": {
+        "displayName": "Web Dark State Provisional Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-provisional-dot": {
+        "displayName": "Web Dark State Provisional Dot",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-late": {
+        "displayName": "Web Dark State Late",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-late-bg": {
+        "displayName": "Web Dark State Late Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-late-border": {
+        "displayName": "Web Dark State Late Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-late-dot": {
+        "displayName": "Web Dark State Late Dot",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-retracted": {
+        "displayName": "Web Dark State Retracted",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-retracted-bg": {
+        "displayName": "Web Dark State Retracted Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-retracted-border": {
+        "displayName": "Web Dark State Retracted Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-state-retracted-dot": {
+        "displayName": "Web Dark State Retracted Dot",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-color-danger": {
+        "displayName": "Web Dark Color Danger",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-danger-bg": {
+        "displayName": "Web Dark Danger Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-danger-border": {
+        "displayName": "Web Dark Danger Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-web": {
+        "displayName": "Web Dark Channel Web",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-web-bg": {
+        "displayName": "Web Dark Channel Web Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-web-border": {
+        "displayName": "Web Dark Channel Web Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-mobile": {
+        "displayName": "Web Dark Channel Mobile",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-mobile-bg": {
+        "displayName": "Web Dark Channel Mobile Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-mobile-border": {
+        "displayName": "Web Dark Channel Mobile Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-call": {
+        "displayName": "Web Dark Channel Call",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-call-bg": {
+        "displayName": "Web Dark Channel Call Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-call-border": {
+        "displayName": "Web Dark Channel Call Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-branch": {
+        "displayName": "Web Dark Channel Branch",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-branch-bg": {
+        "displayName": "Web Dark Channel Branch Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-channel-branch-border": {
+        "displayName": "Web Dark Channel Branch Border",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-code-bg": {
+        "displayName": "Web Dark Code Bg",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-code-text": {
+        "displayName": "Web Dark Code Text",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-syntax-key": {
+        "displayName": "Web Dark Syntax Key",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-syntax-string": {
+        "displayName": "Web Dark Syntax String",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-syntax-number": {
+        "displayName": "Web Dark Syntax Number",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-syntax-boolean": {
+        "displayName": "Web Dark Syntax Boolean",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-syntax-null": {
+        "displayName": "Web Dark Syntax Null",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-selection-bg": {
+        "displayName": "Web Dark Selection Bg",
+        "role": "semantic",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "web-dark-selection-text": {
+        "displayName": "Web Dark Selection Text",
+        "role": "neutral",
+        "purpose": "Current web theme role from design-system/tokens.css; web-dark keys apply only to web dark mode."
+      },
+      "call-light-bg": {
+        "displayName": "Call Light Bg",
+        "role": "neutral",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-surface": {
+        "displayName": "Call Light Surface",
+        "role": "neutral",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-subtle": {
+        "displayName": "Call Light Subtle",
+        "role": "neutral",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-hover": {
+        "displayName": "Call Light Hover",
+        "role": "neutral",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-text": {
+        "displayName": "Call Light Text",
+        "role": "neutral",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-secondary": {
+        "displayName": "Call Light Secondary",
+        "role": "neutral",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-muted": {
+        "displayName": "Call Light Muted",
+        "role": "neutral",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-border": {
+        "displayName": "Call Light Border",
+        "role": "neutral",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-control": {
+        "displayName": "Call Light Control",
+        "role": "neutral",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-green": {
+        "displayName": "Call Light Green",
+        "role": "primary",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-green-hover": {
+        "displayName": "Call Light Green Hover",
+        "role": "primary",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-on-green": {
+        "displayName": "Call Light On Green",
+        "role": "primary",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-accent-border": {
+        "displayName": "Call Light Accent Border",
+        "role": "primary",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-red": {
+        "displayName": "Call Light Red",
+        "role": "semantic",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-red-bg": {
+        "displayName": "Call Light Red Bg",
+        "role": "semantic",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-warn": {
+        "displayName": "Call Light Warn",
+        "role": "semantic",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-light-warn-bg": {
+        "displayName": "Call Light Warn Bg",
+        "role": "semantic",
+        "purpose": "Call-local light palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-bg": {
+        "displayName": "Call Dark Bg",
+        "role": "neutral",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-surface": {
+        "displayName": "Call Dark Surface",
+        "role": "neutral",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-subtle": {
+        "displayName": "Call Dark Subtle",
+        "role": "neutral",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-hover": {
+        "displayName": "Call Dark Hover",
+        "role": "neutral",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-text": {
+        "displayName": "Call Dark Text",
+        "role": "neutral",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-secondary": {
+        "displayName": "Call Dark Secondary",
+        "role": "neutral",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-muted": {
+        "displayName": "Call Dark Muted",
+        "role": "neutral",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-border": {
+        "displayName": "Call Dark Border",
+        "role": "neutral",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-control": {
+        "displayName": "Call Dark Control",
+        "role": "neutral",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-green": {
+        "displayName": "Call Dark Green",
+        "role": "primary",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-green-hover": {
+        "displayName": "Call Dark Green Hover",
+        "role": "primary",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-on-green": {
+        "displayName": "Call Dark On Green",
+        "role": "primary",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-accent-border": {
+        "displayName": "Call Dark Accent Border",
+        "role": "primary",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-red": {
+        "displayName": "Call Dark Red",
+        "role": "semantic",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-red-bg": {
+        "displayName": "Call Dark Red Bg",
+        "role": "semantic",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-warn": {
+        "displayName": "Call Dark Warn",
+        "role": "semantic",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      },
+      "call-dark-warn-bg": {
+        "displayName": "Call Dark Warn Bg",
+        "role": "semantic",
+        "purpose": "Call-local dark palette extracted from apps/call/src/style.css."
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "purpose": "Wide-screen landing hero."
+      },
+      "headline": {
+        "purpose": "Portal page headings."
+      },
+      "mono": {
+        "purpose": "IDs and code only."
+      },
+      "mobile-heading": {
+        "purpose": "Native heading; platform-default React Native font, not a loaded web font."
+      },
+      "mobile-body": {
+        "purpose": "Native body; platform-default React Native font, not a loaded web font."
+      },
+      "mobile-section": {
+        "purpose": "Native section; platform-default React Native font, not a loaded web font."
+      },
+      "mobile-field": {
+        "purpose": "Native field; platform-default React Native font, not a loaded web font."
+      },
+      "mobile-label": {
+        "purpose": "Native label; platform-default React Native font, not a loaded web font."
+      },
+      "call-heading": {
+        "purpose": "Ready-state call service heading; active state compacts to 21px."
+      },
+      "call-body": {
+        "purpose": "Browser call interface body; Inter/system sans."
+      }
+    },
+    "shadows": [
+      {
+        "name": "web-light-shadow-sm",
+        "value": "0 2px 8px rgba(20, 40, 27, .05)",
+        "purpose": "Theme-aware web elevation token."
+      },
+      {
+        "name": "web-light-shadow-md",
+        "value": "0 8px 24px rgba(20, 40, 27, .08)",
+        "purpose": "Theme-aware web elevation token."
+      },
+      {
+        "name": "web-light-shadow-lg",
+        "value": "0 18px 56px rgba(14, 24, 18, .16)",
+        "purpose": "Theme-aware web elevation token."
+      },
+      {
+        "name": "web-dark-shadow-sm",
+        "value": "0 2px 8px rgba(0, 0, 0, .12)",
+        "purpose": "Theme-aware web elevation token."
+      },
+      {
+        "name": "web-dark-shadow-md",
+        "value": "0 8px 24px rgba(0, 0, 0, .18)",
+        "purpose": "Theme-aware web elevation token."
+      },
+      {
+        "name": "web-dark-shadow-lg",
+        "value": "0 18px 56px rgba(0, 0, 0, .3)",
+        "purpose": "Theme-aware web elevation token."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-transition",
+        "value": "150ms ease",
+        "purpose": "Background, border, and text state changes."
+      },
+      {
+        "name": "row-transition",
+        "value": "120ms ease",
+        "purpose": "Table row background."
+      },
+      {
+        "name": "modal-entry",
+        "value": "scaleIn 0.18s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Dialog entry; suppressed for reduced motion."
+      },
+      {
+        "name": "reduced-motion",
+        "value": ".01ms",
+        "purpose": "Animation and transition duration under prefers-reduced-motion: reduce."
+      },
+      {
+        "name": "theme-palette",
+        "value": "200ms ease",
+        "purpose": "Palette-only transition; disabled for reduced motion."
+      },
+      {
+        "name": "theme-thumb",
+        "value": "180ms ease",
+        "purpose": "Switch thumb movement; disabled for reduced motion."
+      },
+      {
+        "name": "call-state-transition",
+        "value": "160ms ease",
+        "purpose": "Call color/border state transitions; disabled for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "event-stack",
+        "value": "1250px"
+      },
+      {
+        "name": "wide",
+        "value": "1200px"
+      },
+      {
+        "name": "sidebar-helper-max",
+        "value": "1024px"
+      },
+      {
+        "name": "sidebar-helper-min",
+        "value": "1025px"
+      },
+      {
+        "name": "tablet",
+        "value": "900px"
+      },
+      {
+        "name": "mobile",
+        "value": "600px"
+      }
+    ],
+    "tonalRampNote": "Synthesized OKLCH lightness ramps for preview only; frontmatter values remain normative.",
+    "native": {
+      "platform": "Android-first Expo / React Native",
+      "themeSelection": "Automatic useColorScheme light/dark; web palette unchanged.",
+      "source": [
+        "apps/mobile/src/components/ui.tsx",
+        "apps/mobile/src/app/_layout.tsx",
+        "apps/mobile/src/app/(tabs)/_layout.tsx",
+        "apps/mobile/src/state/MobileProvider.tsx"
+      ],
+      "units": "Native dimensions are React Native logical units; frontmatter uses portable CSS-style px strings.",
+      "interaction": {
+        "buttonMinHeight": 50,
+        "fieldMinHeight": 52,
+        "rowMinHeight": 64,
+        "tabItemMinHeight": 48,
+        "buttonPressedOpacity": 0.8,
+        "buttonDisabledBusyOpacity": 0.5,
+        "rowPressedOpacity": 0.7
+      },
+      "layout": {
+        "screenPadding": 24,
+        "screenBottomPadding": 48,
+        "screenGap": 28,
+        "contentMaxWidth": 720,
+        "feedbackBottom": 96,
+        "tabs": [
+          "Home",
+          "Conversations",
+          "Support",
+          "Account"
+        ]
+      },
+      "typographyDifference": "Mobile uses platform-default fonts; Inter and JetBrains Mono are not loaded by the native UI. This is an observed platform difference, not a replacement brand rule.",
+      "validation": {
+        "reportedPassed": [
+          "Android JavaScript export",
+          "TypeScript checking",
+          "lint",
+          "Expo Doctor 20/20"
+        ],
+        "previewEvidence": "Browser integration only.",
+        "unverified": [
+          "Native installation",
+          "Device camera and permission flow",
+          "Device-rendered light and dark visual appearance"
+        ],
+        "limitation": "No Android SDK/device available."
+      }
+    },
+    "webTheme": {
+      "selection": "Binary light/dark switch; initial preference follows OS.",
+      "persistence": "wager.theme localStorage; storage-event cross-tab synchronization.",
+      "startup": "Head bootstrap resolves data-theme and color-scheme before CSS/React.",
+      "darkCharacter": "Neutral charcoal surfaces; green subtle accents. Native green-black unchanged.",
+      "validation": {
+        "reportedPassed": "8 contrast/bootstrap tests",
+        "build": "Production web build passed; lint completed with warnings",
+        "visualQA": "Not performed for latest neutral-dark switch refinement; older green-dark/dropdown screenshots outdated."
+      }
+    },
+    "callChannel": {
+      "source": [
+        "apps/call/src/App.tsx",
+        "apps/call/src/style.css",
+        ".impeccable/surfaces/apps-call-src-app-tsx.md"
+      ],
+      "scope": "Ordinary extension; incumbent web/mobile tokens preserved.",
+      "palette": "Local neutral light/charcoal themes with subtle green accents.",
+      "theme": "Binary dark switch; writes the call-local theme preference.",
+      "layout": {
+        "shellMaxWidth": "1160px",
+        "desktopColumns": "minmax(330px,420px) minmax(0,1fr)",
+        "gap": "28px",
+        "responsiveMaxWidthsPx": [
+          "1000",
+          "760"
+        ],
+        "activeConsolePadding": "22px 26px",
+        "activeKeypadMinHeight": "44px"
+      },
+      "interaction": "Visible transcript, optional browser speech, audio toggle/replay, keypad and text fallback; no microphone or real dialling.",
+      "evidence": {
+        "earlierCapture": ".impeccable/review/call/desktop-ready-dark.png",
+        "captureScope": "Earlier desktop dark ready state only; predates active compact CSS and recovery fixes.",
+        "reportedPassed": [
+          "Call build",
+          "Call lint"
+        ],
+        "earlierTests": "Python 21 and JavaScript 20 passed before latest recovery fixes; reruns in progress as documentation was requested.",
+        "unverified": [
+          "Current full flow",
+          "Current light appearance",
+          "Current responsive layout",
+          "Audible speech"
+        ],
+        "computerUse": "Stopped by user; not resumed."
+      },
+      "assets": {
+        "shippingRasterAssets": [],
+        "favicon": "Authored SVG"
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Shared medium button variant; the legacy blue variant aliases primary.",
+      "html": "<button class=\"ds-button-primary\">Primary action</button>",
+      "css": ".ds-button-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:var(--font-sans);font-size:.875rem;font-weight:500;line-height:1.25;padding:.5rem 1rem;border-radius:var(--radius-control);min-height:40px;cursor:pointer;box-shadow:none;transition:background-color 150ms ease,border-color 150ms ease,color 150ms ease;background:var(--color-primary);color:var(--on-primary);border:1px solid transparent;}.ds-button-primary:hover:not(:disabled){background:var(--color-primary-hover)}.ds-button-primary:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px}.ds-button-primary:active:not(:disabled){filter:brightness(.96)}.ds-button-primary:disabled{opacity:.6;cursor:not-allowed}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Shared medium button variant; the legacy blue variant aliases primary.",
+      "html": "<button class=\"ds-button-secondary\">Secondary action</button>",
+      "css": ".ds-button-secondary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:var(--font-sans);font-size:.875rem;font-weight:500;line-height:1.25;padding:.5rem 1rem;border-radius:var(--radius-control);min-height:40px;cursor:pointer;box-shadow:none;transition:background-color 150ms ease,border-color 150ms ease,color 150ms ease;background:var(--bg-app);color:var(--text-secondary);border:1px solid var(--border-subtle);}.ds-button-secondary:hover:not(:disabled){background:var(--bg-surface-hover);border-color:var(--border-medium)}.ds-button-secondary:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px}.ds-button-secondary:active:not(:disabled){filter:brightness(.96)}.ds-button-secondary:disabled{opacity:.6;cursor:not-allowed}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Shared medium button variant; the legacy blue variant aliases primary.",
+      "html": "<button class=\"ds-button-outline\">Outline action</button>",
+      "css": ".ds-button-outline{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:var(--font-sans);font-size:.875rem;font-weight:500;line-height:1.25;padding:.5rem 1rem;border-radius:var(--radius-control);min-height:40px;cursor:pointer;box-shadow:none;transition:background-color 150ms ease,border-color 150ms ease,color 150ms ease;background:var(--bg-surface);color:var(--text-secondary);border:1px solid var(--border-medium);}.ds-button-outline:hover:not(:disabled){background:var(--bg-surface-hover);border-color:var(--border-medium)}.ds-button-outline:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px}.ds-button-outline:active:not(:disabled){filter:brightness(.96)}.ds-button-outline:disabled{opacity:.6;cursor:not-allowed}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Shared medium button variant; the legacy blue variant aliases primary.",
+      "html": "<button class=\"ds-button-ghost\">Ghost action</button>",
+      "css": ".ds-button-ghost{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:var(--font-sans);font-size:.875rem;font-weight:500;line-height:1.25;padding:.5rem 1rem;border-radius:var(--radius-control);min-height:40px;cursor:pointer;box-shadow:none;transition:background-color 150ms ease,border-color 150ms ease,color 150ms ease;background:transparent;color:var(--text-secondary);border:1px solid transparent;}.ds-button-ghost:hover:not(:disabled){background:var(--bg-surface-hover);border-color:var(--border-medium)}.ds-button-ghost:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px}.ds-button-ghost:active:not(:disabled){filter:brightness(.96)}.ds-button-ghost:disabled{opacity:.6;cursor:not-allowed}"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Shared medium button variant; the legacy blue variant aliases primary.",
+      "html": "<button class=\"ds-button-danger\">Danger action</button>",
+      "css": ".ds-button-danger{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:var(--font-sans);font-size:.875rem;font-weight:500;line-height:1.25;padding:.5rem 1rem;border-radius:var(--radius-control);min-height:40px;cursor:pointer;box-shadow:none;transition:background-color 150ms ease,border-color 150ms ease,color 150ms ease;background:var(--danger-bg);color:var(--color-danger);border:1px solid var(--danger-border);}.ds-button-danger:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px}.ds-button-danger:active:not(:disabled){filter:brightness(.96)}.ds-button-danger:disabled{opacity:.6;cursor:not-allowed}"
+    },
+    {
+      "name": "Amber Button",
+      "kind": "button",
+      "refersTo": "button-amber",
+      "description": "Shared medium button variant; the legacy blue variant aliases primary.",
+      "html": "<button class=\"ds-button-amber\">Amber action</button>",
+      "css": ".ds-button-amber{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:var(--font-sans);font-size:.875rem;font-weight:500;line-height:1.25;padding:.5rem 1rem;border-radius:var(--radius-control);min-height:40px;cursor:pointer;box-shadow:none;transition:background-color 150ms ease,border-color 150ms ease,color 150ms ease;background:var(--state-orphan-bg);color:var(--state-orphan);border:1px solid var(--state-orphan-border);}.ds-button-amber:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px}.ds-button-amber:active:not(:disabled){filter:brightness(.96)}.ds-button-amber:disabled{opacity:.6;cursor:not-allowed}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Shared labeled field with helper text.",
+      "html": "<label class=\"ds-field\">Reference<input placeholder=\"Enter reference\"><span>Use the event reference.</span></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans);font-size:.8125rem;font-weight:500;color:var(--text-secondary)}.ds-field input{background:var(--bg-surface);border:1px solid var(--border-medium);border-radius:var(--radius-control);color:var(--text-main);font:inherit;font-size:.875rem;padding:.5625rem .875rem;min-height:40px;box-shadow:none}.ds-field input:hover{border-color:var(--text-subtle)}.ds-field input:focus{border-color:var(--color-primary)}.ds-field input:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px}.ds-field span{font-size:.75rem;color:var(--text-muted)}"
+    },
+    {
+      "name": "Flat Panel",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Standard ruled panel with header and body.",
+      "html": "<section class=\"ds-card\"><h3>Recent activity</h3><div>Review the latest customer events.</div></section>",
+      "css": ".ds-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-xl);overflow:hidden;box-shadow:none;font-family:var(--font-sans);color:var(--text-main)}.ds-card h3{margin:0;padding:1.125rem 1.5rem;border-bottom:1px solid var(--border-subtle);font-size:.9375rem;font-weight:600;letter-spacing:-.01em}.ds-card>div{padding:1.25rem 1.5rem;font-size:14px}"
+    },
+    {
+      "name": "Primary Badge",
+      "kind": "chip",
+      "refersTo": "badge-primary",
+      "description": "Pale green capsule with a meaningful state dot.",
+      "html": "<span class=\"ds-badge\"><i></i>Resolved</span>",
+      "css": ".ds-badge{display:inline-flex;align-items:center;gap:.375rem;background:var(--color-primary-light);border:1px solid var(--color-primary-border);color:var(--color-primary-hover);border-radius:9999px;padding:.2rem .625rem;font-family:var(--font-sans);font-size:.8125rem;font-weight:500;line-height:1.25;letter-spacing:.01em}.ds-badge i{width:6px;height:6px;border-radius:50%;background:var(--state-resolved-dot)}"
+    },
+    {
+      "name": "Sidebar Navigation",
+      "kind": "nav",
+      "refersTo": "sidebar",
+      "description": "Quiet sidebar with selected destination.",
+      "html": "<nav class=\"ds-nav\"><button aria-current=\"page\">Transactions</button><button>Support</button></nav>",
+      "css": ".ds-nav{width:232px;background:var(--bg-sidebar);padding:12px;border-right:1px solid var(--border-subtle);font-family:var(--font-sans)}.ds-nav button{display:block;width:100%;min-height:40px;padding:10px 12px;text-align:left;border:0;border-radius:8px;background:transparent;color:var(--text-secondary);font:inherit;font-size:13px;cursor:pointer}.ds-nav button:hover{background:var(--bg-sidebar-hover)}.ds-nav button[aria-current=page]{background:var(--bg-active);color:var(--color-primary-hover);box-shadow:0 1px 3px rgba(28,48,34,.05)}.ds-nav button:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px}"
+    },
+    {
+      "name": "Call Primary Action",
+      "kind": "button",
+      "refersTo": "call-button-primary",
+      "description": "Call-local primary button, live-bound to the call palette.",
+      "html": "<button class=\"ds-call-primary\">Start support call</button>",
+      "css": ".ds-call-primary{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 18px;min-height:46px;border:1px solid transparent;border-radius:10px;background:var(--green);color:var(--on-green);font-family:Inter,system-ui,sans-serif;font-size:14px;font-weight:500;line-height:1.4;cursor:pointer;transition:background-color 160ms ease}.ds-call-primary:hover:not(:disabled){background:var(--green-hover)}.ds-call-primary:focus-visible{outline:2px solid var(--green);outline-offset:4px}.ds-call-primary:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-call-primary{transition:none}}"
+    }
+  ],
+  "narrative": {
+    "overview": "Wager uses a minimal, professional, sleek interface with refined light surfaces and a neutral charcoal web dark theme. Quiet green neutrals, careful spacing, and clear type hierarchy give customer tasks and technical diagnostics one consistent visual language.\n\nThe system is compact enough for event tables and inspection, with calm surfaces and generous grouping around customer actions. Content and state carry the visual interest; decoration must have a purpose.\n\nThe native Android channel extends this approved system with phone-sized controls and automatic light/dark palettes. The web theme follows the OS until an explicit light/dark choice is saved; native-specific additions below describe the implemented mobile adapter.",
+    "keyCharacteristics": [
+      "Light green-neutral surfaces, neutral charcoal web dark surfaces, and subtle green action accents.",
+      "Thin rules, flat panels, and restrained rounded controls.",
+      "Inter for interface text; JetBrains Mono for IDs and code.",
+      "Shared summary strips, form controls, and dialog treatment."
+    ],
+    "rules": [
+      {
+        "name": "The Purposeful Color Rule",
+        "body": "Use green for actions and emphasis; reserve other accents for the existing semantic states and channels.",
+        "section": "colors"
+      },
+      {
+        "name": "The Interface Type Rule",
+        "body": "Keep navigation, headings, buttons, labels, and prose in Inter. Use monospace only where the content benefits from fixed-width characters.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Panel Rule",
+        "body": "Keep ordinary cards, summary strips, and buttons free of shadows; reserve pronounced elevation for overlays.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do apply the shared green-neutral palette and Inter typography across customer and diagnostic screens.",
+      "Do use thin dividers and flat panels to group information.",
+      "Do preserve semantic dots, visible focus, error messages, and responsive scrolling.",
+      "Do keep IDs and code in JetBrains Mono."
+    ],
+    "donts": [
+      "Don't introduce purposeless decoration or visual clutter.",
+      "Don't add shadows to ordinary panels or buttons.",
+      "Don't turn every summary segment or support action into a separate raised card.",
+      "Don't replace compact technical labels with monospace throughout the interface."
+    ]
+  }
+}

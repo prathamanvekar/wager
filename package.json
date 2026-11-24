@@ -1,0 +1,14 @@
+{
+  "name": "wager",
+  "private": true,
+  "scripts": {
+    "web": "npm --prefix apps/web run dev",
+    "mobile": "npm --prefix apps/mobile start",
+    "mobile:preview": "npm --prefix apps/mobile run web",
+    "test:client": "node --test tests/client.test.mjs",
+    "check:web": "npm --prefix apps/web run build",
+    "check:mobile": "npm --prefix apps/mobile run typecheck",
+    "call": "npm --prefix apps/call run dev",
+    "check:call": "npm --prefix apps/call run build"
+  }
+}

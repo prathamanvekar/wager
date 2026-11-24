@@ -75,3 +75,83 @@ The website serves as the primary live channel generating real interactions befo
 - **FastAPI Backend**: `http://127.0.0.1:8000/` (Swagger docs at `/docs`, health at `/api/v1/health`)
 - **External Services Used**: Zero paid or external services. 100% offline and laptop-friendly.
 - **API Keys / Credentials Needed**: None.
+
+
+## Mobile channel implementation — 24 November 2026
+
+- Added `apps/mobile`, an Expo SDK 58 / React Native app with Expo Router,
+  Home/Conversations/Support/Account, native case messages and timeline,
+  QR/manual handoff, foreground sync, cached offline reads and durable writes.
+- Extracted channel-independent types, fixture and transport into `packages/`.
+- Replaced transient server state with a local SQLite-backed event/attribution
+  store. Cases and transactions are shared projections; raw emission history is
+  retained. Server timestamps, retry idempotency and conflicting-ID rejection
+  protect ingestion. API session ownership guards case reads and writes.
+- Persona sign-in now establishes identity on the server before emitting the
+  login event. Binding is session-scoped; a shared device alone is insufficient.
+- Explicit cross-device handoffs expire after five minutes, are stored as hashes,
+  and are atomically consumed with attribution revisions and retractions.
+- Web now hydrates shared cases/transactions and displays events from both
+  channels; original event emission state is separate from current attribution.
+- Phone setup, local builds, cloud APK profiles and limitations are documented in
+  `MOBILE_SETUP.md`. No cloud upload/build has been initiated.
+- Verification includes real API cross-channel tests, shared-client offline/retry
+  tests, TypeScript/lint, Expo Doctor and Android JS bundle export. Native camera,
+  installation, keyboard/insets and Back behavior need the user's Android phone
+  or an SDK/emulator; a browser preview is not native-device evidence.
+- Final checks: 13 backend tests and 9 shared-client tests pass; mobile typecheck,
+  lint and Android Hermes bundle export pass; Expo Doctor passes 20/20 checks.
+  Browser integration verified explicit web-to-mobile handoff and replies in both
+  channels, including an offline reply automatically flushed after API restart.
+- Finish review corrections preserve durable writes on temporary HTTP failures
+  and discard stale refresh results across server/account changes. Native device
+  verification remains outstanding; no APK was built in this environment.
+
+## Windows native build recovery — 24 November 2026
+
+- Diagnosed Ninja mkdir failure: generated Worklets object paths exceeded 260
+  characters while Gradle selected CMake 3.22.1 / older Ninja.
+- Windows long paths were already enabled. Set the local user Gradle property
+  `android.cmakeVersion=4.1.2`; regenerated native caches (old caches preserved
+  with timestamped names). No native source or dependency version changes.
+- Verified `app:assembleDebug` for arm64-v8a: BUILD SUCCESSFUL, producing the
+  debug APK. Mobile typecheck and lint also pass. Phone installation/runtime
+  checks remain separate. Updated the setup guide with explicit CMake selection.
+
+## Web visual refinement and theme support — 24 November 2026
+
+- Kept existing portal navigation, workflows, layout structure and shared API
+  behavior. Refined visual roles, type hierarchy, spacing, corner geometry and
+  component styling across landing, portal, dialogs and diagnostics.
+- Added pre-paint theme resolution, persisted explicit choices, system default,
+  cross-tab updates, native color-scheme and reduced-motion-aware color changes.
+- Following user feedback, web dark surfaces use neutral charcoal/gray; green is
+  reserved for accents and states. Replaced the initial dropdown with an
+  accessible binary light/dark switch in landing and portal headers.
+- Production web build passes; eight theme bootstrap/contrast tests pass. Lint
+  completes with warnings. Earlier browser captures cover the first palette;
+  final charcoal/toggle visual recapture was not performed after the user
+  stopped Computer Use. No Android/mobile source, build files or processes were
+  modified during this web task.
+
+
+## Browser call channel - 24 November 2026
+
+- Added apps/call as a separate React/Vite IVR simulator with keypad verification,
+  real scoped inquiry context, status prompts, follow-up requests, transcript,
+  call summary and light/dark themes. Browser speech is optional; text is complete.
+- Added server-owned call routes and durable call records in the existing SQLite
+  store. Call events use the same attribution and case projections as web/mobile.
+  Generic client ingestion cannot forge call events or bypass call verification.
+- Independent demo verification exposes already attributed customer inquiries;
+  unrelated anonymous web activity still requires explicit linking. PINs are not
+  persisted. Follow-ups are idempotent and do not schedule actual callbacks.
+- Added retry acknowledgement, restore, pending End and expired-session recovery.
+  The source finish review identified and corrected repeat-call ID reuse and a
+  timer live-region issue. Existing web/mobile source hashes remain unchanged.
+- Validation: 21 Python API tests and 20 JavaScript transport/theme tests pass;
+  call production build and lint pass. A live shared-client/API flow on an isolated
+  database passed verification, inquiry selection, status, idempotent follow-up,
+  End and restore. One earlier desktop dark ready view was inspected. Full current
+  rendered flow, responsive/light layouts and audible speech remain unverified
+  after the user stopped computer use. No real telephone service is integrated.

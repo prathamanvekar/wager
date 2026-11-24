@@ -38,18 +38,18 @@ export const AppHeader: React.FC = () => {
               width: '2.5rem',
               height: '2.5rem',
               borderRadius: 'var(--radius-md)',
-              background: 'linear-gradient(135deg, #2563eb, #0ea5e9)',
+              background: 'linear-gradient(135deg, var(--color-primary), #0ea5e9)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               boxShadow: 'var(--shadow-glow)',
             }}
           >
-            <Shield size={20} color="#ffffff" />
+            <Shield size={20} color="var(--bg-surface)" />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontWeight: 800, fontSize: '1.125rem', letterSpacing: '-0.02em', color: '#fff' }}>
+              <span style={{ fontWeight: 800, fontSize: '1.125rem', letterSpacing: '-0.02em', color: 'var(--bg-surface)' }}>
                 APEX
               </span>
               <span

@@ -1,0 +1,289 @@
+{
+  "$defs": {
+    "EventIdentifiers": {
+      "properties": {
+        "session_id": {
+          "title": "Session Id",
+          "type": "string"
+        },
+        "device_id": {
+          "title": "Device Id",
+          "type": "string"
+        },
+        "ip_hash": {
+          "title": "Ip Hash",
+          "type": "string"
+        },
+        "phone_suffix": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phone Suffix"
+        },
+        "account_token": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Account Token"
+        },
+        "customer_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Customer Id"
+        }
+      },
+      "required": [
+        "session_id",
+        "device_id",
+        "ip_hash"
+      ],
+      "title": "EventIdentifiers",
+      "type": "object"
+    },
+    "EventSource": {
+      "properties": {
+        "channel": {
+          "enum": [
+            "web",
+            "mobile",
+            "call",
+            "branch"
+          ],
+          "title": "Channel",
+          "type": "string"
+        },
+        "application": {
+          "description": "Producer application e.g. customer-web",
+          "title": "Application",
+          "type": "string"
+        },
+        "instance_id": {
+          "description": "Client instance or session identifier",
+          "title": "Instance Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "channel",
+        "application",
+        "instance_id"
+      ],
+      "title": "EventSource",
+      "type": "object"
+    },
+    "EventSubject": {
+      "properties": {
+        "customer_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Customer Id"
+        },
+        "identity_state": {
+          "default": "orphan",
+          "enum": [
+            "orphan",
+            "provisional",
+            "resolved"
+          ],
+          "title": "Identity State",
+          "type": "string"
+        }
+      },
+      "title": "EventSubject",
+      "type": "object"
+    },
+    "JourneyContext": {
+      "properties": {
+        "case_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case Id"
+        },
+        "thread_hint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Thread Hint"
+        },
+        "reference_entity": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference Entity"
+        }
+      },
+      "title": "JourneyContext",
+      "type": "object"
+    },
+    "SimulationMetadata": {
+      "properties": {
+        "scenario_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scenario Id"
+        },
+        "ground_truth_customer_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ground Truth Customer Id"
+        },
+        "ground_truth_thread_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ground Truth Thread Id"
+        },
+        "simulated_delay_ms": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Simulated Delay Ms"
+        }
+      },
+      "title": "SimulationMetadata",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "protocol_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Protocol Version",
+      "type": "string"
+    },
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "event_type": {
+      "title": "Event Type",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/EventSource"
+    },
+    "valid_time": {
+      "title": "Valid Time",
+      "type": "string"
+    },
+    "ingest_time": {
+      "title": "Ingest Time",
+      "type": "string"
+    },
+    "identifiers": {
+      "$ref": "#/$defs/EventIdentifiers"
+    },
+    "subject": {
+      "$ref": "#/$defs/EventSubject"
+    },
+    "journey": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/JourneyContext"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "simulation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SimulationMetadata"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "event_id",
+    "event_type",
+    "source",
+    "valid_time",
+    "ingest_time",
+    "identifiers",
+    "subject"
+  ],
+  "title": "EventEnvelope",
+  "type": "object"
+}

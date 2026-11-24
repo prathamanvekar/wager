@@ -74,13 +74,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             ? 'var(--state-retracted-border)'
             : 'var(--color-primary)';
 
-          const bgColor = isBinding
-            ? 'rgba(16, 185, 129, 0.95)'
-            : isSuccess
-            ? 'rgba(15, 23, 42, 0.95)'
-            : isWarning
-            ? 'rgba(15, 23, 42, 0.95)'
-            : 'rgba(15, 23, 42, 0.95)';
+          const bgColor = 'var(--bg-surface-elevated)';
 
           return (
             <div
@@ -91,19 +85,19 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                 borderRadius: 'var(--radius-lg)',
                 padding: '0.875rem 1rem',
                 boxShadow: 'var(--shadow-lg)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
+                backdropFilter: 'none',
+                WebkitBackdropFilter: 'none',
                 pointerEvents: 'auto',
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: '0.75rem',
-                color: '#fff',
+                color: 'var(--text-main)',
                 animation: 'slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
             >
               <div style={{ marginTop: '2px', flexShrink: 0 }}>
                 {isBinding ? (
-                  <GitMerge size={18} color="#fff" />
+                  <GitMerge size={18} color="var(--color-primary)" />
                 ) : isSuccess ? (
                   <CheckCircle2 size={18} color="var(--state-resolved)" />
                 ) : isWarning ? (
@@ -117,7 +111,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                 <div style={{ fontSize: '0.875rem', fontWeight: 700, lineHeight: 1.2 }}>
                   {toast.title}
                 </div>
-                <div style={{ fontSize: '0.75rem', color: isBinding ? '#e2e8f0' : 'var(--text-secondary)', marginTop: '0.25rem', lineHeight: 1.4 }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem', lineHeight: 1.4 }}>
                   {toast.message}
                 </div>
               </div>
@@ -127,7 +121,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: isBinding ? '#fff' : 'var(--text-muted)',
+                  color: 'var(--text-muted)',
                   cursor: 'pointer',
                   padding: '0.125rem',
                   display: 'flex',

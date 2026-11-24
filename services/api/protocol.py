@@ -4,8 +4,8 @@ Pydantic v2 schemas for backend validation and serialization.
 """
 
 from typing import Dict, Any, Optional, List, Literal
-from pydantic import BaseModel, Field
-from datetime import datetime
+from pydantic import BaseModel, Field, field_validator
+from datetime import datetime, timezone
 
 
 class EventSource(BaseModel):
@@ -53,6 +53,16 @@ class EventEnvelope(BaseModel):
     journey: Optional[JourneyContext] = None
     payload: Dict[str, Any] = Field(default_factory=dict)
     simulation: Optional[SimulationMetadata] = None
+
+    @field_validator('valid_time', 'ingest_time')
+    @classmethod
+    def validate_time(cls, value):
+        if not value:
+            raise ValueError('A timezone-aware timestamp is required')
+        parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+        if parsed.tzinfo is None:
+            raise ValueError('Timestamp must include a timezone')
+        return parsed.astimezone(timezone.utc).isoformat()
 
 
 class EventIngestResponse(BaseModel):

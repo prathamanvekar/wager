@@ -21,60 +21,8 @@ import { useSession } from '../context/SessionContext';
 import { useEvents } from '../context/EventContext';
 import type { TransactionItem, DisputeCase } from '../types/cases';
 
-export const INITIAL_TRANSACTIONS: TransactionItem[] = [
-  {
-    id: 'txn_88213',
-    date: 'Today 09:42 AM',
-    merchant: 'CloudScale SaaS Hosting Ltd',
-    category: 'Software & Technology',
-    amount: 142.5,
-    currency: 'USD',
-    location: 'Online Transaction · Stripe Billing',
-    canDispute: true,
-    status: 'unrecognized',
-    channel: 'web',
-    cycle: 'current',
-  },
-  {
-    id: 'txn_77910',
-    date: 'Yesterday 07:15 PM',
-    merchant: 'Metropolis Bistro & Lounge',
-    category: 'Dining & Hospitality',
-    amount: 68.2,
-    currency: 'USD',
-    location: 'Downtown Branch POS Terminal 4',
-    canDispute: true,
-    status: 'eligible',
-    channel: 'pos',
-    cycle: 'current',
-  },
-  {
-    id: 'txn_65219',
-    date: 'Sat 11:30 AM',
-    merchant: 'Apex Premier Direct Deposit',
-    category: 'Payroll & Income',
-    amount: 3250.0,
-    currency: 'USD',
-    location: 'ACH Electronic Federal Reserve Transfer',
-    canDispute: true,
-    status: 'cleared',
-    channel: 'web',
-    cycle: 'current',
-  },
-  {
-    id: 'txn_54192',
-    date: 'Fri 03:22 PM',
-    merchant: 'Apex Mobile Express Transfer',
-    category: 'Internal Transfer',
-    amount: 250.0,
-    currency: 'USD',
-    location: 'Mobile App Channel (iOS Client)',
-    canDispute: true,
-    status: 'cleared',
-    channel: 'mobile',
-    cycle: 'previous',
-  },
-];
+import demoTransactions from '../../../../packages/contracts/fixtures/transactions.json';
+export const INITIAL_TRANSACTIONS = demoTransactions as TransactionItem[];
 
 interface OverviewPageProps {
   transactions: TransactionItem[];
@@ -95,6 +43,9 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
 }) => {
   const { session, isLoggedIn, openAuthModal } = useSession();
   const { events, orphanCount } = useEvents();
+  const disputeCount = cases.filter(c => c.threadHint === 'billing_dispute').length;
+  const mobileEventCount = events.filter(e => e.envelope.source.channel === 'mobile').length;
+  const callEventCount = events.filter(e => e.envelope.source.channel === 'call').length;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filterTab, setFilterTab] = useState<'all' | 'eligible' | 'disputed' | 'cleared'>('all');
@@ -158,14 +109,14 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
   }, [transactions, searchQuery, selectedCycle, selectedCategory, filterTab, cases]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+    <div className="portal-page overview-page" style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       {/* 1. Page Header with Title & Action */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.625rem', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>
+          <h1 style={{ fontSize: '1.625rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
             Portal Overview
           </h1>
-          <p style={{ fontSize: '0.875rem', color: '#64748b', marginTop: '0.25rem' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
             View account balances, recent transaction events, and cross-channel journeys in real time.
           </p>
         </div>
@@ -193,19 +144,89 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
               onClick={onNavigateToCases}
               leftIcon={<FileText size={15} />}
             >
-              View Disputed Cases ({cases.length})
+              View Inquiries ({cases.length})
             </Button>
           )}
         </div>
       </div>
 
+      {/* 3. Account Balances Overview */}
+      <div className="account-summary" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
+        <div
+          style={{
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '1.25rem 1.5rem',
+            boxShadow: 'none',
+          }}
+        >
+          <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+            Apex Premier Checking
+          </div>
+          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-main)', marginTop: '0.25rem', letterSpacing: '-0.02em' }}>
+            $18,452.90
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid var(--bg-surface-hover)' }}>
+            <span>Account: ····4902</span>
+            <span style={{ color: 'var(--color-primary)', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <CheckCircle2 size={13} /> Active
+            </span>
+          </div>
+        </div>
+
+        <div
+          style={{
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '1.25rem 1.5rem',
+            boxShadow: 'none',
+          }}
+        >
+          <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+            Apex High-Yield Treasury
+          </div>
+          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-main)', marginTop: '0.25rem', letterSpacing: '-0.02em' }}>
+            $45,120.15
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid var(--bg-surface-hover)' }}>
+            <span>Account: ····9011</span>
+            <span style={{ color: 'var(--color-primary)', fontWeight: 500 }}>4.85% APY</span>
+          </div>
+        </div>
+
+        <div
+          style={{
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '1.25rem 1.5rem',
+            boxShadow: 'none',
+          }}
+        >
+          <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+            Inquiries & Shared Events
+          </div>
+          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-main)', marginTop: '0.25rem', letterSpacing: '-0.02em' }}>
+            {cases.length > 0 ? `${cases.length} Active` : orphanCount > 0 ? `${orphanCount} Pending` : 'All Clear'}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid var(--bg-surface-hover)' }}>
+            <span>{events.length} Envelopes Logged</span>
+            <span style={{ color: orphanCount > 0 ? 'var(--state-orphan)' : 'var(--color-primary)', fontWeight: 500 }}>
+              {orphanCount > 0 ? `${orphanCount} Orphan buffered` : 'All Resolved'}
+            </span>
+          </div>
+        </div>
+      </div>
+
       {/* 2. Real-Time Cross-Channel Journey Card */}
-      <div
+      <div className="journey-status"
         style={{
-          backgroundColor: '#ffffff',
-          border: '1px solid #e2e8f0',
+          backgroundColor: 'var(--bg-surface)',
+          border: '1px solid var(--border-subtle)',
           borderRadius: 'var(--radius-lg)',
-          boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.04)',
+          boxShadow: 'none',
           overflow: 'hidden',
         }}
       >
@@ -217,32 +238,32 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                   style={{
                     fontSize: '0.6875rem',
                     fontWeight: 700,
-                    color: '#0369a1',
-                    backgroundColor: '#e0f2fe',
+                    color: 'var(--channel-web)',
+                    backgroundColor: 'var(--channel-web-bg)',
                     padding: '0.15rem 0.5rem',
                     borderRadius: '9999px',
                     textTransform: 'uppercase',
                     letterSpacing: '0.04em',
-                    border: '1px solid #bae6fd',
+                    border: '1px solid var(--channel-web-border)',
                   }}
                 >
                   Cross-Channel Journey Graph
                 </span>
-                <span style={{ color: '#cbd5e1' }}>•</span>
-                <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>
+                <span style={{ color: 'var(--border-medium)' }}>•</span>
+                <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
                   {isLoggedIn
                     ? `Active Persona: ${session.customer?.id || 'C1041'} (${session.customer?.fullName || 'Alex Mercer'})`
                     : 'Anonymous Session Active'}
                 </span>
               </div>
 
-              <h2 style={{ fontSize: '1.1875rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.375rem', letterSpacing: '-0.01em' }}>
+              <h2 style={{ fontSize: '1.1875rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.375rem', letterSpacing: '-0.01em' }}>
                 {isLoggedIn
                   ? `Authenticated Persona Active: ${session.customer?.fullName} (${session.customer?.id})`
                   : 'Real-Time Touchpoint Capture & Late Identity Binding'}
               </h2>
 
-              <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.55 }}>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
                 {isLoggedIn ? (
                   <>
                     You are now authenticated. Any transaction disputes or support inquiries initiated prior to sign-in have been automatically claimed and bound to customer <strong>{session.customer?.id}</strong>. The bitemporal store emits a negative/positive retraction pair to maintain continuous audit truth.
@@ -281,7 +302,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
             style={{
               marginTop: '1.5rem',
               paddingTop: '1.25rem',
-              borderTop: '1px solid #f1f5f9',
+              borderTop: '1px solid var(--bg-surface-hover)',
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
               gap: '1rem',
@@ -295,17 +316,17 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                     width: '7px',
                     height: '7px',
                     borderRadius: '50%',
-                    backgroundColor: isLoggedIn ? '#10b981' : '#f59e0b',
+                    backgroundColor: isLoggedIn ? 'var(--state-resolved-dot)' : 'var(--state-orphan-dot)',
                   }}
                 />
-                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: isLoggedIn ? '#047857' : '#b45309' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: isLoggedIn ? 'var(--color-primary-hover)' : 'var(--state-orphan)' }}>
                   1. Web (Portal)
                 </span>
               </div>
-              <div style={{ fontSize: '0.8125rem', fontWeight: 500, color: '#0f172a', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-main)', marginTop: '0.2rem' }}>
                 {isLoggedIn ? 'Authenticated Session' : 'Anonymous Dispute'}
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 {isLoggedIn ? `Customer ${session.customer?.id || 'C1041'} Bound` : 'Buffered as ORPHAN'}
               </div>
             </div>
@@ -318,49 +339,49 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                     width: '7px',
                     height: '7px',
                     borderRadius: '50%',
-                    backgroundColor: '#f59e0b',
+                    backgroundColor: 'var(--state-orphan-dot)',
                   }}
                 />
-                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#b45309' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--state-orphan)' }}>
                   2. Mobile (App)
                 </span>
               </div>
-              <div style={{ fontSize: '0.8125rem', fontWeight: 500, color: '#0f172a', marginTop: '0.2rem' }}>
-                Standby Channel
+              <div style={{ fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-main)', marginTop: '0.2rem' }}>
+                {mobileEventCount ? `${mobileEventCount} mobile touchpoints` : 'Standby Channel'}
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                Awaiting mobile client
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                {mobileEventCount ? 'Connected through the shared API' : 'Awaiting mobile client'}
               </div>
             </div>
 
             {/* Step 3: Voice IVR */}
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#94a3b8' }} />
-                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--text-subtle)' }} />
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>
                   3. Call (Voice IVR)
                 </span>
               </div>
-              <div style={{ fontSize: '0.8125rem', fontWeight: 500, color: '#0f172a', marginTop: '0.2rem' }}>
-                Telephony Stream
+              <div style={{ fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-main)', marginTop: '0.2rem' }}>
+                {callEventCount ? `${callEventCount} voice touchpoints` : 'Telephony Stream'}
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                Standby for call events
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                {callEventCount ? 'Events available in shared history' : 'Standby for call events'}
               </div>
             </div>
 
             {/* Step 4: Bitemporal Store */}
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10b981' }} />
-                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#047857' }}>
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--state-resolved-dot)' }} />
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-primary-hover)' }}>
                   4. Bitemporal Store
                 </span>
               </div>
-              <div style={{ fontSize: '0.8125rem', fontWeight: 500, color: '#0f172a', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-main)', marginTop: '0.2rem' }}>
                 Real-Time Ingestion
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 Zero-overwrites audit trail
               </div>
             </div>
@@ -368,83 +389,13 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
         </div>
       </div>
 
-      {/* 3. Account Balances Overview */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
-        <div
-          style={{
-            backgroundColor: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: 'var(--radius-lg)',
-            padding: '1.25rem 1.5rem',
-            boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.04)',
-          }}
-        >
-          <div style={{ fontSize: '0.8125rem', color: '#64748b', fontWeight: 500 }}>
-            Apex Premier Checking
-          </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#0f172a', marginTop: '0.25rem', letterSpacing: '-0.02em' }}>
-            $18,452.90
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid #f1f5f9' }}>
-            <span>Account: ····4902</span>
-            <span style={{ color: '#059669', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              <CheckCircle2 size={13} /> Active
-            </span>
-          </div>
-        </div>
-
-        <div
-          style={{
-            backgroundColor: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: 'var(--radius-lg)',
-            padding: '1.25rem 1.5rem',
-            boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.04)',
-          }}
-        >
-          <div style={{ fontSize: '0.8125rem', color: '#64748b', fontWeight: 500 }}>
-            Apex High-Yield Treasury
-          </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#0f172a', marginTop: '0.25rem', letterSpacing: '-0.02em' }}>
-            $45,120.15
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid #f1f5f9' }}>
-            <span>Account: ····9011</span>
-            <span style={{ color: '#2563eb', fontWeight: 500 }}>4.85% APY</span>
-          </div>
-        </div>
-
-        <div
-          style={{
-            backgroundColor: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: 'var(--radius-lg)',
-            padding: '1.25rem 1.5rem',
-            boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.04)',
-          }}
-        >
-          <div style={{ fontSize: '0.8125rem', color: '#64748b', fontWeight: 500 }}>
-            Dispute & Event State
-          </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#0f172a', marginTop: '0.25rem', letterSpacing: '-0.02em' }}>
-            {cases.length > 0 ? `${cases.length} Disputed` : orphanCount > 0 ? `${orphanCount} Pending` : 'All Clear'}
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid #f1f5f9' }}>
-            <span>{events.length} Envelopes Logged</span>
-            <span style={{ color: orphanCount > 0 ? '#d97706' : '#059669', fontWeight: 500 }}>
-              {orphanCount > 0 ? `${orphanCount} Orphan buffered` : 'All Resolved'}
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* 4. Transactions Workspace */}
-      <div
+      <div className="transactions-workspace"
         style={{
-          backgroundColor: '#ffffff',
-          border: '1px solid #e2e8f0',
+          backgroundColor: 'var(--bg-surface)',
+          border: '1px solid var(--border-subtle)',
           borderRadius: 'var(--radius-lg)',
-          boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.04)',
+          boxShadow: 'none',
           overflow: 'hidden',
         }}
       >
@@ -452,7 +403,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
         <div
           style={{
             padding: '1.25rem 1.5rem',
-            borderBottom: '1px solid #e2e8f0',
+            borderBottom: '1px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -465,7 +416,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
             tabs={[
               { id: 'all', label: 'All transactions' },
               { id: 'eligible', label: 'Eligible for Dispute' },
-              { id: 'disputed', label: `Disputed (${cases.length})` },
+              { id: 'disputed', label: `Disputed (${disputeCount})` },
               { id: 'cleared', label: 'Settled & Cleared' },
             ]}
             activeTab={filterTab}
@@ -479,7 +430,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
             <div style={{ position: 'relative', minWidth: '220px' }}>
               <Search
                 size={14}
-                style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}
+                style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-subtle)' }}
               />
               <input
                 type="text"
@@ -491,11 +442,11 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                   width: '100%',
                   padding: '0.4375rem 2rem 0.4375rem 2.25rem',
                   fontSize: '0.8125rem',
-                  border: '1px solid #cbd5e1',
+                  border: '1px solid var(--border-medium)',
                   borderRadius: 'var(--radius-md)',
                   outline: 'none',
-                  backgroundColor: '#ffffff',
-                  color: '#0f172a',
+                  backgroundColor: 'var(--bg-surface)',
+                  color: 'var(--text-main)',
                 }}
               />
               {searchQuery && (
@@ -510,7 +461,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    color: '#94a3b8',
+                    color: 'var(--text-subtle)',
                     padding: '2px',
                   }}
                 >
@@ -532,17 +483,17 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                   alignItems: 'center',
                   gap: '0.375rem',
                   padding: '0.4375rem 0.75rem',
-                  border: '1px solid #cbd5e1',
+                  border: '1px solid var(--border-medium)',
                   borderRadius: 'var(--radius-md)',
-                  backgroundColor: selectedCycle !== 'all' ? '#f0fdf4' : '#ffffff',
-                  borderColor: selectedCycle !== 'all' ? '#86efac' : '#cbd5e1',
+                  backgroundColor: selectedCycle !== 'all' ? 'var(--state-resolved-bg)' : 'var(--bg-surface)',
+                  borderColor: selectedCycle !== 'all' ? 'var(--state-resolved-border)' : 'var(--border-medium)',
                   fontSize: '0.8125rem',
-                  color: selectedCycle !== 'all' ? '#166534' : '#334155',
+                  color: selectedCycle !== 'all' ? 'var(--state-resolved)' : 'var(--text-secondary)',
                   cursor: 'pointer',
                   fontWeight: 500,
                 }}
               >
-                <Calendar size={14} color={selectedCycle !== 'all' ? '#166534' : '#64748b'} />
+                <Calendar size={14} color={selectedCycle !== 'all' ? 'var(--state-resolved)' : 'var(--text-muted)'} />
                 <span>
                   {selectedCycle === 'current'
                     ? 'Current Cycle'
@@ -560,8 +511,8 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                     top: 'calc(100% + 0.375rem)',
                     right: 0,
                     width: '200px',
-                    backgroundColor: '#ffffff',
-                    border: '1px solid #e2e8f0',
+                    backgroundColor: 'var(--bg-surface)',
+                    border: '1px solid var(--border-subtle)',
                     borderRadius: 'var(--radius-md)',
                     boxShadow: '0 10px 15px -3px rgba(15, 23, 42, 0.1)',
                     zIndex: 40,
@@ -587,8 +538,8 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                         fontSize: '0.8125rem',
                         borderRadius: 'var(--radius-sm)',
                         border: 'none',
-                        backgroundColor: selectedCycle === c.id ? '#eff6ff' : 'transparent',
-                        color: selectedCycle === c.id ? '#1d4ed8' : '#334155',
+                        backgroundColor: selectedCycle === c.id ? 'var(--color-primary-light)' : 'transparent',
+                        color: selectedCycle === c.id ? 'var(--color-primary-hover)' : 'var(--text-secondary)',
                         fontWeight: selectedCycle === c.id ? 600 : 500,
                         cursor: 'pointer',
                       }}
@@ -614,17 +565,17 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                   alignItems: 'center',
                   gap: '0.375rem',
                   padding: '0.4375rem 0.75rem',
-                  border: '1px solid #cbd5e1',
+                  border: '1px solid var(--border-medium)',
                   borderRadius: 'var(--radius-md)',
-                  backgroundColor: selectedCategory !== 'all' ? '#eff6ff' : '#ffffff',
-                  borderColor: selectedCategory !== 'all' ? '#bfdbfe' : '#cbd5e1',
+                  backgroundColor: selectedCategory !== 'all' ? 'var(--color-primary-light)' : 'var(--bg-surface)',
+                  borderColor: selectedCategory !== 'all' ? 'var(--color-primary-border)' : 'var(--border-medium)',
                   fontSize: '0.8125rem',
-                  color: selectedCategory !== 'all' ? '#1d4ed8' : '#334155',
+                  color: selectedCategory !== 'all' ? 'var(--color-primary-hover)' : 'var(--text-secondary)',
                   cursor: 'pointer',
                   fontWeight: 500,
                 }}
               >
-                <Filter size={14} color={selectedCategory !== 'all' ? '#1d4ed8' : '#64748b'} />
+                <Filter size={14} color={selectedCategory !== 'all' ? 'var(--color-primary-hover)' : 'var(--text-muted)'} />
                 <span>{selectedCategory !== 'all' ? selectedCategory : 'Filters'}</span>
                 <ChevronDown size={12} />
               </button>
@@ -636,15 +587,15 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                     top: 'calc(100% + 0.375rem)',
                     right: 0,
                     width: '240px',
-                    backgroundColor: '#ffffff',
-                    border: '1px solid #e2e8f0',
+                    backgroundColor: 'var(--bg-surface)',
+                    border: '1px solid var(--border-subtle)',
                     borderRadius: 'var(--radius-md)',
                     boxShadow: '0 10px 15px -3px rgba(15, 23, 42, 0.1)',
                     zIndex: 40,
                     padding: '0.5rem',
                   }}
                 >
-                  <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.375rem' }}>
+                  <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.375rem' }}>
                     Filter by Category
                   </div>
                   <button
@@ -660,8 +611,8 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                       fontSize: '0.8125rem',
                       borderRadius: 'var(--radius-sm)',
                       border: 'none',
-                      backgroundColor: selectedCategory === 'all' ? '#eff6ff' : 'transparent',
-                      color: selectedCategory === 'all' ? '#1d4ed8' : '#334155',
+                      backgroundColor: selectedCategory === 'all' ? 'var(--color-primary-light)' : 'transparent',
+                      color: selectedCategory === 'all' ? 'var(--color-primary-hover)' : 'var(--text-secondary)',
                       fontWeight: selectedCategory === 'all' ? 600 : 500,
                       cursor: 'pointer',
                     }}
@@ -683,8 +634,8 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                         fontSize: '0.8125rem',
                         borderRadius: 'var(--radius-sm)',
                         border: 'none',
-                        backgroundColor: selectedCategory === cat ? '#eff6ff' : 'transparent',
-                        color: selectedCategory === cat ? '#1d4ed8' : '#334155',
+                        backgroundColor: selectedCategory === cat ? 'var(--color-primary-light)' : 'transparent',
+                        color: selectedCategory === cat ? 'var(--color-primary-hover)' : 'var(--text-secondary)',
                         fontWeight: selectedCategory === cat ? 600 : 500,
                         cursor: 'pointer',
                       }}
@@ -693,7 +644,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                     </button>
                   ))}
 
-                  <div style={{ borderTop: '1px solid #e2e8f0', marginTop: '0.5rem', paddingTop: '0.5rem' }}>
+                  <div style={{ borderTop: '1px solid var(--border-subtle)', marginTop: '0.5rem', paddingTop: '0.5rem' }}>
                     <button
                       type="button"
                       onClick={() => {
@@ -708,9 +659,9 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                         padding: '0.375rem',
                         fontSize: '0.75rem',
                         fontWeight: 600,
-                        color: '#64748b',
-                        backgroundColor: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        color: 'var(--text-muted)',
+                        backgroundColor: 'var(--bg-app)',
+                        border: '1px solid var(--border-subtle)',
                         borderRadius: 'var(--radius-sm)',
                         cursor: 'pointer',
                         textAlign: 'center',
@@ -729,18 +680,18 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
         <div
           style={{
             padding: '0.75rem 1.5rem',
-            backgroundColor: '#f8fafc',
-            borderBottom: '1px solid #e2e8f0',
+            backgroundColor: 'var(--bg-app)',
+            borderBottom: '1px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             fontSize: '0.8125rem',
-            color: '#64748b',
+            color: 'var(--text-muted)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontWeight: 600, color: '#0f172a' }}>Recent activity</span>
-            <span style={{ fontSize: '0.8125rem', color: '#64748b', fontWeight: 500 }}>
+            <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>Recent activity</span>
+            <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 500 }}>
               ({filteredTransactions.length} items)
             </span>
           </div>
@@ -752,7 +703,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
               gap: '0.375rem',
               fontSize: '0.75rem',
               fontWeight: 500,
-              color: '#475569',
+              color: 'var(--text-secondary)',
             }}
           >
             <span
@@ -760,7 +711,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                 width: '6px',
                 height: '6px',
                 borderRadius: '9999px',
-                backgroundColor: isLoggedIn ? '#10b981' : '#f59e0b',
+                backgroundColor: isLoggedIn ? 'var(--state-resolved-dot)' : 'var(--state-orphan-dot)',
                 flexShrink: 0,
               }}
             />
@@ -774,11 +725,11 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
             <thead>
               <tr
                 style={{
-                  borderBottom: '1px solid #e2e8f0',
-                  color: '#64748b',
+                  borderBottom: '1px solid var(--border-subtle)',
+                  color: 'var(--text-muted)',
                   fontSize: '0.75rem',
                   fontWeight: 600,
-                  backgroundColor: '#ffffff',
+                  backgroundColor: 'var(--bg-surface)',
                 }}
               >
                 <th scope="col" style={{ padding: '0.75rem 1.5rem', width: '30px' }}>
@@ -801,9 +752,9 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
             <tbody>
               {filteredTransactions.length === 0 ? (
                 <tr>
-                  <td colSpan={8} style={{ textAlign: 'center', padding: '3rem 1.5rem', color: '#64748b' }}>
-                    <Layers size={28} style={{ margin: '0 auto 0.5rem auto', color: '#cbd5e1' }} />
-                    <div style={{ fontWeight: 600, color: '#0f172a' }}>No transactions found</div>
+                  <td colSpan={8} style={{ textAlign: 'center', padding: '3rem 1.5rem', color: 'var(--text-muted)' }}>
+                    <Layers size={28} style={{ margin: '0 auto 0.5rem auto', color: 'var(--border-medium)' }} />
+                    <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>No transactions found</div>
                     <div style={{ fontSize: '0.8125rem', marginTop: '0.25rem' }}>
                       Try adjusting your search query or billing cycle filter.
                     </div>
@@ -819,8 +770,8 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                     <tr
                       key={txn.id}
                       style={{
-                        borderBottom: '1px solid #e2e8f0',
-                        backgroundColor: isDisputed ? '#fefce8' : isFlagshipTxn ? '#fafafa' : '#ffffff',
+                        borderBottom: '1px solid var(--border-subtle)',
+                        backgroundColor: isDisputed ? 'var(--state-orphan-bg)' : isFlagshipTxn ? 'var(--bg-surface-subtle)' : 'var(--bg-surface)',
                         transition: 'background-color 0.15s ease',
                       }}
                       className="hover:bg-slate-50"
@@ -837,11 +788,11 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
 
                       {/* Transaction ID */}
                       <td style={{ padding: '1rem' }}>
-                        <div style={{ fontWeight: 600, color: '#0f172a', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem' }}>
+                        <div style={{ fontWeight: 600, color: 'var(--text-main)', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem' }}>
                           {txn.id}
                         </div>
                         {isFlagshipTxn && (
-                          <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#d97706', marginTop: '0.15rem' }}>
+                          <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--state-orphan)', marginTop: '0.15rem' }}>
                             Flagship Target
                           </div>
                         )}
@@ -849,19 +800,19 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
 
                       {/* Merchant & Location */}
                       <td style={{ padding: '1rem' }}>
-                        <div style={{ fontWeight: 600, color: '#0f172a' }}>{txn.merchant}</div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.125rem' }}>
+                        <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>{txn.merchant}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.125rem' }}>
                           {txn.location}
                         </div>
                       </td>
 
                       {/* Category */}
-                      <td style={{ padding: '1rem', color: '#475569', fontSize: '0.8125rem' }}>
+                      <td style={{ padding: '1rem', color: 'var(--text-secondary)', fontSize: '0.8125rem' }}>
                         {txn.category}
                       </td>
 
                       {/* Date */}
-                      <td style={{ padding: '1rem', color: '#334155', fontSize: '0.8125rem' }}>
+                      <td style={{ padding: '1rem', color: 'var(--text-secondary)', fontSize: '0.8125rem' }}>
                         {txn.date}
                       </td>
 
@@ -875,9 +826,9 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                               gap: '0.375rem',
                               fontSize: '0.75rem',
                               fontWeight: 600,
-                              color: '#b45309',
-                              backgroundColor: '#fffbeb',
-                              border: '1px solid #fde68a',
+                              color: 'var(--state-orphan)',
+                              backgroundColor: 'var(--state-orphan-bg)',
+                              border: '1px solid var(--state-orphan-border)',
                               padding: '0.15rem 0.5rem',
                               borderRadius: '9999px',
                             }}
@@ -887,7 +838,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                                 width: '6px',
                                 height: '6px',
                                 borderRadius: '50%',
-                                backgroundColor: '#f59e0b',
+                                backgroundColor: 'var(--state-orphan-dot)',
                                 flexShrink: 0,
                               }}
                             />
@@ -901,7 +852,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                               gap: '0.375rem',
                               fontSize: '0.75rem',
                               fontWeight: 500,
-                              color: '#b45309',
+                              color: 'var(--state-orphan)',
                             }}
                           >
                             <span
@@ -909,7 +860,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                                 width: '6px',
                                 height: '6px',
                                 borderRadius: '50%',
-                                backgroundColor: '#f59e0b',
+                                backgroundColor: 'var(--state-orphan-dot)',
                                 flexShrink: 0,
                               }}
                             />
@@ -923,7 +874,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                               gap: '0.375rem',
                               fontSize: '0.75rem',
                               fontWeight: 500,
-                              color: '#047857',
+                              color: 'var(--color-primary-hover)',
                             }}
                           >
                             <span
@@ -931,7 +882,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                                 width: '6px',
                                 height: '6px',
                                 borderRadius: '50%',
-                                backgroundColor: '#10b981',
+                                backgroundColor: 'var(--state-resolved-dot)',
                                 flexShrink: 0,
                               }}
                             />
@@ -945,7 +896,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                               gap: '0.375rem',
                               fontSize: '0.75rem',
                               fontWeight: 500,
-                              color: '#047857',
+                              color: 'var(--color-primary-hover)',
                             }}
                           >
                             <span
@@ -953,7 +904,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                                 width: '6px',
                                 height: '6px',
                                 borderRadius: '50%',
-                                backgroundColor: '#10b981',
+                                backgroundColor: 'var(--state-resolved-dot)',
                                 flexShrink: 0,
                               }}
                             />
@@ -963,7 +914,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                       </td>
 
                       {/* Amount */}
-                      <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 600, color: '#0f172a', fontVariantNumeric: 'tabular-nums' }}>
+                      <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 600, color: 'var(--text-main)', fontVariantNumeric: 'tabular-nums' }}>
                         ${txn.amount.toFixed(2)}
                       </td>
 
@@ -1006,13 +957,13 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
         <div
           style={{
             padding: '0.875rem 1.5rem',
-            borderTop: '1px solid #e2e8f0',
-            backgroundColor: '#ffffff',
+            borderTop: '1px solid var(--border-subtle)',
+            backgroundColor: 'var(--bg-surface)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             fontSize: '0.8125rem',
-            color: '#64748b',
+            color: 'var(--text-muted)',
           }}
         >
           <div>

@@ -5,6 +5,7 @@ import { Button } from '../design-system/Button';
 import { Badge } from '../design-system/Badge';
 import { useSession } from '../context/SessionContext';
 import { useEvents } from '../context/EventContext';
+import { useToast } from '../context/ToastContext';
 import type { DisputeCase } from '../types/cases';
 
 interface SupportInquiryModalProps {
@@ -22,6 +23,7 @@ export const SupportInquiryModal: React.FC<SupportInquiryModalProps> = ({
 }) => {
   const { session, isLoggedIn } = useSession();
   const { emitEvent } = useEvents();
+  const { showToast } = useToast();
 
   const [requestedAmount, setRequestedAmount] = useState('25000');
   const [annualIncome, setAnnualIncome] = useState('185000');
@@ -47,23 +49,23 @@ export const SupportInquiryModal: React.FC<SupportInquiryModalProps> = ({
     ? 'card_replacement'
     : 'general_support';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
       const now = new Date().toISOString();
-      const caseId = `case_inq_${Date.now().toString(36).substring(2, 7)}`;
+      const caseId = `case_inq_${crypto.randomUUID()}`;
 
       const newCase: DisputeCase = {
         id: caseId,
-        transactionId: isCreditLimit ? 'credit_line_8821' : 'card_token_9941',
-        merchant: isCreditLimit ? 'Apex Credit Operations' : 'Card Operations Support',
+        transactionId: isCreditLimit ? 'credit_line_8821' : isCardReplacement ? 'card_token_9941' : 'general_support',
+        merchant: isCreditLimit ? 'Apex Credit Operations' : isCardReplacement ? 'Card Operations Support' : 'Apex Customer Support',
         amount: isCreditLimit ? parseFloat(requestedAmount) : 0,
         currency: 'USD',
         reason: isCreditLimit
           ? `Requested credit line increase to $${requestedAmount}`
-          : 'Expedited replacement card requested',
+          : isCardReplacement ? 'Expedited replacement card requested' : 'General assistance requested',
         customerNotes: inquiryNotes,
         status: 'under_review',
         createdAt: now,
@@ -97,11 +99,14 @@ export const SupportInquiryModal: React.FC<SupportInquiryModalProps> = ({
       };
 
       // Emit CJEP v1 event
-      emitEvent(
+      await emitEvent(
         'support.inquiry.created',
         {
           case_id: caseId,
           intent_type: intentType,
+          transaction_id: newCase.transactionId,
+          merchant: newCase.merchant,
+          dispute_reason: newCase.reason,
           requested_limit: isCreditLimit ? parseFloat(requestedAmount) : undefined,
           annual_income: isCreditLimit ? parseFloat(annualIncome) : undefined,
           description: inquiryNotes,
@@ -116,7 +121,10 @@ export const SupportInquiryModal: React.FC<SupportInquiryModalProps> = ({
       setIsSubmitting(false);
       onCaseCreated(newCase);
       onClose();
-    }, 400);
+    } catch (error) {
+      setIsSubmitting(false);
+      showToast({type:'error',title:'Could not save your inquiry',message:error instanceof Error ? error.message : 'Please try again.'});
+    }
   };
 
   return (
@@ -131,20 +139,20 @@ export const SupportInquiryModal: React.FC<SupportInquiryModalProps> = ({
         {/* Intent Threading Callout */}
         <div
           style={{
-            backgroundColor: '#f5f3ff',
-            border: '1px solid #ddd6fe',
+            backgroundColor: 'var(--state-late-bg)',
+            border: '1px solid var(--state-late-border)',
             borderRadius: 'var(--radius-md)',
             padding: '0.875rem 1rem',
             fontSize: '0.8125rem',
-            color: '#475569',
+            color: 'var(--text-secondary)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6d28d9', fontWeight: 600, marginBottom: '0.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--state-late)', fontWeight: 600, marginBottom: '0.25rem' }}>
             <Layers size={16} />
             <span>Independent Intent Thread</span>
           </div>
           <p style={{ lineHeight: 1.45 }}>
-            This inquiry creates a distinct thread (<code>{threadHint}</code>) using entity signals and sentence embeddings. It will not be conflated with billing disputes on your account timeline.
+            This inquiry creates a distinct thread (<code>{threadHint}</code>) using its own case reference and intent classification. It will not be conflated with billing disputes on your account timeline.
           </p>
         </div>
 
@@ -153,7 +161,7 @@ export const SupportInquiryModal: React.FC<SupportInquiryModalProps> = ({
           <>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div>
-                <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '0.375rem' }}>
+                <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '0.375rem' }}>
                   Requested Total Limit (USD)
                 </label>
                 <input
@@ -162,21 +170,21 @@ export const SupportInquiryModal: React.FC<SupportInquiryModalProps> = ({
                   onChange={(e) => setRequestedAmount(e.target.value)}
                   style={{
                     width: '100%',
-                    backgroundColor: '#ffffff',
-                    border: '1px solid #cbd5e1',
+                    backgroundColor: 'var(--bg-surface)',
+                    border: '1px solid var(--border-medium)',
                     borderRadius: 'var(--radius-md)',
-                    color: '#0f172a',
+                    color: 'var(--text-main)',
                     fontSize: '0.875rem',
                     padding: '0.5625rem 0.875rem',
                     outline: 'none',
-                    boxShadow: '0 1px 2px 0 rgba(0,0,0,0.03)',
+                    boxShadow: 'none',
                   }}
                   required
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '0.375rem' }}>
+                <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '0.375rem' }}>
                   Declared Annual Income (USD)
                 </label>
                 <input
@@ -185,14 +193,14 @@ export const SupportInquiryModal: React.FC<SupportInquiryModalProps> = ({
                   onChange={(e) => setAnnualIncome(e.target.value)}
                   style={{
                     width: '100%',
-                    backgroundColor: '#ffffff',
-                    border: '1px solid #cbd5e1',
+                    backgroundColor: 'var(--bg-surface)',
+                    border: '1px solid var(--border-medium)',
                     borderRadius: 'var(--radius-md)',
-                    color: '#0f172a',
+                    color: 'var(--text-main)',
                     fontSize: '0.875rem',
                     padding: '0.5625rem 0.875rem',
                     outline: 'none',
-                    boxShadow: '0 1px 2px 0 rgba(0,0,0,0.03)',
+                    boxShadow: 'none',
                   }}
                   required
                 />
@@ -202,7 +210,7 @@ export const SupportInquiryModal: React.FC<SupportInquiryModalProps> = ({
         ) : null}
 
         <div>
-          <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '0.375rem' }}>
+          <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '0.375rem' }}>
             Inquiry Details & Justification
           </label>
           <textarea
@@ -211,16 +219,16 @@ export const SupportInquiryModal: React.FC<SupportInquiryModalProps> = ({
             rows={3}
             style={{
               width: '100%',
-              backgroundColor: '#ffffff',
-              border: '1px solid #cbd5e1',
+              backgroundColor: 'var(--bg-surface)',
+              border: '1px solid var(--border-medium)',
               borderRadius: 'var(--radius-md)',
-              color: '#0f172a',
+              color: 'var(--text-main)',
               fontFamily: 'var(--font-sans)',
               fontSize: '0.875rem',
               padding: '0.625rem 0.75rem',
               outline: 'none',
               resize: 'vertical',
-              boxShadow: '0 1px 2px 0 rgba(0,0,0,0.03)',
+              boxShadow: 'none',
             }}
             required
           />
@@ -229,17 +237,17 @@ export const SupportInquiryModal: React.FC<SupportInquiryModalProps> = ({
         {/* Identity Context */}
         <div
           style={{
-            backgroundColor: '#f8fafc',
+            backgroundColor: 'var(--bg-app)',
             padding: '0.625rem 0.875rem',
             borderRadius: 'var(--radius-md)',
-            border: '1px solid #e2e8f0',
+            border: '1px solid var(--border-subtle)',
             fontSize: '0.75rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
           }}
         >
-          <span style={{ color: '#64748b' }}>Customer Context:</span>
+          <span style={{ color: 'var(--text-muted)' }}>Customer Context:</span>
           <Badge identityState={session.identityState} size="sm">
             {isLoggedIn ? `Authenticated (${session.customer?.id})` : 'Anonymous (Orphan)'}
           </Badge>

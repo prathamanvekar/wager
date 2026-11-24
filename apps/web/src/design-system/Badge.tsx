@@ -36,88 +36,88 @@ export const Badge: React.FC<BadgeProps> = ({
     switch (effectiveVariant) {
       case 'orphan':
         return {
-          bg: '#fffbeb',
-          border: '#fde68a',
-          color: '#b45309',
-          dotColor: '#f59e0b',
+          bg: 'var(--state-orphan-bg)',
+          border: 'var(--state-orphan-border)',
+          color: 'var(--state-orphan)',
+          dotColor: 'var(--state-orphan-dot)',
         };
       case 'provisional':
         return {
-          bg: '#eff6ff',
-          border: '#bfdbfe',
-          color: '#1d4ed8',
-          dotColor: '#3b82f6',
+          bg: 'var(--color-primary-light)',
+          border: 'var(--color-primary-border)',
+          color: 'var(--color-primary-hover)',
+          dotColor: 'var(--state-provisional-dot)',
         };
       case 'resolved':
         return {
-          bg: '#ecfdf5',
-          border: '#a7f3d0',
-          color: '#047857',
-          dotColor: '#10b981',
+          bg: 'var(--color-primary-light)',
+          border: 'var(--color-primary-border)',
+          color: 'var(--color-primary-hover)',
+          dotColor: 'var(--state-resolved-dot)',
         };
       case 'late':
         return {
-          bg: '#f5f3ff',
-          border: '#ddd6fe',
-          color: '#6d28d9',
-          dotColor: '#8b5cf6',
+          bg: 'var(--state-late-bg)',
+          border: 'var(--state-late-border)',
+          color: 'var(--state-late)',
+          dotColor: 'var(--state-late-dot)',
         };
       case 'retracted':
         return {
-          bg: '#fff1f2',
-          border: '#fecdd3',
-          color: '#be123c',
-          dotColor: '#f43f5e',
+          bg: 'var(--state-retracted-bg)',
+          border: 'var(--state-retracted-border)',
+          color: 'var(--state-retracted)',
+          dotColor: 'var(--state-retracted-dot)',
         };
       case 'primary':
         return {
-          bg: '#eff6ff',
-          border: '#bfdbfe',
-          color: '#1d4ed8',
-          dotColor: '#2563eb',
+          bg: 'var(--color-primary-light)',
+          border: 'var(--color-primary-border)',
+          color: 'var(--color-primary-hover)',
+          dotColor: 'var(--color-primary)',
         };
       case 'channel':
         return {
           bg:
             channel === 'web'
-              ? '#f0f9ff'
+              ? 'var(--channel-web-bg)'
               : channel === 'mobile'
-              ? '#f5f3ff'
+              ? 'var(--state-late-bg)'
               : channel === 'call'
-              ? '#fff7ed'
-              : '#f0fdfa',
+              ? 'var(--channel-call-bg)'
+              : 'var(--channel-branch-bg)',
           border:
             channel === 'web'
-              ? '#bae6fd'
+              ? 'var(--channel-web-border)'
               : channel === 'mobile'
-              ? '#ddd6fe'
+              ? 'var(--state-late-border)'
               : channel === 'call'
-              ? '#fed7aa'
-              : '#99f6e4',
+              ? 'var(--channel-call-border)'
+              : 'var(--channel-branch-border)',
           color:
             channel === 'web'
-              ? '#0369a1'
+              ? 'var(--channel-web)'
               : channel === 'mobile'
-              ? '#6d28d9'
+              ? 'var(--state-late)'
               : channel === 'call'
-              ? '#c2410c'
-              : '#0f766e',
+              ? 'var(--channel-call)'
+              : 'var(--channel-branch)',
           dotColor:
             channel === 'web'
-              ? '#0284c7'
+              ? 'var(--channel-web)'
               : channel === 'mobile'
-              ? '#7c3aed'
+              ? 'var(--channel-mobile)'
               : channel === 'call'
-              ? '#ea580c'
-              : '#0d9488',
+              ? 'var(--channel-call)'
+              : 'var(--channel-branch)',
         };
       case 'neutral':
       default:
         return {
-          bg: '#f8fafc',
-          border: '#e2e8f0',
-          color: '#475569',
-          dotColor: '#94a3b8',
+          bg: 'var(--bg-app)',
+          border: 'var(--border-subtle)',
+          color: 'var(--text-secondary)',
+          dotColor: 'var(--text-subtle)',
         };
     }
   };
@@ -231,16 +231,16 @@ export const MicroIndicator: React.FC<MicroIndicatorProps> = ({
     switch (variant) {
       case 'resolved':
       case 'live':
-        return '#10b981';
+        return 'var(--state-resolved-dot)';
       case 'orphan':
-        return '#f59e0b';
+        return 'var(--state-orphan-dot)';
       case 'provisional':
-        return '#3b82f6';
+        return 'var(--state-provisional-dot)';
       case 'error':
-        return '#ef4444';
+        return 'var(--color-danger)';
       case 'neutral':
       default:
-        return '#94a3b8';
+        return 'var(--text-subtle)';
     }
   };
 
@@ -256,7 +256,7 @@ export const MicroIndicator: React.FC<MicroIndicatorProps> = ({
         gap: '0.375rem',
         fontSize,
         fontWeight: 500,
-        color: '#475569',
+        color: 'var(--text-secondary)',
         letterSpacing: '0.01em',
         ...style,
       }}

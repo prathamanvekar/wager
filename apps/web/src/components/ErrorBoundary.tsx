@@ -87,7 +87,7 @@ export class ErrorBoundary extends Component<Props, State> {
             {this.state.error && (
               <pre
                 style={{
-                  backgroundColor: 'rgba(0,0,0,0.4)',
+                  backgroundColor: 'var(--overlay)',
                   padding: '0.875rem',
                   borderRadius: 'var(--radius-md)',
                   color: 'var(--state-retracted)',

@@ -1,25 +1,38 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { EventEnvelope, IdentityState } from '../types/protocol';
-import { useSession } from './SessionContext';
-import { apiClient, type BackendHealth, type IngestResult } from '../services/api';
-
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import type { EventEnvelope, IdentityState } from "../types/protocol";
+import type { DisputeCase, TransactionItem } from "../types/cases";
+import { useSession } from "./SessionContext";
+import {
+  apiClient,
+  type BackendHealth,
+  type IngestResult,
+} from "../services/api";
 export interface EmittedEvent {
   envelope: EventEnvelope;
   timestamp: string;
-  status: 'buffered' | 'emitted' | 'bound_retroactively' | 'queued_offline';
+  status: "buffered" | "emitted" | "bound_retroactively" | "queued_offline";
   backendResult?: IngestResult;
+  currentIdentityState?: IdentityState;
 }
-
-interface EventContextValue {
+interface Value {
   events: EmittedEvent[];
+  cases: DisputeCase[];
+  transactions: TransactionItem[];
   emitEvent: <T = Record<string, unknown>>(
-    eventType: string,
+    type: string,
     payload: T,
     options?: {
       caseId?: string;
       threadHint?: string;
       customValidTime?: string;
-    }
+    },
   ) => Promise<EventEnvelope<T>>;
   clearEvents: () => void;
   orphanCount: number;
@@ -29,155 +42,184 @@ interface EventContextValue {
   checkBackendConnection: () => Promise<boolean>;
   flushOfflineQueue: () => Promise<number>;
   offlineQueueCount: number;
+  refresh: () => Promise<void>;
+  syncError: string | null;
 }
-
-const EventContext = createContext<EventContextValue | null>(null);
-
-function generateEventId(): string {
-  const ts = Date.now().toString(36);
-  const rand = Math.random().toString(36).substring(2, 8);
-  return `evt_${ts}_${rand}`;
-}
-
-export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { session } = useSession();
+const EventContext = createContext<Value | null>(null);
+export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const { isReady, session } = useSession();
   const [events, setEvents] = useState<EmittedEvent[]>([]);
-  const [isBackendConnected, setIsBackendConnected] = useState<boolean>(false);
-  const [backendHealth, setBackendHealth] = useState<BackendHealth | null>(null);
-  const [offlineQueueCount, setOfflineQueueCount] = useState<number>(0);
-
-  const checkBackendConnection = useCallback(async (): Promise<boolean> => {
-    const health = await apiClient.checkHealth();
-    if (health) {
-      setIsBackendConnected(true);
-      setBackendHealth(health);
-      setOfflineQueueCount(apiClient.getOfflineQueue().length);
-      return true;
-    } else {
-      setIsBackendConnected(false);
-      setBackendHealth(null);
-      setOfflineQueueCount(apiClient.getOfflineQueue().length);
-      return false;
-    }
+  const [transactions, setTransactions] = useState<TransactionItem[]>([]);
+  const [cases, setCases] = useState<DisputeCase[]>([]);
+  const [caseScope, setCaseScope] = useState("");
+  const scope = JSON.stringify([
+    session.sessionId,
+    session.customer?.id || null,
+  ]);
+  const [health, setHealth] = useState<BackendHealth | null>(null);
+  const [offlineQueueCount, setQueueCount] = useState(0);
+  const [syncError, setSyncError] = useState<string | null>(null);
+  const hidden = useRef(new Set<string>());
+  const refreshing = useRef<Promise<void> | null>(null);
+  const checkBackendConnection = useCallback(async () => {
+    const h = await apiClient.checkHealth();
+    setHealth(h);
+    setQueueCount(apiClient.getOfflineQueue().length);
+    return !!h;
   }, []);
-
-  // Poll health and connect stream on mount
-  useEffect(() => {
-    checkBackendConnection();
-    const interval = setInterval(checkBackendConnection, 5000);
-
-    const unsubscribe = apiClient.connectStream((streamData) => {
-      console.log('[SSE Stream] Received journey update:', streamData);
-      checkBackendConnection();
-    });
-
-    return () => {
-      clearInterval(interval);
-      unsubscribe();
-    };
-  }, [checkBackendConnection]);
-
-  const emitEvent = async <T = Record<string, unknown>>(
-    eventType: string,
-    payload: T,
-    options?: {
-      caseId?: string;
-      threadHint?: string;
-      customValidTime?: string;
+  const refresh = useCallback(async () => {
+    if (!isReady) return;
+    if (refreshing.current) return refreshing.current;
+    refreshing.current = (async () => {
+      const serverSession = apiClient.getSession();
+      const requestScope = JSON.stringify([
+        serverSession?.session_id,
+        serverSession?.customer_id || null,
+      ]);
+      const h = await apiClient.checkHealth();
+      setHealth(h);
+      if (!h) return;
+      try {
+        await apiClient.flushQueue();
+        const [raw, sharedCases, retractions, txns] = await Promise.all([
+          apiClient.fetchEvents(),
+          apiClient.fetchCases(),
+          apiClient.fetchRetractions(),
+          apiClient.fetchTransactions(),
+        ]);
+        const revised = new Map(
+          retractions.map((r) => [r.event_id, r.new_state.identity_state]),
+        );
+        const current = apiClient.getSession();
+        if (
+          requestScope !==
+          JSON.stringify([current?.session_id, current?.customer_id || null])
+        )
+          return;
+        setCases(sharedCases);
+        setTransactions(txns);
+        setCaseScope(requestScope);
+        const pending = apiClient.getOfflineQueue();
+        const ids = new Set(raw.map((e) => e.event_id));
+        setEvents([
+          ...pending
+            .filter((e) => !ids.has(e.event_id))
+            .map((envelope) => ({
+              envelope,
+              timestamp: envelope.valid_time,
+              status: "queued_offline" as const,
+            })),
+          ...raw
+            .filter((e) => !hidden.current.has(e.event_id))
+            .map((envelope) => ({
+              envelope,
+              timestamp: envelope.ingest_time,
+              status: "emitted" as const,
+              currentIdentityState: (revised.get(envelope.event_id) ||
+                envelope.subject.identity_state) as IdentityState,
+            })),
+        ]);
+        setSyncError(null);
+      } catch (error) {
+        setSyncError(
+          error instanceof Error
+            ? error.message
+            : "Could not synchronize your journey.",
+        );
+      }
+      setQueueCount(apiClient.getOfflineQueue().length);
+    })();
+    try {
+      await refreshing.current;
+    } finally {
+      refreshing.current = null;
     }
-  ): Promise<EventEnvelope<T>> => {
-    const now = new Date().toISOString();
-    const validTime = options?.customValidTime || now;
-    const ingestTime = now;
-
-    const currentIdentityState: IdentityState =
-      session.authState === 'authenticated' ? 'resolved' : 'orphan';
-
-    const envelope: EventEnvelope<T> = {
-      protocol_version: '1.0',
-      event_id: generateEventId(),
-      event_type: eventType,
-      source: {
-        channel: 'web',
-        application: 'customer-web',
-        instance_id: session.sessionId,
-      },
-      valid_time: validTime,
-      ingest_time: ingestTime,
-      identifiers: {
-        session_id: session.sessionId,
-        device_id: session.deviceId,
-        ip_hash: session.ipHash,
-        customer_id: session.customer?.id || null,
-        phone_suffix: session.customer?.phoneSuffix,
-      },
-      subject: {
-        customer_id: session.customer?.id || null,
-        identity_state: currentIdentityState,
-      },
-      journey: {
-        case_id: options?.caseId,
-        thread_hint: options?.threadHint,
-      },
-      payload,
+  }, [isReady]);
+  useEffect(() => {
+    if (!isReady) return;
+    void refresh();
+    const timer = setInterval(() => void refresh(), 5000);
+    const stream = new EventSource(apiClient.getBaseUrl() + "/stream");
+    stream.onmessage = () => void refresh();
+    const foreground = () => {
+      if (document.visibilityState === "visible") void refresh();
     };
-
-    // 1. Transmit to backend API
-    const result = await apiClient.ingestEvent(envelope as unknown as EventEnvelope);
-
-    // 2. Record in state
-    setEvents((prev) => [
-      {
-        envelope: envelope as unknown as EventEnvelope,
-        timestamp: now,
-        status: result.status === 'queued_offline' ? 'queued_offline' : currentIdentityState === 'resolved' ? 'emitted' : 'buffered',
-        backendResult: result,
+    document.addEventListener("visibilitychange", foreground);
+    window.addEventListener("online", foreground);
+    return () => {
+      clearInterval(timer);
+      stream.close();
+      document.removeEventListener("visibilitychange", foreground);
+      window.removeEventListener("online", foreground);
+    };
+  }, [isReady, session.customer?.id, refresh]);
+  const emitEvent = useCallback(
+    async <T,>(
+      type: string,
+      payload: T,
+      options?: {
+        caseId?: string;
+        threadHint?: string;
+        customValidTime?: string;
       },
-      ...prev,
-    ]);
-
-    setOfflineQueueCount(apiClient.getOfflineQueue().length);
-    checkBackendConnection();
-
-    return envelope;
-  };
-
-  const flushOfflineQueue = async (): Promise<number> => {
+    ) => {
+      const { envelope, result } = await apiClient.emit(type, payload, options);
+      setEvents((prev) => [
+        {
+          envelope: envelope as EventEnvelope,
+          timestamp: envelope.valid_time,
+          status: result.online ? "emitted" : "queued_offline",
+          backendResult: result,
+        },
+        ...prev.filter((e) => e.envelope.event_id !== envelope.event_id),
+      ]);
+      setQueueCount(apiClient.getOfflineQueue().length);
+      await refresh();
+      return envelope;
+    },
+    [refresh],
+  );
+  const flushOfflineQueue = async () => {
     const count = await apiClient.flushQueue();
-    setOfflineQueueCount(apiClient.getOfflineQueue().length);
-    checkBackendConnection();
+    await refresh();
     return count;
   };
-
-  const clearEvents = () => setEvents([]);
-
-  const orphanCount = events.filter((e) => e.envelope.subject.identity_state === 'orphan').length;
-  const resolvedCount = events.filter((e) => e.envelope.subject.identity_state === 'resolved').length;
-
   return (
     <EventContext.Provider
       value={{
         events,
+        cases: caseScope === scope ? cases : [],
+        transactions: caseScope === scope ? transactions : [],
         emitEvent,
-        clearEvents,
-        orphanCount,
-        resolvedCount,
-        isBackendConnected,
-        backendHealth,
+        clearEvents: () => {
+          events.forEach((e) => hidden.current.add(e.envelope.event_id));
+          setEvents([]);
+        },
+        orphanCount:
+          health?.buffered_orphans ??
+          events.filter((e) => e.currentIdentityState === "orphan").length,
+        resolvedCount: events.filter(
+          (e) =>
+            (e.currentIdentityState || e.envelope.subject.identity_state) ===
+            "resolved",
+        ).length,
+        isBackendConnected: !!health,
+        backendHealth: health,
         checkBackendConnection,
         flushOfflineQueue,
         offlineQueueCount,
+        refresh,
+        syncError,
       }}
     >
       {children}
     </EventContext.Provider>
   );
 };
-
-export function useEvents(): EventContextValue {
-  const ctx = useContext(EventContext);
-  if (!ctx) {
-    throw new Error('useEvents must be used within an EventProvider');
-  }
-  return ctx;
+export function useEvents() {
+  const value = useContext(EventContext);
+  if (!value) throw new Error("EventProvider is required");
+  return value;
 }

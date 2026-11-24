@@ -1,46 +1,125 @@
 # Wager
 
-Most customer service stacks have selective amnesia. You dispute a mystery charge while logged out, log in twenty minutes later, call support two days later, and end up explaining the exact same story three times.
+Cross-channel customer support with late identity binding and bitemporal event history.
 
-The usual excuse is that systems do not talk to each other. The real reason is subtler: traditional databases only store what they believe right now. If identity arrives late or a call transcript syncs six hours after the call ends, the old belief state is silently paved over.
+Wager is a local prototype that carries customer inquiries across a web portal,
+an Android app and a browser call simulator. Each channel uses the same backend
+and case history, so customers can continue an inquiry without starting another
+conversation or repeating information already recorded.
 
-Wager fixes this by giving every event two independent clocks: when it actually happened, and when the system learned about it. Logged-out actions wait in an orphan buffer instead of the trash bin, late logins stitch past history with an explicit changelog, and you can query the system as of any moment in the past to see what an agent actually saw.
+## Channels
 
-## Getting Started
+| Channel | Implementation | Capabilities |
+| --- | --- | --- |
+| Web portal | React, TypeScript, Vite | Transactions, disputes, support inquiries, follow-up messages, demo sign-in and a technical event inspector. |
+| Mobile app | React Native, Expo, Expo Router | Shared inquiries and messages, account views, QR/manual web-session linking and installable Android builds. |
+| Support call | React, TypeScript, Vite | Independent demo verification, existing inquiry retrieval, spoken status, follow-up requests, keypad controls and a written transcript. |
 
-Everything runs locally on your machine with zero cloud setup.
+All three channels support light and dark appearances. The call channel is a
+browser IVR simulation with optional text-to-speech. It does not dial a phone
+number, use a microphone or schedule callbacks.
 
-### 1. Backend API (FastAPI)
+## Technical implementation
 
-```bash
-python -m uvicorn services.api.main:app --host 127.0.0.1 --port 8000 --reload
+A shared FastAPI service validates Canonical Customer Journey Event Protocol
+(CJEP) envelopes with Pydantic and persists events, attribution versions,
+retractions, sessions, handoffs and calls in SQLite. Events retain valid time
+(when an action happened) and ingest time (when it reached the backend).
+Attribution changes are recorded separately rather than rewriting raw events.
+Historical journey queries and knowledge-gap calculations compare current history
+with what was known at an earlier contact time.
+
+Anonymous events remain in an orphan buffer. Demo sign-in can bind events from
+that session; a different anonymous web session requires an explicit, expiring,
+single-use handoff. Mobile sign-in and call verification retrieve already
+attributed customer inquiries without requiring another web-session handoff.
+Identity is not inferred from a caller's phone number or an unrelated device.
+
+Shared TypeScript contracts and a transport client serve the three frontends.
+The client provides bearer-session handling, backend-specific storage and durable
+offline event retries. The API validates session ownership and scopes case access.
+Call events are server-authored, with persistent call state and idempotent action
+IDs, with restore and connection-recovery feedback.
+
+## Repository
+
+```text
+apps/web/           Customer portal and event inspector
+apps/mobile/        Native mobile channel
+apps/call/          Browser call simulator
+services/api/       Shared API, event protocol and SQLite store
+packages/contracts/ Shared TypeScript models
+packages/client/    Shared transport and storage interfaces
+tests/              Backend, cross-channel, client and theme checks
 ```
 
-The API spins up at `http://127.0.0.1:8000`. You can inspect the OpenAPI docs at `http://127.0.0.1:8000/docs`.
+## Run locally
 
-### 2. Web Portal (React + Vite)
+The documented setup uses Python 3.13 and Node.js 24.3+ in the 24.x series.
+Commands below use PowerShell. No cloud services are required.
 
-In a separate terminal window:
+From the project root, create a virtual environment, install dependencies and
+start the backend:
 
-```bash
-cd apps/web
-npm install
-npm run dev
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m uvicorn services.api.main:app --host 0.0.0.0 --port 8000
 ```
 
-Open `http://localhost:5173` to see the portal in action.
+Install browser dependencies once:
 
-### 3. Verification Suite
-
-Run the bitemporal test suite to verify orphan retention, late binding, and knowledge gap calculations:
-
-```bash
-python -m unittest discover tests
+```powershell
+npm.cmd --prefix apps/web ci
+npm.cmd --prefix apps/call ci
 ```
 
-## How To Try The Magic
+Run each browser channel in its own terminal from the project root:
 
-1. Open the portal while logged out.
-2. File a dispute on the CloudScale SaaS charge. It gets buffered as an orphan event rather than thrown away.
-3. Click sign in as Alex Mercer (C1041). The engine recognizes the device fingerprint, claims the orphan retroactively, and emits a retraction pair.
-4. Jump into the CJEP Event Stream tab to watch the raw envelopes, dual clocks, and state changes unfold live.
+```powershell
+npm.cmd run web
+```
+
+```powershell
+npm.cmd run call
+```
+
+Open the [web portal](http://localhost:5173),
+[call simulator](http://localhost:5174) or [API docs](http://localhost:8000/docs). Data persists in
+`.data/wager.sqlite3`; `WAGER_DB_PATH` can select another database file.
+
+The [mobile setup guide](MOBILE_SETUP.md) covers Android tools, phone installation,
+networking and release APKs. Development builds require Metro; release APKs do
+not. Both require the backend. See the [call guide](apps/call/README.md) for
+simulator controls and recovery.
+
+## Try the shared journey
+
+1. Create a dispute on the web while signed out, then sign in as Alex Mercer
+   (`C1041`). Inspect the retained events and attribution changes in the portal.
+2. Sign in as Alex on mobile and open the same inquiry. For an anonymous web
+   session on another device, use the existing QR or manual linking flow.
+3. Start a support call using customer number `1041` and demo PIN `1234`.
+   Select the inquiry, hear its status, request a follow-up and end the call.
+4. Refresh the inquiry on web and mobile to see the follow-up and call activity
+   in the same history.
+
+## Verification
+
+After installing the dependencies above, run from the project root:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover tests
+node --test tests/client.test.mjs tests/call-client.test.mjs tests/web-theme.test.mjs
+npm.cmd run check:web
+npm.cmd run check:call
+npm.cmd --prefix apps/call run lint
+```
+
+After installing mobile dependencies, run `npm.cmd run check:mobile`.
+Tests cover attribution history, handoff isolation, persistence, call authorization,
+client retries and web theme behavior/contrast.
+
+This is a demonstration system with synthetic customer data and public demo
+credentials. Production authentication, real telephony, probabilistic identity
+matching and automated inquiry resolution are outside the implemented scope.

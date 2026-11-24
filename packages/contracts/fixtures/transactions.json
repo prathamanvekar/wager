@@ -1,0 +1,54 @@
+[
+  {
+    "id": "txn_88213",
+    "date": "Today 09:42 AM",
+    "merchant": "CloudScale SaaS Hosting Ltd",
+    "category": "Software & Technology",
+    "amount": 142.5,
+    "currency": "USD",
+    "location": "Online Transaction · Stripe Billing",
+    "canDispute": true,
+    "status": "unrecognized",
+    "channel": "web",
+    "cycle": "current"
+  },
+  {
+    "id": "txn_77910",
+    "date": "Yesterday 07:15 PM",
+    "merchant": "Metropolis Bistro & Lounge",
+    "category": "Dining & Hospitality",
+    "amount": 68.2,
+    "currency": "USD",
+    "location": "Downtown Branch POS Terminal 4",
+    "canDispute": true,
+    "status": "eligible",
+    "channel": "pos",
+    "cycle": "current"
+  },
+  {
+    "id": "txn_65219",
+    "date": "Sat 11:30 AM",
+    "merchant": "Apex Premier Direct Deposit",
+    "category": "Payroll & Income",
+    "amount": 3250,
+    "currency": "USD",
+    "location": "ACH Electronic Federal Reserve Transfer",
+    "canDispute": true,
+    "status": "cleared",
+    "channel": "web",
+    "cycle": "current"
+  },
+  {
+    "id": "txn_54192",
+    "date": "Fri 03:22 PM",
+    "merchant": "Apex Mobile Express Transfer",
+    "category": "Internal Transfer",
+    "amount": 250,
+    "currency": "USD",
+    "location": "Mobile App Channel (iOS Client)",
+    "canDispute": true,
+    "status": "cleared",
+    "channel": "mobile",
+    "cycle": "previous"
+  }
+]

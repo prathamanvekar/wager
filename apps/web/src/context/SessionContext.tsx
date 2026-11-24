@@ -1,129 +1,145 @@
-import React, { createContext, useContext, useState } from 'react';
-import type { VisitorSession, CustomerProfile } from '../types/session';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import type { VisitorSession, CustomerProfile } from "../types/session";
+import { apiClient } from "../services/api";
 import {
   getOrCreateDeviceId,
   getOrCreateSessionId,
   getOrCreateIpHash,
-  rotateSessionId,
   rotateDeviceId,
-} from '../services/storage';
-
+  rotateSessionId,
+} from "../services/storage";
 export const FLAGSHIP_CUSTOMER: CustomerProfile = {
-  id: 'C1041',
-  fullName: 'Alex Mercer',
-  email: 'alex.mercer@apex.bank',
-  phoneSuffix: '8821',
-  tier: 'Premier',
-  accountNumber: 'APEX-8821-4902',
+  id: "C1041",
+  fullName: "Alex Mercer",
+  email: "alex.mercer@apex.bank",
+  phoneSuffix: "8821",
+  tier: "Premier",
+  accountNumber: "APEX-8821-4902",
   linkedDevicesCount: 2,
 };
-
 interface SessionContextValue {
   session: VisitorSession;
   isLoggedIn: boolean;
-  login: (customer?: CustomerProfile) => void;
-  logout: () => void;
-  rotateDevice: () => void;
+  isReady: boolean;
+  connectionError: string | null;
+  login: (customer?: CustomerProfile) => Promise<void>;
+  logout: () => Promise<void>;
+  rotateDevice: () => Promise<void>;
+  reconnect: () => Promise<void>;
   isAuthModalOpen: boolean;
   openAuthModal: () => void;
   closeAuthModal: () => void;
   bindingNotice: string | null;
   dismissBindingNotice: () => void;
 }
-
 const SessionContext = createContext<SessionContextValue | null>(null);
-
-export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [session, setSession] = useState<VisitorSession>(() => {
-    const deviceId = getOrCreateDeviceId();
-    const sessionId = getOrCreateSessionId();
-    const ipHash = getOrCreateIpHash();
-
-    return {
-      sessionId,
-      deviceId,
-      ipHash,
-      networkAsn: 'AS13335 (Cloudflare/Metro)',
-      startedAt: new Date().toISOString(),
-      authState: 'anonymous',
-      identityState: 'orphan',
-      customer: null,
-    };
-  });
-
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [session, setSession] = useState<VisitorSession>(() => ({
+    deviceId: getOrCreateDeviceId(),
+    sessionId: getOrCreateSessionId(),
+    ipHash: getOrCreateIpHash(),
+    networkAsn: "Local demo",
+    startedAt: new Date().toISOString(),
+    authState: "anonymous",
+    identityState: "orphan",
+    customer: null,
+  }));
+  const [isReady, setReady] = useState(false);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
+  const [isAuthModalOpen, setAuthModal] = useState(false);
   const [bindingNotice, setBindingNotice] = useState<string | null>(null);
-
-  const login = (customer: CustomerProfile = FLAGSHIP_CUSTOMER) => {
-    const previousAnonymousSession = session.sessionId;
-
+  const reconnect = useCallback(async () => {
+    try {
+      const s = await apiClient.connect({
+        device_id: getOrCreateDeviceId(),
+        session_id: getOrCreateSessionId(),
+        channel: "web",
+      });
+      const people = s.customer_id ? await apiClient.customers() : [];
+      setSession((prev) => ({
+        ...prev,
+        deviceId: s.device_id,
+        sessionId: s.session_id,
+        authState: s.customer_id ? "authenticated" : "anonymous",
+        identityState: s.customer_id ? "resolved" : "orphan",
+        customer: people.find((c) => c.id === s.customer_id) || null,
+      }));
+      setReady(true);
+      setConnectionError(null);
+    } catch (e) {
+      setConnectionError(
+        e instanceof Error ? e.message : "Could not connect to Wager.",
+      );
+    }
+  }, []);
+  useEffect(() => {
+    void reconnect();
+  }, [reconnect]);
+  const login = async (customer = FLAGSHIP_CUSTOMER) => {
+    const profile = await apiClient.login(customer.id);
     setSession((prev) => ({
       ...prev,
-      authState: 'authenticated',
-      identityState: 'resolved',
-      customer,
+      customer: profile,
+      authState: "authenticated",
+      identityState: "resolved",
     }));
-
-    setIsAuthModalOpen(false);
-
-    // Announce the identity discovery
+    setAuthModal(false);
     setBindingNotice(
-      `Identity authenticated as ${customer.fullName} (${customer.id}). Previous anonymous session (${previousAnonymousSession}) is now candidates for retroactive binding.`
+      `Signed in as ${profile.fullName}. Your earlier actions in this web session are now connected to your account.`,
     );
   };
-
-  const logout = () => {
-    const newSessionId = rotateSessionId();
-    setSession((prev) => ({
-      ...prev,
-      sessionId: newSessionId,
-      authState: 'anonymous',
-      identityState: 'orphan',
-      customer: null,
-    }));
-    setBindingNotice(null);
+  const logout = async () => {
+    try {
+      await apiClient.logout();
+      rotateSessionId();
+      setReady(false);
+      setBindingNotice(null);
+      await reconnect();
+    } catch (e) {
+      setConnectionError(
+        e instanceof Error ? e.message : "Could not sign out.",
+      );
+    }
   };
-
-  const rotateDevice = () => {
-    const newDev = rotateDeviceId();
-    const newSes = rotateSessionId();
-    setSession((prev) => ({
-      ...prev,
-      deviceId: newDev,
-      sessionId: newSes,
-      authState: 'anonymous',
-      identityState: 'orphan',
-      customer: null,
-    }));
-    setBindingNotice(null);
+  const rotateDevice = async () => {
+    await apiClient.logout();
+    rotateDeviceId();
+    rotateSessionId();
+    setReady(false);
+    await reconnect();
   };
-
-  const dismissBindingNotice = () => setBindingNotice(null);
-
   return (
     <SessionContext.Provider
       value={{
         session,
-        isLoggedIn: session.authState === 'authenticated',
+        isLoggedIn: session.authState === "authenticated",
+        isReady,
+        connectionError,
         login,
         logout,
         rotateDevice,
+        reconnect,
         isAuthModalOpen,
-        openAuthModal: () => setIsAuthModalOpen(true),
-        closeAuthModal: () => setIsAuthModalOpen(false),
+        openAuthModal: () => setAuthModal(true),
+        closeAuthModal: () => setAuthModal(false),
         bindingNotice,
-        dismissBindingNotice,
+        dismissBindingNotice: () => setBindingNotice(null),
       }}
     >
       {children}
     </SessionContext.Provider>
   );
 };
-
-export function useSession(): SessionContextValue {
-  const ctx = useContext(SessionContext);
-  if (!ctx) {
-    throw new Error('useSession must be used within a SessionProvider');
-  }
-  return ctx;
+export function useSession() {
+  const value = useContext(SessionContext);
+  if (!value) throw new Error("SessionProvider is required");
+  return value;
 }

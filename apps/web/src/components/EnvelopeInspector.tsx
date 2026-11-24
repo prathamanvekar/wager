@@ -111,14 +111,15 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
     return (
       <div
         style={{
-          backgroundColor: '#090d16',
+          backgroundColor: 'var(--bg-app)',
+          color: 'var(--text-main)',
           borderRadius: 'var(--radius-md)',
           padding: '1rem',
           fontFamily: 'var(--font-mono)',
           fontSize: '0.75rem',
           lineHeight: '1.6',
           overflowX: 'auto',
-          border: '1px solid #1e293b',
+          border: '1px solid var(--border-subtle)',
         }}
       >
         <div style={{ display: 'table', width: '100%' }}>
@@ -131,10 +132,10 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                     display: 'table-cell',
                     textAlign: 'right',
                     paddingRight: '1rem',
-                    color: '#475569',
+                    color: 'var(--text-secondary)',
                     userSelect: 'none',
                     width: '3rem',
-                    borderRight: '1px solid #1e293b',
+                    borderRight: '1px solid var(--border-subtle)',
                   }}
                 >
                   {lineNum}
@@ -174,19 +175,19 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
         if (colonToken) {
           // Object key
           elements.push(
-            <span key={match.index} style={{ color: '#818cf8', fontWeight: 600 }}>
+            <span key={match.index} style={{ color: 'var(--syntax-key)', fontWeight: 600 }}>
               {stringToken}
             </span>
           );
           elements.push(
-            <span key={match.index + '_colon'} style={{ color: '#94a3b8' }}>
+            <span key={match.index + '_colon'} style={{ color: 'var(--text-subtle)' }}>
               :
             </span>
           );
         } else {
           // String value
           elements.push(
-            <span key={match.index} style={{ color: '#34d399' }}>
+            <span key={match.index} style={{ color: 'var(--syntax-string)' }}>
               {stringToken}
             </span>
           );
@@ -196,7 +197,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
           <span
             key={match.index}
             style={{
-              color: boolNullToken === 'null' ? '#f87171' : '#fbbf24',
+              color: boolNullToken === 'null' ? 'var(--syntax-null)' : 'var(--syntax-boolean)',
               fontWeight: 600,
             }}
           >
@@ -205,13 +206,13 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
         );
       } else if (numberToken) {
         elements.push(
-          <span key={match.index} style={{ color: '#60a5fa' }}>
+          <span key={match.index} style={{ color: 'var(--syntax-number)' }}>
             {numberToken}
           </span>
         );
       } else if (punctToken) {
         elements.push(
-          <span key={match.index} style={{ color: '#64748b' }}>
+          <span key={match.index} style={{ color: 'var(--text-muted)' }}>
             {punctToken}
           </span>
         );
@@ -230,10 +231,10 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
   };
 
   return (
-    <div
+    <div className="envelope-inspector"
       style={{
-        backgroundColor: '#ffffff',
-        border: '1px solid #e2e8f0',
+        backgroundColor: 'var(--bg-surface)',
+        border: '1px solid var(--border-subtle)',
         borderRadius: 'var(--radius-lg)',
         boxShadow: isExpanded
           ? '0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.1)'
@@ -249,8 +250,8 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
       <div
         style={{
           padding: '1rem 1.25rem',
-          borderBottom: '1px solid #e2e8f0',
-          backgroundColor: '#fafcfd',
+          borderBottom: '1px solid var(--border-subtle)',
+          backgroundColor: 'var(--bg-surface-subtle)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -264,12 +265,12 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
               width: '32px',
               height: '32px',
               borderRadius: 'var(--radius-md)',
-              backgroundColor: '#eff6ff',
-              border: '1px solid #dbeafe',
+              backgroundColor: 'var(--color-primary-light)',
+              border: '1px solid var(--channel-web-border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#2563eb',
+              color: 'var(--color-primary)',
               flexShrink: 0,
             }}
           >
@@ -283,7 +284,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                   fontFamily: 'var(--font-mono)',
                   fontSize: '0.9375rem',
                   fontWeight: 700,
-                  color: '#0f172a',
+                  color: 'var(--text-main)',
                   letterSpacing: '-0.01em',
                 }}
               >
@@ -293,9 +294,9 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 style={{
                   fontSize: '0.6875rem',
                   fontWeight: 600,
-                  color: '#0369a1',
-                  backgroundColor: '#e0f2fe',
-                  border: '1px solid #bae6fd',
+                  color: 'var(--channel-web)',
+                  backgroundColor: 'var(--channel-web-bg)',
+                  border: '1px solid var(--channel-web-border)',
                   padding: '0.1rem 0.4rem',
                   borderRadius: '9999px',
                 }}
@@ -310,7 +311,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 alignItems: 'center',
                 gap: '0.375rem',
                 fontSize: '0.75rem',
-                color: '#64748b',
+                color: 'var(--text-muted)',
                 fontFamily: 'var(--font-mono)',
                 marginTop: '0.15rem',
               }}
@@ -325,7 +326,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                   border: 'none',
                   padding: '2px',
                   cursor: 'pointer',
-                  color: copiedKey === 'event_id' ? '#059669' : '#94a3b8',
+                  color: copiedKey === 'event_id' ? 'var(--color-primary)' : 'var(--text-subtle)',
                   display: 'inline-flex',
                   alignItems: 'center',
                 }}
@@ -343,10 +344,10 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
           <div
             style={{
               display: 'inline-flex',
-              backgroundColor: '#f1f5f9',
+              backgroundColor: 'var(--bg-surface-hover)',
               borderRadius: 'var(--radius-md)',
               padding: '0.1875rem',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-subtle)',
             }}
           >
             <button
@@ -362,8 +363,8 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 border: 'none',
                 borderRadius: 'var(--radius-sm)',
                 cursor: 'pointer',
-                backgroundColor: viewMode === 'structured' ? '#ffffff' : 'transparent',
-                color: viewMode === 'structured' ? '#0f172a' : '#64748b',
+                backgroundColor: viewMode === 'structured' ? 'var(--bg-surface)' : 'transparent',
+                color: viewMode === 'structured' ? 'var(--text-main)' : 'var(--text-muted)',
                 boxShadow: viewMode === 'structured' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
                 transition: 'all 0.15s ease',
               }}
@@ -385,8 +386,8 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 border: 'none',
                 borderRadius: 'var(--radius-sm)',
                 cursor: 'pointer',
-                backgroundColor: viewMode === 'json' ? '#ffffff' : 'transparent',
-                color: viewMode === 'json' ? '#0f172a' : '#64748b',
+                backgroundColor: viewMode === 'json' ? 'var(--bg-surface)' : 'transparent',
+                color: viewMode === 'json' ? 'var(--text-main)' : 'var(--text-muted)',
                 boxShadow: viewMode === 'json' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
                 transition: 'all 0.15s ease',
               }}
@@ -405,9 +406,9 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
             style={{
               padding: '0.4rem',
               borderRadius: 'var(--radius-sm)',
-              border: '1px solid #e2e8f0',
-              backgroundColor: '#ffffff',
-              color: '#475569',
+              border: '1px solid var(--border-subtle)',
+              backgroundColor: 'var(--bg-surface)',
+              color: 'var(--text-secondary)',
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
@@ -427,9 +428,9 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
               style={{
                 padding: '0.4rem',
                 borderRadius: 'var(--radius-sm)',
-                border: '1px solid #e2e8f0',
-                backgroundColor: '#ffffff',
-                color: '#475569',
+                border: '1px solid var(--border-subtle)',
+                backgroundColor: 'var(--bg-surface)',
+                color: 'var(--text-secondary)',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -449,9 +450,9 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
             style={{
               padding: '0.4rem',
               borderRadius: 'var(--radius-sm)',
-              border: '1px solid #e2e8f0',
-              backgroundColor: '#ffffff',
-              color: '#475569',
+              border: '1px solid var(--border-subtle)',
+              backgroundColor: 'var(--bg-surface)',
+              color: 'var(--text-secondary)',
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
@@ -467,8 +468,8 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
       <div
         style={{
           padding: '0.625rem 1.25rem',
-          borderBottom: '1px solid #e2e8f0',
-          backgroundColor: '#f8fafc',
+          borderBottom: '1px solid var(--border-subtle)',
+          backgroundColor: 'var(--bg-app)',
           display: 'flex',
           alignItems: 'center',
           gap: '0.75rem',
@@ -476,27 +477,27 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
           fontSize: '0.75rem',
         }}
       >
-        <span style={{ color: '#64748b', fontWeight: 500 }}>Origin:</span>
+        <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Origin:</span>
         <Badge channel={event.source.channel} size="sm" />
 
-        <span style={{ color: '#cbd5e1' }}>•</span>
+        <span style={{ color: 'var(--border-medium)' }}>•</span>
 
-        <span style={{ color: '#64748b', fontWeight: 500 }}>Identity State:</span>
+        <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Identity State:</span>
         <Badge identityState={event.subject.identity_state} size="sm" />
 
         {event.journey?.case_id && (
           <>
-            <span style={{ color: '#cbd5e1' }}>•</span>
-            <span style={{ color: '#64748b', fontWeight: 500 }}>Case:</span>
+            <span style={{ color: 'var(--border-medium)' }}>•</span>
+            <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Case:</span>
             <span
               style={{
                 fontFamily: 'var(--font-mono)',
                 fontWeight: 600,
-                color: '#1d4ed8',
-                backgroundColor: '#eff6ff',
+                color: 'var(--color-primary-hover)',
+                backgroundColor: 'var(--color-primary-light)',
                 padding: '0.125rem 0.45rem',
                 borderRadius: '4px',
-                border: '1px solid #bfdbfe',
+                border: '1px solid var(--color-primary-border)',
               }}
             >
               {event.journey.case_id}
@@ -526,13 +527,13 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 marginBottom: '0.5rem',
               }}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#475569' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
                 CANONICAL ENVELOPE SCHEMA (v{event.protocol_version})
               </div>
               <Button
                 variant="outline"
                 size="sm"
-                leftIcon={copiedKey === 'all_json' ? <Check size={13} color="#059669" /> : <Copy size={13} />}
+                leftIcon={copiedKey === 'all_json' ? <Check size={13} color="var(--color-primary)" /> : <Copy size={13} />}
                 onClick={() => handleCopy(JSON.stringify(event, null, 2), 'all_json')}
               >
                 {copiedKey === 'all_json' ? 'Copied' : 'Copy JSON'}
@@ -546,11 +547,11 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
             {/* 1. Bitemporal Dual-Clock Visualizer */}
             <div
               style={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #e2e8f0',
+                backgroundColor: 'var(--bg-surface)',
+                border: '1px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-md)',
                 padding: '1rem',
-                boxShadow: '0 1px 2px rgba(15, 23, 42, 0.03)',
+                boxShadow: 'none',
               }}
             >
               <div
@@ -562,21 +563,21 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <Clock size={15} color="#2563eb" />
-                  <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a' }}>
+                  <Clock size={15} color="var(--color-primary)" />
+                  <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)' }}>
                     Bitemporal Dual Clock
                   </span>
                 </div>
                 <span
                   style={{
                     fontSize: '0.6875rem',
-                    color: '#64748b',
+                    color: 'var(--text-muted)',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.25rem',
                   }}
                 >
-                  <Zap size={11} color="#f59e0b" />
+                  <Zap size={11} color="var(--state-orphan-dot)" />
                   Two-dimensional timeline
                 </span>
               </div>
@@ -588,8 +589,8 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                   gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)',
                   alignItems: 'center',
                   gap: '0.75rem',
-                  backgroundColor: '#f8fafc',
-                  border: '1px solid #e2e8f0',
+                  backgroundColor: 'var(--bg-app)',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: 'var(--radius-sm)',
                   padding: '0.875rem',
                 }}
@@ -600,7 +601,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                     style={{
                       fontSize: '0.6875rem',
                       fontWeight: 600,
-                      color: '#0284c7',
+                      color: 'var(--channel-web)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.04em',
                       marginBottom: '0.2rem',
@@ -613,7 +614,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       fontFamily: 'var(--font-mono)',
                       fontSize: '0.8125rem',
                       fontWeight: 600,
-                      color: '#0f172a',
+                      color: 'var(--text-main)',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -624,7 +625,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                   <div
                     style={{
                       fontSize: '0.6875rem',
-                      color: '#64748b',
+                      color: 'var(--text-muted)',
                       marginTop: '0.125rem',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
@@ -651,9 +652,9 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       gap: '0.25rem',
                       padding: '0.2rem 0.5rem',
                       borderRadius: '9999px',
-                      backgroundColor: isLateArrival ? '#fffbeb' : '#ecfdf5',
-                      border: `1px solid ${isLateArrival ? '#fde68a' : '#a7f3d0'}`,
-                      color: isLateArrival ? '#b45309' : '#047857',
+                      backgroundColor: isLateArrival ? 'var(--state-orphan-bg)' : 'var(--color-primary-light)',
+                      border: `1px solid ${isLateArrival ? 'var(--state-orphan-border)' : 'var(--color-primary-border)'}`,
+                      color: isLateArrival ? 'var(--state-orphan)' : 'var(--color-primary-hover)',
                       fontSize: '0.6875rem',
                       fontWeight: 700,
                       fontFamily: 'var(--font-mono)',
@@ -664,7 +665,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                   <span
                     style={{
                       fontSize: '0.625rem',
-                      color: '#94a3b8',
+                      color: 'var(--text-subtle)',
                       textAlign: 'center',
                       whiteSpace: 'nowrap',
                     }}
@@ -683,7 +684,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                     style={{
                       fontSize: '0.6875rem',
                       fontWeight: 600,
-                      color: '#059669',
+                      color: 'var(--color-primary)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.04em',
                       marginBottom: '0.2rem',
@@ -696,7 +697,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       fontFamily: 'var(--font-mono)',
                       fontSize: '0.8125rem',
                       fontWeight: 600,
-                      color: '#0f172a',
+                      color: 'var(--text-main)',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -707,7 +708,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                   <div
                     style={{
                       fontSize: '0.6875rem',
-                      color: '#64748b',
+                      color: 'var(--text-muted)',
                       marginTop: '0.125rem',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
@@ -726,11 +727,11 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                   alignItems: 'flex-start',
                   gap: '0.5rem',
                   fontSize: '0.6875rem',
-                  color: '#64748b',
+                  color: 'var(--text-muted)',
                   marginTop: '0.625rem',
                 }}
               >
-                <Info size={13} style={{ flexShrink: 0, marginTop: '1px', color: '#94a3b8' }} />
+                <Info size={13} style={{ flexShrink: 0, marginTop: '1px', color: 'var(--text-subtle)' }} />
                 <span>
                   Valid time records customer reality; Ingest time guarantees immutable auditability
                   even when network delay or out-of-order events occur.
@@ -741,11 +742,11 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
             {/* 2. Identity Graph & Late Binding Card */}
             <div
               style={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #e2e8f0',
+                backgroundColor: 'var(--bg-surface)',
+                border: '1px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-md)',
                 padding: '1rem',
-                boxShadow: '0 1px 2px rgba(15, 23, 42, 0.03)',
+                boxShadow: 'none',
               }}
             >
               <div
@@ -757,8 +758,8 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <Fingerprint size={15} color="#7c3aed" />
-                  <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a' }}>
+                  <Fingerprint size={15} color="var(--channel-mobile)" />
+                  <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)' }}>
                     Identity Graph & Attribution
                   </span>
                 </div>
@@ -770,7 +771,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       alignItems: 'center',
                       gap: '0.25rem',
                       fontSize: '0.6875rem',
-                      color: '#047857',
+                      color: 'var(--color-primary-hover)',
                       fontWeight: 600,
                     }}
                   >
@@ -783,7 +784,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       alignItems: 'center',
                       gap: '0.25rem',
                       fontSize: '0.6875rem',
-                      color: '#b45309',
+                      color: 'var(--state-orphan)',
                       fontWeight: 600,
                     }}
                   >
@@ -798,13 +799,13 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                   padding: '0.625rem 0.75rem',
                   borderRadius: 'var(--radius-sm)',
                   backgroundColor:
-                    event.subject.identity_state === 'resolved' ? '#f0fdf4' : '#fffbeb',
+                    event.subject.identity_state === 'resolved' ? 'var(--state-resolved-bg)' : 'var(--state-orphan-bg)',
                   border: `1px solid ${
-                    event.subject.identity_state === 'resolved' ? '#bbf7d0' : '#fef08a'
+                    event.subject.identity_state === 'resolved' ? 'var(--state-resolved-border)' : 'var(--state-orphan-border)'
                   }`,
                   fontSize: '0.75rem',
                   color:
-                    event.subject.identity_state === 'resolved' ? '#166534' : '#854d0e',
+                    event.subject.identity_state === 'resolved' ? 'var(--state-resolved)' : 'var(--state-orphan)',
                   marginBottom: '0.875rem',
                   lineHeight: '1.4',
                 }}
@@ -836,10 +837,10 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 {/* Device Token */}
                 <div
                   style={{
-                    backgroundColor: '#f8fafc',
+                    backgroundColor: 'var(--bg-app)',
                     padding: '0.625rem',
                     borderRadius: 'var(--radius-sm)',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-subtle)',
                   }}
                 >
                   <div
@@ -848,7 +849,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       fontSize: '0.6875rem',
-                      color: '#64748b',
+                      color: 'var(--text-muted)',
                     }}
                   >
                     <span>Hardware Device Token</span>
@@ -860,7 +861,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                         background: 'none',
                         border: 'none',
                         cursor: 'pointer',
-                        color: copiedKey === 'device_id' ? '#059669' : '#94a3b8',
+                        color: copiedKey === 'device_id' ? 'var(--color-primary)' : 'var(--text-subtle)',
                       }}
                     >
                       {copiedKey === 'device_id' ? <Check size={11} /> : <Copy size={11} />}
@@ -871,7 +872,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       fontFamily: 'var(--font-mono)',
                       fontSize: '0.75rem',
                       fontWeight: 600,
-                      color: '#0f172a',
+                      color: 'var(--text-main)',
                       marginTop: '0.2rem',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
@@ -886,10 +887,10 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 {/* Session ID */}
                 <div
                   style={{
-                    backgroundColor: '#f8fafc',
+                    backgroundColor: 'var(--bg-app)',
                     padding: '0.625rem',
                     borderRadius: 'var(--radius-sm)',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-subtle)',
                   }}
                 >
                   <div
@@ -898,7 +899,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       fontSize: '0.6875rem',
-                      color: '#64748b',
+                      color: 'var(--text-muted)',
                     }}
                   >
                     <span>Session Instance</span>
@@ -910,7 +911,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                         background: 'none',
                         border: 'none',
                         cursor: 'pointer',
-                        color: copiedKey === 'session_id' ? '#059669' : '#94a3b8',
+                        color: copiedKey === 'session_id' ? 'var(--color-primary)' : 'var(--text-subtle)',
                       }}
                     >
                       {copiedKey === 'session_id' ? <Check size={11} /> : <Copy size={11} />}
@@ -921,7 +922,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       fontFamily: 'var(--font-mono)',
                       fontSize: '0.75rem',
                       fontWeight: 600,
-                      color: '#0f172a',
+                      color: 'var(--text-main)',
                       marginTop: '0.2rem',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
@@ -936,19 +937,19 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 {/* Customer ID */}
                 <div
                   style={{
-                    backgroundColor: '#f8fafc',
+                    backgroundColor: 'var(--bg-app)',
                     padding: '0.625rem',
                     borderRadius: 'var(--radius-sm)',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-subtle)',
                   }}
                 >
-                  <div style={{ fontSize: '0.6875rem', color: '#64748b' }}>Canonical Customer</div>
+                  <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>Canonical Customer</div>
                   <div
                     style={{
                       fontFamily: 'var(--font-mono)',
                       fontSize: '0.75rem',
                       fontWeight: 600,
-                      color: event.subject.customer_id ? '#0f172a' : '#94a3b8',
+                      color: event.subject.customer_id ? 'var(--text-main)' : 'var(--text-subtle)',
                       marginTop: '0.2rem',
                     }}
                   >
@@ -959,19 +960,19 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 {/* IP Hash */}
                 <div
                   style={{
-                    backgroundColor: '#f8fafc',
+                    backgroundColor: 'var(--bg-app)',
                     padding: '0.625rem',
                     borderRadius: 'var(--radius-sm)',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-subtle)',
                   }}
                 >
-                  <div style={{ fontSize: '0.6875rem', color: '#64748b' }}>Network IP Hash</div>
+                  <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>Network IP Hash</div>
                   <div
                     style={{
                       fontFamily: 'var(--font-mono)',
                       fontSize: '0.75rem',
                       fontWeight: 600,
-                      color: '#0f172a',
+                      color: 'var(--text-main)',
                       marginTop: '0.2rem',
                     }}
                   >
@@ -984,11 +985,11 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
             {/* 3. Journey & Provenance Context */}
             <div
               style={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #e2e8f0',
+                backgroundColor: 'var(--bg-surface)',
+                border: '1px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-md)',
                 padding: '1rem',
-                boxShadow: '0 1px 2px rgba(15, 23, 42, 0.03)',
+                boxShadow: 'none',
               }}
             >
               <div
@@ -999,8 +1000,8 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                   marginBottom: '0.75rem',
                 }}
               >
-                <Radio size={15} color="#059669" />
-                <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a' }}>
+                <Radio size={15} color="var(--color-primary)" />
+                <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)' }}>
                   Journey & Provenance Context
                 </span>
               </div>
@@ -1014,27 +1015,27 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 }}
               >
                 <div>
-                  <span style={{ color: '#64748b' }}>Channel Origin:</span>
+                  <span style={{ color: 'var(--text-muted)' }}>Channel Origin:</span>
                   <div style={{ marginTop: '0.25rem' }}>
                     <Badge channel={event.source.channel} size="sm" />
                   </div>
                 </div>
 
                 <div>
-                  <span style={{ color: '#64748b' }}>Application:</span>
-                  <div style={{ fontWeight: 600, color: '#0f172a', marginTop: '0.25rem' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Application:</span>
+                  <div style={{ fontWeight: 600, color: 'var(--text-main)', marginTop: '0.25rem' }}>
                     {event.source.application}
                   </div>
                 </div>
 
                 {event.journey?.case_id && (
                   <div>
-                    <span style={{ color: '#64748b' }}>Linked Case ID:</span>
+                    <span style={{ color: 'var(--text-muted)' }}>Linked Case ID:</span>
                     <div
                       style={{
                         fontFamily: 'var(--font-mono)',
                         fontWeight: 600,
-                        color: '#1d4ed8',
+                        color: 'var(--color-primary-hover)',
                         marginTop: '0.25rem',
                       }}
                     >
@@ -1045,12 +1046,12 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
 
                 {event.journey?.thread_hint && (
                   <div>
-                    <span style={{ color: '#64748b' }}>Thread Hint:</span>
+                    <span style={{ color: 'var(--text-muted)' }}>Thread Hint:</span>
                     <div
                       style={{
                         fontFamily: 'var(--font-mono)',
                         fontWeight: 500,
-                        color: '#475569',
+                        color: 'var(--text-secondary)',
                         marginTop: '0.25rem',
                       }}
                     >
@@ -1064,11 +1065,11 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
             {/* 4. Business Domain Payload Card */}
             <div
               style={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #e2e8f0',
+                backgroundColor: 'var(--bg-surface)',
+                border: '1px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-md)',
                 padding: '1rem',
-                boxShadow: '0 1px 2px rgba(15, 23, 42, 0.03)',
+                boxShadow: 'none',
               }}
             >
               <div
@@ -1080,15 +1081,15 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <FileText size={15} color="#ea580c" />
-                  <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0f172a' }}>
+                  <FileText size={15} color="var(--channel-call)" />
+                  <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-main)' }}>
                     Domain Payload
                   </span>
                 </div>
                 <span
                   style={{
                     fontSize: '0.6875rem',
-                    color: '#64748b',
+                    color: 'var(--text-muted)',
                     fontFamily: 'var(--font-mono)',
                   }}
                 >
@@ -1105,23 +1106,23 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       padding: '0.75rem',
-                      backgroundColor: '#f8fafc',
+                      backgroundColor: 'var(--bg-app)',
                       borderRadius: 'var(--radius-sm)',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-subtle)',
                     }}
                   >
                     <div>
-                      <div style={{ fontSize: '0.6875rem', color: '#64748b' }}>Disputed Amount</div>
-                      <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a' }}>
+                      <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>Disputed Amount</div>
+                      <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>
                         ${event.payload.amount.toFixed(2)}{' '}
-                        <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500 }}>
                           {event.payload.currency}
                         </span>
                       </div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '0.6875rem', color: '#64748b' }}>Merchant</div>
-                      <div style={{ fontWeight: 600, color: '#0f172a' }}>
+                      <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>Merchant</div>
+                      <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>
                         {event.payload.merchant}
                       </div>
                     </div>
@@ -1138,13 +1139,13 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                     <div
                       style={{
                         padding: '0.5rem',
-                        backgroundColor: '#f8fafc',
+                        backgroundColor: 'var(--bg-app)',
                         borderRadius: '4px',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid var(--border-subtle)',
                       }}
                     >
-                      <span style={{ color: '#64748b', fontSize: '0.6875rem' }}>Reason:</span>
-                      <div style={{ fontWeight: 600, color: '#0f172a', marginTop: '0.1rem' }}>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.6875rem' }}>Reason:</span>
+                      <div style={{ fontWeight: 600, color: 'var(--text-main)', marginTop: '0.1rem' }}>
                         {event.payload.dispute_reason}
                       </div>
                     </div>
@@ -1152,17 +1153,17 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                     <div
                       style={{
                         padding: '0.5rem',
-                        backgroundColor: '#f8fafc',
+                        backgroundColor: 'var(--bg-app)',
                         borderRadius: '4px',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid var(--border-subtle)',
                       }}
                     >
-                      <span style={{ color: '#64748b', fontSize: '0.6875rem' }}>Transaction ID:</span>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.6875rem' }}>Transaction ID:</span>
                       <div
                         style={{
                           fontFamily: 'var(--font-mono)',
                           fontWeight: 600,
-                          color: '#0f172a',
+                          color: 'var(--text-main)',
                           marginTop: '0.1rem',
                         }}
                       >
@@ -1173,22 +1174,22 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                     <div
                       style={{
                         padding: '0.5rem',
-                        backgroundColor: '#f8fafc',
+                        backgroundColor: 'var(--bg-app)',
                         borderRadius: '4px',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid var(--border-subtle)',
                       }}
                     >
-                      <span style={{ color: '#64748b', fontSize: '0.6875rem' }}>Dispute Status:</span>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.6875rem' }}>Dispute Status:</span>
                       <div style={{ marginTop: '0.1rem' }}>
                         <span
                           style={{
                             fontSize: '0.6875rem',
                             fontWeight: 600,
-                            color: '#b45309',
-                            backgroundColor: '#fffbeb',
+                            color: 'var(--state-orphan)',
+                            backgroundColor: 'var(--state-orphan-bg)',
                             padding: '0.1rem 0.4rem',
                             borderRadius: '9999px',
-                            border: '1px solid #fde68a',
+                            border: '1px solid var(--state-orphan-border)',
                           }}
                         >
                           {event.payload.status}
@@ -1201,14 +1202,14 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                     <div
                       style={{
                         padding: '0.625rem',
-                        backgroundColor: '#f8fafc',
+                        backgroundColor: 'var(--bg-app)',
                         borderRadius: 'var(--radius-sm)',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid var(--border-subtle)',
                         fontSize: '0.75rem',
                       }}
                     >
-                      <span style={{ color: '#64748b', fontWeight: 500 }}>Customer Notes:</span>
-                      <p style={{ color: '#334155', marginTop: '0.2rem', fontStyle: 'italic' }}>
+                      <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Customer Notes:</span>
+                      <p style={{ color: 'var(--text-secondary)', marginTop: '0.2rem', fontStyle: 'italic' }}>
                         "{event.payload.customer_notes}"
                       </p>
                     </div>
@@ -1225,12 +1226,12 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       fontSize: '0.75rem',
                     }}
                   >
-                    <span style={{ color: '#64748b' }}>Sender:</span>
+                    <span style={{ color: 'var(--text-muted)' }}>Sender:</span>
                     <span
                       style={{
                         fontWeight: 600,
                         textTransform: 'capitalize',
-                        color: event.payload.sender_type === 'customer' ? '#2563eb' : '#059669',
+                        color: event.payload.sender_type === 'customer' ? 'var(--color-primary)' : 'var(--color-primary)',
                       }}
                     >
                       {event.payload.sender_type}
@@ -1239,11 +1240,11 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                   <div
                     style={{
                       padding: '0.75rem',
-                      backgroundColor: '#f8fafc',
+                      backgroundColor: 'var(--bg-app)',
                       borderRadius: 'var(--radius-sm)',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-subtle)',
                       fontSize: '0.8125rem',
-                      color: '#0f172a',
+                      color: 'var(--text-main)',
                     }}
                   >
                     {event.payload.content}
@@ -1262,30 +1263,30 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                   <div
                     style={{
                       padding: '0.625rem',
-                      backgroundColor: '#f8fafc',
+                      backgroundColor: 'var(--bg-app)',
                       borderRadius: 'var(--radius-sm)',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-subtle)',
                     }}
                   >
-                    <span style={{ color: '#64748b' }}>Auth Mechanism:</span>
-                    <div style={{ fontWeight: 600, color: '#0f172a', marginTop: '0.1rem' }}>
+                    <span style={{ color: 'var(--text-muted)' }}>Auth Mechanism:</span>
+                    <div style={{ fontWeight: 600, color: 'var(--text-main)', marginTop: '0.1rem' }}>
                       {event.payload.auth_method}
                     </div>
                   </div>
                   <div
                     style={{
                       padding: '0.625rem',
-                      backgroundColor: '#f8fafc',
+                      backgroundColor: 'var(--bg-app)',
                       borderRadius: 'var(--radius-sm)',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-subtle)',
                     }}
                   >
-                    <span style={{ color: '#64748b' }}>Customer ID:</span>
+                    <span style={{ color: 'var(--text-muted)' }}>Customer ID:</span>
                     <div
                       style={{
                         fontFamily: 'var(--font-mono)',
                         fontWeight: 600,
-                        color: '#0f172a',
+                        color: 'var(--text-main)',
                         marginTop: '0.1rem',
                       }}
                     >
@@ -1307,15 +1308,15 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       key={key}
                       style={{
                         padding: '0.5rem 0.625rem',
-                        backgroundColor: '#f8fafc',
+                        backgroundColor: 'var(--bg-app)',
                         borderRadius: 'var(--radius-sm)',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid var(--border-subtle)',
                         fontSize: '0.75rem',
                       }}
                     >
                       <div
                         style={{
-                          color: '#64748b',
+                          color: 'var(--text-muted)',
                           fontFamily: 'var(--font-mono)',
                           fontSize: '0.6875rem',
                         }}
@@ -1325,7 +1326,7 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
                       <div
                         style={{
                           fontWeight: 600,
-                          color: '#0f172a',
+                          color: 'var(--text-main)',
                           marginTop: '0.15rem',
                           wordBreak: 'break-word',
                         }}
@@ -1347,17 +1348,17 @@ export const EnvelopeInspector: React.FC<EnvelopeInspectorProps> = ({
       <div
         style={{
           padding: '0.75rem 1.25rem',
-          borderTop: '1px solid #e2e8f0',
-          backgroundColor: '#fafcfd',
+          borderTop: '1px solid var(--border-subtle)',
+          backgroundColor: 'var(--bg-surface-subtle)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           fontSize: '0.6875rem',
-          color: '#64748b',
+          color: 'var(--text-muted)',
         }}
       >
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
-          <Cpu size={12} color="#64748b" />
+          <Cpu size={12} color="var(--text-muted)" />
           <span>Wager Bitemporal Engine v1.0.4</span>
         </span>
         <span style={{ fontFamily: 'var(--font-mono)' }}>

@@ -29,7 +29,7 @@ export const Input: React.FC<InputProps> = ({
           style={{
             fontSize: '0.8125rem',
             fontWeight: 500,
-            color: '#334155',
+            color: 'var(--text-secondary)',
           }}
         >
           {label}
@@ -52,7 +52,7 @@ export const Input: React.FC<InputProps> = ({
               display: 'flex',
               alignItems: 'center',
               pointerEvents: 'none',
-              color: '#94a3b8',
+              color: 'var(--text-subtle)',
             }}
           >
             {leftIcon}
@@ -71,17 +71,17 @@ export const Input: React.FC<InputProps> = ({
           }
           style={{
             width: '100%',
-            backgroundColor: '#ffffff',
-            border: error ? '1px solid #ef4444' : '1px solid #cbd5e1',
+            backgroundColor: 'var(--bg-surface)',
+            border: error ? '1px solid var(--color-danger)' : '1px solid var(--border-control)',
             borderRadius: 'var(--radius-md)',
-            color: '#0f172a',
+            color: 'var(--text-main)',
             fontFamily: 'var(--font-sans)',
             fontSize: '0.875rem',
             padding: '0.5625rem 0.875rem',
             paddingLeft: leftIcon ? '2.375rem' : '0.875rem',
             paddingRight: rightIcon ? '2.375rem' : '0.875rem',
             outline: 'none',
-            boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+            boxShadow: 'none',
             transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
             ...style,
           }}
@@ -97,7 +97,7 @@ export const Input: React.FC<InputProps> = ({
               display: 'flex',
               alignItems: 'center',
               pointerEvents: 'none',
-              color: '#94a3b8',
+              color: 'var(--text-subtle)',
             }}
           >
             {rightIcon}
@@ -106,11 +106,11 @@ export const Input: React.FC<InputProps> = ({
       </div>
 
       {error ? (
-        <p id={inputId ? `${inputId}-error` : undefined} style={{ fontSize: '0.75rem', color: '#ef4444', marginTop: '0.125rem' }}>
+        <p id={inputId ? `${inputId}-error` : undefined} style={{ fontSize: '0.75rem', color: 'var(--color-danger)', marginTop: '0.125rem' }}>
           {error}
         </p>
       ) : helperText ? (
-        <p id={inputId ? `${inputId}-helper` : undefined} style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.125rem' }}>
+        <p id={inputId ? `${inputId}-helper` : undefined} style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.125rem' }}>
           {helperText}
         </p>
       ) : null}

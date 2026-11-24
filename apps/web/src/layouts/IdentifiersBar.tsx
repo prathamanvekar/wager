@@ -28,19 +28,19 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
       {bindingNotice && (
         <div
           style={{
-            backgroundColor: '#ecfdf5',
-            borderBottom: '1px solid #a7f3d0',
+            backgroundColor: 'var(--color-primary-light)',
+            borderBottom: '1px solid var(--color-primary-border)',
             padding: '0.625rem 1.5rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: '1rem',
-            color: '#065f46',
+            color: 'var(--color-primary-hover)',
             fontSize: '0.8125rem',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <CheckCircle2 size={16} color="#059669" />
+            <CheckCircle2 size={16} color="var(--color-primary)" />
             <span>
               <strong>Late Identity Binding Successful:</strong> {bindingNotice}
             </span>
@@ -50,7 +50,7 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#047857',
+              color: 'var(--color-primary-hover)',
               cursor: 'pointer',
               fontWeight: 600,
               fontSize: '0.75rem',
@@ -69,7 +69,7 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
             position: 'fixed',
             inset: 0,
             zIndex: 60,
-            backgroundColor: 'rgba(15, 23, 42, 0.35)',
+            backgroundColor: 'var(--overlay)',
             backdropFilter: 'blur(2px)',
             display: 'flex',
             justifyContent: 'flex-end',
@@ -84,9 +84,9 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
               width: '100%',
               maxWidth: '440px',
               height: '100%',
-              backgroundColor: '#ffffff',
+              backgroundColor: 'var(--bg-surface)',
               boxShadow: '-4px 0 24px -2px rgba(15, 23, 42, 0.12)',
-              borderLeft: '1px solid #e2e8f0',
+              borderLeft: '1px solid var(--border-subtle)',
               display: 'flex',
               flexDirection: 'column',
               animation: 'slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -97,7 +97,7 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
             <div
               style={{
                 padding: '1.25rem 1.5rem',
-                borderBottom: '1px solid #e2e8f0',
+                borderBottom: '1px solid var(--border-subtle)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -105,12 +105,12 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
             >
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <ShieldCheck size={18} color="#2563eb" />
-                  <h3 id="session-inspector-title" style={{ fontSize: '1rem', fontWeight: 600, color: '#0f172a' }}>
+                  <ShieldCheck size={18} color="var(--color-primary)" />
+                  <h3 id="session-inspector-title" style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)' }}>
                     Session Signals & Inspector
                   </h3>
                 </div>
-                <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.2rem' }}>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
                   Low-level device, network, and attribution tokens
                 </p>
               </div>
@@ -120,7 +120,7 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#94a3b8',
+                  color: 'var(--text-subtle)',
                   cursor: 'pointer',
                   padding: '0.25rem',
                   display: 'flex',
@@ -139,17 +139,17 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
                 style={{
                   padding: '1rem',
                   borderRadius: 'var(--radius-md)',
-                  backgroundColor: isLoggedIn ? '#ecfdf5' : '#fffbeb',
-                  border: `1px solid ${isLoggedIn ? '#a7f3d0' : '#fde68a'}`,
+                  backgroundColor: isLoggedIn ? 'var(--color-primary-light)' : 'var(--state-orphan-bg)',
+                  border: `1px solid ${isLoggedIn ? 'var(--color-primary-border)' : 'var(--state-orphan-border)'}`,
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: isLoggedIn ? '#065f46' : '#92400e' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: isLoggedIn ? 'var(--color-primary-hover)' : 'var(--state-orphan)' }}>
                     ATTRIBUTION STATE
                   </span>
                   <Badge identityState={session.identityState} size="sm" />
                 </div>
-                <p style={{ fontSize: '0.8125rem', color: isLoggedIn ? '#047857' : '#78350f', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.8125rem', color: isLoggedIn ? 'var(--color-primary-hover)' : 'var(--state-orphan)', lineHeight: 1.5 }}>
                   {isLoggedIn ? (
                     <>
                       Authenticated as <strong>{session.customer?.fullName}</strong> ({session.customer?.id}). Actions opened in this session resolve deterministically.
@@ -164,7 +164,7 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
 
               {/* Signals Breakdown */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#475569', letterSpacing: '0.04em' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', letterSpacing: '0.04em' }}>
                   ACTIVE HARDWARE & SESSION SIGNALS
                 </span>
 
@@ -173,18 +173,18 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
                   style={{
                     padding: '0.75rem 1rem',
                     borderRadius: 'var(--radius-md)',
-                    border: '1px solid #e2e8f0',
-                    backgroundColor: '#f8fafc',
+                    border: '1px solid var(--border-subtle)',
+                    backgroundColor: 'var(--bg-app)',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', color: '#64748b', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
                     <Smartphone size={13} />
                     <span>Browser Device Fingerprint (Weak Token)</span>
                   </div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', color: '#0f172a', fontWeight: 600 }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', color: 'var(--text-main)', fontWeight: 600 }}>
                     {session.deviceId}
                   </div>
-                  <div style={{ fontSize: '0.6875rem', color: '#94a3b8', marginTop: '0.2rem' }}>
+                  <div style={{ fontSize: '0.6875rem', color: 'var(--text-subtle)', marginTop: '0.2rem' }}>
                     Claimed and retroactively stitched upon customer login
                   </div>
                 </div>
@@ -194,15 +194,15 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
                   style={{
                     padding: '0.75rem 1rem',
                     borderRadius: 'var(--radius-md)',
-                    border: '1px solid #e2e8f0',
-                    backgroundColor: '#f8fafc',
+                    border: '1px solid var(--border-subtle)',
+                    backgroundColor: 'var(--bg-app)',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', color: '#64748b', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
                     <Hash size={13} />
                     <span>Ephemeral Web Session ID</span>
                   </div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', color: '#0f172a', fontWeight: 600 }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', color: 'var(--text-main)', fontWeight: 600 }}>
                     {session.sessionId}
                   </div>
                 </div>
@@ -212,15 +212,15 @@ export const IdentifiersBar: React.FC<IdentifiersBarProps> = ({
                   style={{
                     padding: '0.75rem 1rem',
                     borderRadius: 'var(--radius-md)',
-                    border: '1px solid #e2e8f0',
-                    backgroundColor: '#f8fafc',
+                    border: '1px solid var(--border-subtle)',
+                    backgroundColor: 'var(--bg-app)',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', color: '#64748b', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
                     <Network size={13} />
                     <span>Salted Network Subnet Hash</span>
                   </div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', color: '#0f172a', fontWeight: 600 }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', color: 'var(--text-main)', fontWeight: 600 }}>
                     {session.ipHash}
                   </div>
                 </div>

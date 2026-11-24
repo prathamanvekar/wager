@@ -24,48 +24,48 @@ export const Button: React.FC<ButtonProps> = ({
     switch (variant) {
       case 'primary':
         return {
-          backgroundColor: '#059669', // Crisp Workflex emerald
-          color: '#ffffff',
-          border: '1px solid #047857',
-          boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+          backgroundColor: 'var(--color-primary)', // Crisp Workflex emerald
+          color: 'var(--on-primary)',
+          border: '1px solid var(--color-primary-hover)',
+          boxShadow: 'none',
         };
       case 'blue':
         return {
-          backgroundColor: '#2563eb', // Enterprise slate/blue
-          color: '#ffffff',
-          border: '1px solid #1d4ed8',
-          boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+          backgroundColor: 'var(--color-primary)', // Enterprise slate/blue
+          color: 'var(--on-primary)',
+          border: '1px solid var(--color-primary-hover)',
+          boxShadow: 'none',
         };
       case 'secondary':
         return {
-          backgroundColor: '#f8fafc',
-          color: '#334155',
-          border: '1px solid #e2e8f0',
+          backgroundColor: 'var(--bg-app)',
+          color: 'var(--text-secondary)',
+          border: '1px solid var(--border-subtle)',
         };
       case 'outline':
         return {
-          backgroundColor: '#ffffff',
-          color: '#334155',
-          border: '1px solid #cbd5e1',
-          boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+          backgroundColor: 'var(--bg-surface)',
+          color: 'var(--text-secondary)',
+          border: '1px solid var(--border-medium)',
+          boxShadow: 'none',
         };
       case 'ghost':
         return {
           backgroundColor: 'transparent',
-          color: '#475569',
+          color: 'var(--text-secondary)',
           border: '1px solid transparent',
         };
       case 'danger':
         return {
-          backgroundColor: '#fef2f2',
-          color: '#dc2626',
-          border: '1px solid #fecaca',
+          backgroundColor: 'var(--danger-bg)',
+          color: 'var(--color-danger)',
+          border: '1px solid var(--danger-border)',
         };
       case 'amber':
         return {
-          backgroundColor: '#fffbeb',
-          color: '#b45309',
-          border: '1px solid #fde68a',
+          backgroundColor: 'var(--state-orphan-bg)',
+          color: 'var(--state-orphan)',
+          border: '1px solid var(--state-orphan-border)',
         };
       default:
         return {};
@@ -97,7 +97,7 @@ export const Button: React.FC<ButtonProps> = ({
         borderRadius: 'var(--radius-md)',
         cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
         opacity: disabled || isLoading ? 0.6 : 1,
-        transition: 'all 0.15s ease-in-out',
+        transition: 'background-color 150ms ease, border-color 150ms ease, color 150ms ease',
         outline: 'none',
         lineHeight: 1.25,
         whiteSpace: 'nowrap',
@@ -105,7 +105,7 @@ export const Button: React.FC<ButtonProps> = ({
         ...getVariantStyles(),
         ...style,
       }}
-      className={`transition-smooth ${className}`}
+      className={`ui-button ui-button--${variant} ui-button--${size} ${className}`}
       {...props}
     >
       {isLoading ? (
@@ -114,7 +114,7 @@ export const Button: React.FC<ButtonProps> = ({
             width: '14px',
             height: '14px',
             border: '2px solid rgba(255,255,255,0.3)',
-            borderTopColor: variant === 'outline' || variant === 'ghost' ? '#334155' : '#ffffff',
+            borderTopColor: variant === 'outline' || variant === 'ghost' ? 'var(--text-secondary)' : 'var(--bg-surface)',
             borderRadius: '50%',
             animation: 'spin 0.6s linear infinite',
           }}

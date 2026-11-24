@@ -5,6 +5,7 @@ import { Button } from '../design-system/Button';
 import { Badge } from '../design-system/Badge';
 import { useSession } from '../context/SessionContext';
 import { useEvents } from '../context/EventContext';
+import { useToast } from '../context/ToastContext';
 import type { DisputeCase, CaseMessage, CaseTimelineEvent } from '../types/cases';
 
 interface CaseDetailModalProps {
@@ -22,27 +23,25 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
 }) => {
   const { session, isLoggedIn, openAuthModal } = useSession();
   const { emitEvent } = useEvents();
+  const { showToast } = useToast();
 
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
 
   if (!caseItem) return null;
 
-  // Check if case was opened anonymously but current session is authenticated
-  const isNowBound =
-    caseItem.anonymousOrigin &&
-    isLoggedIn &&
-    (!caseItem.associatedCustomerId || caseItem.associatedCustomerId === session.customer?.id);
+  // Current attribution belongs to the server, independently of whether
+  // this particular browser is signed in or was claimed from mobile.
+  const isNowBound = caseItem.anonymousOrigin && !!caseItem.associatedCustomerId;
+  const effectiveCustomerId = caseItem.associatedCustomerId;
 
-  const effectiveCustomerId = isLoggedIn ? session.customer?.id : caseItem.associatedCustomerId;
-
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
     setIsSending(true);
 
-    setTimeout(() => {
+    try {
       const now = new Date().toISOString();
       const messageId = `msg_${Date.now()}`;
 
@@ -74,7 +73,7 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
       };
 
       // Emit canonical event
-      emitEvent(
+      await emitEvent(
         'support.case.message_sent',
         {
           case_id: caseItem.id,
@@ -91,14 +90,17 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
       onUpdateCase(updated);
       setNewMessage('');
       setIsSending(false);
-    }, 300);
+    } catch (error) {
+      setIsSending(false);
+      showToast({type:'error',title:'Could not send message',message:error instanceof Error ? error.message : 'Please try again.'});
+    }
   };
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Inquiry Details: ${caseItem.id}`}
+      title={`Conversation ${caseItem.id.slice(-8).toUpperCase()}`}
       subtitle={`${caseItem.merchant} · $${caseItem.amount.toFixed(2)} ${caseItem.currency}`}
       maxWidth="700px"
     >
@@ -109,27 +111,27 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
             padding: '1.125rem 1.25rem',
             borderRadius: 'var(--radius-lg)',
             backgroundColor: isNowBound
-              ? '#ecfdf5'
+              ? 'var(--color-primary-light)'
               : caseItem.anonymousOrigin
-              ? '#fffbeb'
-              : '#eff6ff',
+              ? 'var(--state-orphan-bg)'
+              : 'var(--color-primary-light)',
             border: `1px solid ${
               isNowBound
-                ? '#a7f3d0'
+                ? 'var(--color-primary-border)'
                 : caseItem.anonymousOrigin
-                ? '#fde68a'
-                : '#bfdbfe'
+                ? 'var(--state-orphan-border)'
+                : 'var(--color-primary-border)'
             }`,
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               {isNowBound || !caseItem.anonymousOrigin ? (
-                <ShieldCheck size={18} color="#059669" />
+                <ShieldCheck size={18} color="var(--color-primary)" />
               ) : (
-                <AlertTriangle size={18} color="#d97706" />
+                <AlertTriangle size={18} color="var(--state-orphan)" />
               )}
-              <span style={{ fontWeight: 600, fontSize: '0.875rem', color: isNowBound || !caseItem.anonymousOrigin ? '#065f46' : '#92400e' }}>
+              <span style={{ fontWeight: 600, fontSize: '0.875rem', color: isNowBound || !caseItem.anonymousOrigin ? 'var(--color-primary-hover)' : 'var(--state-orphan)' }}>
                 {isNowBound
                   ? 'Retroactively Bound via Late Identity Engine'
                   : caseItem.anonymousOrigin
@@ -142,46 +144,46 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
               <Badge variant={caseItem.anonymousOrigin ? 'orphan' : 'resolved'} size="sm">
                 Origin: {caseItem.anonymousOrigin ? 'Anonymous' : 'Authenticated'}
               </Badge>
-              <Badge identityState={isLoggedIn ? 'resolved' : 'orphan'} size="sm">
-                Current: {isLoggedIn ? 'Resolved' : 'Orphan'}
+              <Badge identityState={effectiveCustomerId ? 'resolved' : 'orphan'} size="sm">
+                Current: {effectiveCustomerId ? 'Resolved' : 'Orphan'}
               </Badge>
             </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem', fontSize: '0.75rem' }}>
             <div>
-              <span style={{ color: '#64748b' }}>Customer ID:</span>
-              <div style={{ color: '#0f172a', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Customer ID:</span>
+              <div style={{ color: 'var(--text-main)', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
                 {effectiveCustomerId || 'Unattributed (Orphan)'}
               </div>
             </div>
 
             <div>
-              <span style={{ color: '#64748b' }}>Originating Device:</span>
-              <div style={{ color: '#0f172a', fontFamily: 'var(--font-mono)' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Originating Device:</span>
+              <div style={{ color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>
                 {caseItem.originatingDeviceId}
               </div>
             </div>
 
             <div>
-              <span style={{ color: '#64748b' }}>Thread Classification:</span>
-              <div style={{ color: '#0f172a', fontWeight: 600 }}>
+              <span style={{ color: 'var(--text-muted)' }}>Thread Classification:</span>
+              <div style={{ color: 'var(--text-main)', fontWeight: 600 }}>
                 {caseItem.threadHint}
               </div>
             </div>
 
             <div>
-              <span style={{ color: '#64748b' }}>Transaction Reference:</span>
-              <div style={{ color: '#0f172a', fontFamily: 'var(--font-mono)' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Transaction Reference:</span>
+              <div style={{ color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>
                 {caseItem.transactionId}
               </div>
             </div>
           </div>
 
           {/* Quick Login trigger if logged out */}
-          {!isLoggedIn && caseItem.anonymousOrigin && (
-            <div style={{ marginTop: '0.875rem', paddingTop: '0.75rem', borderTop: '1px solid #fde68a', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.75rem', color: '#78350f' }}>
+          {!isLoggedIn && caseItem.anonymousOrigin && !isNowBound && (
+            <div style={{ marginTop: '0.875rem', paddingTop: '0.75rem', borderTop: '1px solid var(--state-orphan-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--state-orphan)' }}>
                 Want to claim this dispute into your permanent customer record?
               </span>
               <Button size="sm" variant="primary" rightIcon={<ArrowRight size={13} />} onClick={openAuthModal}>
@@ -193,8 +195,8 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
 
         {/* Multi-Channel Case Timeline */}
         <div>
-          <h4 style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.625rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Clock size={15} color="#2563eb" />
+          <h4 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.625rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Clock size={15} color="var(--color-primary)" />
             <span>Case Progression & Event Timeline</span>
           </h4>
 
@@ -208,8 +210,8 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
                   gap: '0.75rem',
                   padding: '0.75rem 1rem',
                   borderRadius: 'var(--radius-md)',
-                  backgroundColor: '#f8fafc',
-                  border: '1px solid #e2e8f0',
+                  backgroundColor: 'var(--bg-app)',
+                  border: '1px solid var(--border-subtle)',
                   fontSize: '0.8125rem',
                 }}
               >
@@ -219,21 +221,21 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
 
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-                    <span style={{ fontWeight: 600, color: '#0f172a' }}>
+                    <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>
                       {evt.title}
                     </span>
-                    <span style={{ fontSize: '0.6875rem', color: '#94a3b8' }}>
+                    <span style={{ fontSize: '0.6875rem', color: 'var(--text-subtle)' }}>
                       {new Date(evt.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
 
-                  <p style={{ color: '#475569', marginTop: '0.2rem', lineHeight: 1.4 }}>
+                  <p style={{ color: 'var(--text-secondary)', marginTop: '0.2rem', lineHeight: 1.4 }}>
                     {evt.description}
                   </p>
 
                   <div style={{ marginTop: '0.25rem', display: 'flex', gap: '0.5rem', fontSize: '0.6875rem' }}>
-                    <span style={{ color: '#64748b' }}>
-                      Identity at emission: <strong style={{ color: evt.identityStateAtEmission === 'orphan' ? '#b45309' : '#047857' }}>{evt.identityStateAtEmission}</strong>
+                    <span style={{ color: 'var(--text-muted)' }}>
+                      Identity at emission: <strong style={{ color: evt.identityStateAtEmission === 'orphan' ? 'var(--state-orphan)' : 'var(--color-primary-hover)' }}>{evt.identityStateAtEmission}</strong>
                     </span>
                   </div>
                 </div>
@@ -244,8 +246,8 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
 
         {/* Customer Discussion & Follow-Up Messages */}
         <div>
-          <h4 style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.625rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <MessageSquare size={15} color="#2563eb" />
+          <h4 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.625rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <MessageSquare size={15} color="var(--color-primary)" />
             <span>Customer Messages & Communications</span>
           </h4>
 
@@ -266,21 +268,21 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
                 style={{
                   padding: '0.75rem 1rem',
                   borderRadius: 'var(--radius-md)',
-                  backgroundColor: msg.sender === 'customer' ? '#eff6ff' : '#f8fafc',
-                  border: msg.sender === 'customer' ? '1px solid #bfdbfe' : '1px solid #e2e8f0',
+                  backgroundColor: msg.sender === 'customer' ? 'var(--color-primary-light)' : 'var(--bg-app)',
+                  border: msg.sender === 'customer' ? '1px solid var(--color-primary-border)' : '1px solid var(--border-subtle)',
                   alignSelf: msg.sender === 'customer' ? 'flex-end' : 'flex-start',
                   maxWidth: '85%',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.2rem' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#1d4ed8' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-primary-hover)' }}>
                     {msg.senderName}
                   </span>
-                  <span style={{ fontSize: '0.6875rem', color: '#94a3b8' }}>
+                  <span style={{ fontSize: '0.6875rem', color: 'var(--text-subtle)' }}>
                     {new Date(msg.timestamp).toLocaleTimeString()}
                   </span>
                 </div>
-                <p style={{ fontSize: '0.8125rem', color: '#0f172a', lineHeight: 1.4 }}>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--text-main)', lineHeight: 1.4 }}>
                   {msg.content}
                 </p>
                 {msg.attachments && msg.attachments.length > 0 && (
@@ -290,9 +292,9 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
                         key={i}
                         style={{
                           fontSize: '0.6875rem',
-                          backgroundColor: '#ffffff',
-                          border: '1px solid #e2e8f0',
-                          color: '#475569',
+                          backgroundColor: 'var(--bg-surface)',
+                          border: '1px solid var(--border-subtle)',
+                          color: 'var(--text-secondary)',
                           padding: '0.125rem 0.375rem',
                           borderRadius: '4px',
                           display: 'flex',
@@ -319,14 +321,14 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
               placeholder="Send a follow-up message to the support specialist..."
               style={{
                 flex: 1,
-                backgroundColor: '#ffffff',
-                border: '1px solid #cbd5e1',
+                backgroundColor: 'var(--bg-surface)',
+                border: '1px solid var(--border-medium)',
                 borderRadius: 'var(--radius-md)',
-                color: '#0f172a',
+                color: 'var(--text-main)',
                 fontSize: '0.875rem',
                 padding: '0.5625rem 0.875rem',
                 outline: 'none',
-                boxShadow: '0 1px 2px 0 rgba(0,0,0,0.03)',
+                boxShadow: 'none',
               }}
             />
             <Button

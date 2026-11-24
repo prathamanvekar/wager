@@ -14,13 +14,15 @@ import { DisputeWizard } from './components/DisputeWizard';
 import { CaseDetailModal } from './components/CaseDetailModal';
 import { SupportInquiryModal } from './components/SupportInquiryModal';
 import { NewTransactionModal } from './components/NewTransactionModal';
+import { apiClient } from './services/api';
 import type { DisputeCase, TransactionItem } from './types/cases';
 
 const MainApp: React.FC = () => {
   const [currentView, setCurrentView] = useState<'landing' | 'portal'>('landing');
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
-  const [cases, setCases] = useState<DisputeCase[]>([]);
-  const [transactions, setTransactions] = useState<TransactionItem[]>(INITIAL_TRANSACTIONS);
+  const { cases: sharedCases, transactions: sharedTransactions, refresh } = useEvents();
+  const cases = sharedCases;
+  const [detailScope, setDetailScope] = useState('');
 
   // Modal control states
   const [selectedDisputeTxn, setSelectedDisputeTxn] = useState<TransactionItem | null>(null);
@@ -33,15 +35,15 @@ const MainApp: React.FC = () => {
   const [supportInquiryType, setSupportInquiryType] = useState<'credit_limit' | 'general' | 'card_replacement' | null>(null);
   const [isSupportInquiryOpen, setIsSupportInquiryOpen] = useState(false);
 
-  const { session, isLoggedIn } = useSession();
-  const { emitEvent } = useEvents();
+  const { isReady, session } = useSession();
+  const { emitEvent, events } = useEvents();
   const { showToast } = useToast();
 
   // Guard against React Strict Mode duplicate emission of web.session.started
-  const hasEmittedSessionStart = useRef(false);
+  const hasEmittedSessionStart = useRef(new Set<string>());
   useEffect(() => {
-    if (hasEmittedSessionStart.current) return;
-    hasEmittedSessionStart.current = true;
+    if (!isReady || hasEmittedSessionStart.current.has(session.sessionId)) return;
+    hasEmittedSessionStart.current.add(session.sessionId);
 
     emitEvent(
       'web.session.started',
@@ -54,63 +56,21 @@ const MainApp: React.FC = () => {
         threadHint: 'session_initiation',
       }
     );
-  }, [emitEvent]);
+  }, [emitEvent, isReady, session.sessionId]);
 
-  // When user logs in, retroactively bind any cases that were created anonymously
-  const boundSessionCustomerId = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (!isLoggedIn || !session.customer) {
-      boundSessionCustomerId.current = null;
-      return;
-    }
-
-    if (boundSessionCustomerId.current === session.customer.id) {
-      return;
-    }
-
-    const hasAnonymousCases = cases.some((c) => c.anonymousOrigin && !c.associatedCustomerId);
-    if (hasAnonymousCases) {
-      boundSessionCustomerId.current = session.customer.id;
-      const now = new Date().toISOString();
-      const customerId = session.customer.id;
-      const customerName = session.customer.fullName;
-      const deviceId = session.deviceId;
-
-      setCases((prevCases) =>
-        prevCases.map((c) => {
-          if (c.anonymousOrigin && !c.associatedCustomerId) {
-            return {
-              ...c,
-              associatedCustomerId: customerId,
-              timeline: [
-                ...c.timeline,
-                {
-                  id: `tl_bind_${Date.now()}`,
-                  timestamp: now,
-                  title: `Identity Bound to ${customerId} (${customerName})`,
-                  description: `Device token ${deviceId} claimed after successful authentication. Retraction pair emitted: (-) orphan, (+) ${customerId}.`,
-                  channel: 'web' as const,
-                  identityStateAtEmission: 'resolved' as const,
-                  eventType: 'identity.bound',
-                  actor: 'system' as const,
-                },
-              ],
-            };
-          }
-          return c;
-        })
-      );
-
-      // Fire toast once outside the state updater function to prevent double invocation in React StrictMode
-      showToast({
-        type: 'binding',
-        title: 'Late Identity Binding Executed!',
-        message: `Anonymous disputes from device ${deviceId} have been claimed and bound to customer ${customerId}.`,
-        duration: 6000,
-      });
-    }
-  }, [isLoggedIn, session.customer, session.deviceId, cases, showToast]);
+  const scope = `${session.sessionId}:${session.customer?.id || 'anonymous'}`;
+  const pendingTransactions = events
+    .filter(e => e.status === 'queued_offline' && e.envelope.event_type === 'payment.authorized' && e.envelope.identifiers.session_id === session.sessionId)
+    .map(e => {
+      const p = e.envelope.payload;
+      return {id: String(p.transaction_id), date: String(p.date), merchant: String(p.merchant), category: String(p.category), amount: Number(p.amount), currency: String(p.currency), location: String(p.location), canDispute: p.status !== 'cleared', status: p.status, channel: p.channel, cycle: p.cycle} as TransactionItem;
+    });
+  const baseTransactions = sharedTransactions.length ? sharedTransactions : INITIAL_TRANSACTIONS;
+  const transactions = [...pendingTransactions, ...baseTransactions.filter(t => !pendingTransactions.some(p => p.id === t.id))].map(t => {
+    const c = cases.find(item => item.transactionId === t.id);
+    return c ? {...t, status: 'under_review' as const, canDispute: false, disputeId: c.id} : t;
+  });
+  const detailCase = detailScope === scope ? cases.find(c => c.id === activeDetailCase?.id) || activeDetailCase : null;
 
   // Open Dispute Wizard
   const handleOpenDispute = (transaction: TransactionItem) => {
@@ -120,41 +80,18 @@ const MainApp: React.FC = () => {
 
   // Case Created from Dispute Wizard
   const handleCaseCreated = (newCase: DisputeCase) => {
-    // 1. Update disputed transaction's status so it shows "Dispute Pending" instead of "Unrecognized"
-    setTransactions((prev) =>
-      prev.map((t) =>
-        t.id === newCase.transactionId
-          ? { ...t, status: 'under_review' as const, canDispute: false, disputeId: newCase.id }
-          : t
-      )
-    );
-
-    // 2. Add case to cases list
-    setCases((prev) => [newCase, ...prev.filter((c) => c.id !== newCase.id)]);
+    void refresh();
     setActiveDetailCase(newCase);
+    setDetailScope(scope);
     setIsCaseDetailOpen(true);
     setActiveTab('cases');
 
-    if (newCase.anonymousOrigin) {
-      showToast({
-        type: 'warning',
-        title: 'Orphan Dispute Emitted (Flagship F1)',
-        message: `Dispute ${newCase.id} filed anonymously with device ${session.deviceId}. Retained in buffer until authentication.`,
-      });
-    } else {
-      showToast({
-        type: 'success',
-        title: 'Dispute Case Registered',
-        message: `Dispute ${newCase.id} attributed directly to customer ${session.customer?.id}.`,
-      });
-    }
+    showToast({type: 'success', title: 'Inquiry saved', message: apiClient.getOfflineQueue().length ? 'Saved on this device. It will sync when you reconnect.' : 'Your conversation is available across connected channels.'});
   };
 
   // Record a New Transaction Manually
-  const handleAddTransaction = (newTxn: TransactionItem) => {
-    setTransactions((prev) => [newTxn, ...prev]);
-
-    emitEvent(
+  const handleAddTransaction = async (newTxn: TransactionItem) => {
+    await emitEvent(
       'payment.authorized',
       {
         transaction_id: newTxn.id,
@@ -165,6 +102,8 @@ const MainApp: React.FC = () => {
         channel: newTxn.channel || 'web',
         location: newTxn.location,
         status: newTxn.status,
+        date: newTxn.date,
+        cycle: newTxn.cycle,
       },
       {
         threadHint: 'transaction_stream',
@@ -181,13 +120,15 @@ const MainApp: React.FC = () => {
   // Open Case Details
   const handleSelectCase = (caseItem: DisputeCase) => {
     setActiveDetailCase(caseItem);
+    setDetailScope(scope);
     setIsCaseDetailOpen(true);
   };
 
   // Update Case from CaseDetailModal (e.g. after customer message)
   const handleUpdateCase = (updated: DisputeCase) => {
-    setCases((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
+    void refresh();
     setActiveDetailCase(updated);
+    setDetailScope(scope);
 
     showToast({
       type: 'info',
@@ -252,9 +193,9 @@ const MainApp: React.FC = () => {
 
       {/* 2. Comprehensive Case Detail & Multi-Channel Timeline Modal */}
       <CaseDetailModal
-        isOpen={isCaseDetailOpen}
+        isOpen={isCaseDetailOpen && detailScope === scope}
         onClose={() => setIsCaseDetailOpen(false)}
-        caseItem={activeDetailCase}
+        caseItem={detailCase}
         onUpdateCase={handleUpdateCase}
       />
 

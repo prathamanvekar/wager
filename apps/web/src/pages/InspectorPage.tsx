@@ -197,7 +197,7 @@ export const InspectorPage: React.FC = () => {
       }
 
       // Identity state filter
-      if (identityFilter !== 'all' && env.subject.identity_state !== identityFilter) {
+      if (identityFilter !== 'all' && (evt.currentIdentityState || env.subject.identity_state) !== identityFilter) {
         return false;
       }
 
@@ -221,7 +221,7 @@ export const InspectorPage: React.FC = () => {
   }, [events, channelFilter, identityFilter, searchQuery]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+    <div className="portal-page inspector-page" style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       {/* 1. Page Header & Actions */}
       <div
         style={{
@@ -234,7 +234,7 @@ export const InspectorPage: React.FC = () => {
       >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
-            <h1 style={{ fontSize: '1.625rem', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>
+            <h1 style={{ fontSize: '1.625rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
               CJEP Event Stream & Inspector
             </h1>
             <span
@@ -244,7 +244,7 @@ export const InspectorPage: React.FC = () => {
                 gap: '0.375rem',
                 fontSize: '0.75rem',
                 fontWeight: 500,
-                color: '#475569',
+                color: 'var(--text-secondary)',
               }}
             >
               <span
@@ -252,14 +252,14 @@ export const InspectorPage: React.FC = () => {
                   width: '6px',
                   height: '6px',
                   borderRadius: '9999px',
-                  backgroundColor: isBackendConnected ? '#10b981' : '#f59e0b',
+                  backgroundColor: isBackendConnected ? 'var(--state-resolved-dot)' : 'var(--state-orphan-dot)',
                   flexShrink: 0,
                 }}
               />
               <span>{isBackendConnected ? 'API Live (8000)' : 'Local Buffer Mode'}</span>
             </span>
           </div>
-          <p style={{ fontSize: '0.875rem', color: '#64748b' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
             Deep inspection of canonical Customer Journey Event Protocol (CJEP v1) envelopes with bitemporal dual-clock telemetry.
           </p>
         </div>
@@ -285,8 +285,8 @@ export const InspectorPage: React.FC = () => {
                   left: 0,
                   top: 'calc(100% + 0.5rem)',
                   width: '260px',
-                  backgroundColor: '#ffffff',
-                  border: '1px solid #e2e8f0',
+                  backgroundColor: 'var(--bg-surface)',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: 'var(--radius-md)',
                   boxShadow: '0 10px 15px -3px rgba(15, 23, 42, 0.1), 0 4px 6px -4px rgba(15, 23, 42, 0.05)',
                   zIndex: 50,
@@ -297,7 +297,7 @@ export const InspectorPage: React.FC = () => {
                   style={{
                     fontSize: '0.6875rem',
                     fontWeight: 600,
-                    color: '#64748b',
+                    color: 'var(--text-muted)',
                     padding: '0.375rem 0.5rem',
                     textTransform: 'uppercase',
                     letterSpacing: '0.04em',
@@ -317,7 +317,7 @@ export const InspectorPage: React.FC = () => {
                     backgroundColor: 'transparent',
                     cursor: 'pointer',
                     fontSize: '0.8125rem',
-                    color: '#0f172a',
+                    color: 'var(--text-main)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.125rem',
@@ -325,7 +325,7 @@ export const InspectorPage: React.FC = () => {
                   className="hover:bg-slate-50"
                 >
                   <span style={{ fontWeight: 600 }}>Dispute Submission</span>
-                  <span style={{ fontSize: '0.6875rem', color: '#64748b' }}>
+                  <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
                     $189.50 Uber Eats transaction
                   </span>
                 </button>
@@ -342,7 +342,7 @@ export const InspectorPage: React.FC = () => {
                     backgroundColor: 'transparent',
                     cursor: 'pointer',
                     fontSize: '0.8125rem',
-                    color: '#0f172a',
+                    color: 'var(--text-main)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.125rem',
@@ -350,7 +350,7 @@ export const InspectorPage: React.FC = () => {
                   className="hover:bg-slate-50"
                 >
                   <span style={{ fontWeight: 600 }}>Late-Arriving Event (2.5h)</span>
-                  <span style={{ fontSize: '0.6875rem', color: '#64748b' }}>
+                  <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
                     Demonstrates bitemporal clock delta
                   </span>
                 </button>
@@ -367,7 +367,7 @@ export const InspectorPage: React.FC = () => {
                     backgroundColor: 'transparent',
                     cursor: 'pointer',
                     fontSize: '0.8125rem',
-                    color: '#0f172a',
+                    color: 'var(--text-main)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.125rem',
@@ -375,7 +375,7 @@ export const InspectorPage: React.FC = () => {
                   className="hover:bg-slate-50"
                 >
                   <span style={{ fontWeight: 600 }}>Web Interaction</span>
-                  <span style={{ fontSize: '0.6875rem', color: '#64748b' }}>
+                  <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
                     Anonymous portal pageview
                   </span>
                 </button>
@@ -392,7 +392,7 @@ export const InspectorPage: React.FC = () => {
                     backgroundColor: 'transparent',
                     cursor: 'pointer',
                     fontSize: '0.8125rem',
-                    color: '#0f172a',
+                    color: 'var(--text-main)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.125rem',
@@ -400,7 +400,7 @@ export const InspectorPage: React.FC = () => {
                   className="hover:bg-slate-50"
                 >
                   <span style={{ fontWeight: 600 }}>Support Message</span>
-                  <span style={{ fontSize: '0.6875rem', color: '#64748b' }}>
+                  <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
                     Case message payload
                   </span>
                 </button>
@@ -413,18 +413,18 @@ export const InspectorPage: React.FC = () => {
             size="sm"
             style={
               healthStatus === 'healthy'
-                ? { borderColor: '#86efac', backgroundColor: '#f0fdf4', color: '#166534', transition: 'all 0.2s ease' }
+                ? { borderColor: 'var(--state-resolved-border)', backgroundColor: 'var(--state-resolved-bg)', color: 'var(--state-resolved)', transition: 'all 0.2s ease' }
                 : healthStatus === 'offline'
-                ? { borderColor: '#fde68a', backgroundColor: '#fffbeb', color: '#b45309', transition: 'all 0.2s ease' }
+                ? { borderColor: 'var(--state-orphan-border)', backgroundColor: 'var(--state-orphan-bg)', color: 'var(--state-orphan)', transition: 'all 0.2s ease' }
                 : { transition: 'all 0.2s ease' }
             }
             leftIcon={
               healthStatus === 'checking' ? (
                 <RefreshCw size={14} className="animate-spin text-slate-500" />
               ) : healthStatus === 'healthy' ? (
-                <CheckCircle2 size={14} style={{ color: '#16a34a' }} />
+                <CheckCircle2 size={14} style={{ color: 'var(--state-resolved-dot)' }} />
               ) : healthStatus === 'offline' ? (
-                <AlertCircle size={14} style={{ color: '#d97706' }} />
+                <AlertCircle size={14} style={{ color: 'var(--state-orphan)' }} />
               ) : (
                 <RefreshCw size={14} className={isRefreshing ? 'animate-spin' : ''} />
               )
@@ -466,76 +466,76 @@ export const InspectorPage: React.FC = () => {
       </div>
 
       {/* 2. Metrics & Telemetry Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
+      <div className="inspector-summary" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
         <div
           style={{
-            backgroundColor: '#ffffff',
-            border: '1px solid #e2e8f0',
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-lg)',
             padding: '1.25rem',
-            boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.04)',
+            boxShadow: 'none',
           }}
         >
-          <div style={{ fontSize: '0.8125rem', color: '#64748b', fontWeight: 500 }}>Client Events Logged</div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#0f172a', marginTop: '0.25rem' }}>
+          <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 500 }}>Client Events Logged</div>
+          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-main)', marginTop: '0.25rem' }}>
             {events.length}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.5rem' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
             Canonical CJEP envelopes emitted
           </div>
         </div>
 
         <div
           style={{
-            backgroundColor: '#ffffff',
-            border: '1px solid #e2e8f0',
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-lg)',
             padding: '1.25rem',
-            boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.04)',
+            boxShadow: 'none',
           }}
         >
-          <div style={{ fontSize: '0.8125rem', color: '#b45309', fontWeight: 500 }}>Pending Orphan Buffer</div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#b45309', marginTop: '0.25rem' }}>
+          <div style={{ fontSize: '0.8125rem', color: 'var(--state-orphan)', fontWeight: 500 }}>Pending Orphan Buffer</div>
+          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--state-orphan)', marginTop: '0.25rem' }}>
             {backendHealth ? backendHealth.buffered_orphans : orphanCount}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#b45309', marginTop: '0.5rem' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--state-orphan)', marginTop: '0.5rem' }}>
             Awaiting late identity binding
           </div>
         </div>
 
         <div
           style={{
-            backgroundColor: '#ffffff',
-            border: '1px solid #e2e8f0',
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-lg)',
             padding: '1.25rem',
-            boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.04)',
+            boxShadow: 'none',
           }}
         >
-          <div style={{ fontSize: '0.8125rem', color: '#047857', fontWeight: 500 }}>Resolved Attributions</div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#047857', marginTop: '0.25rem' }}>
+          <div style={{ fontSize: '0.8125rem', color: 'var(--color-primary-hover)', fontWeight: 500 }}>Resolved Attributions</div>
+          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--color-primary-hover)', marginTop: '0.25rem' }}>
             {resolvedCount}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#047857', marginTop: '0.5rem' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--color-primary-hover)', marginTop: '0.5rem' }}>
             Canonical customer graph bound
           </div>
         </div>
 
         <div
           style={{
-            backgroundColor: '#ffffff',
-            border: '1px solid #e2e8f0',
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-lg)',
             padding: '1.25rem',
-            boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.04)',
+            boxShadow: 'none',
           }}
         >
-          <div style={{ fontSize: '0.8125rem', color: '#64748b', fontWeight: 500 }}>Active Weak Token</div>
+          <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 500 }}>Active Weak Token</div>
           <div
             style={{
               fontSize: '0.875rem',
               fontWeight: 600,
-              color: '#0f172a',
+              color: 'var(--text-main)',
               fontFamily: 'var(--font-mono)',
               marginTop: '0.625rem',
               whiteSpace: 'nowrap',
@@ -546,7 +546,7 @@ export const InspectorPage: React.FC = () => {
           >
             {session.deviceId}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.5rem' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
             Hardware fingerprint token
           </div>
         </div>
@@ -560,11 +560,11 @@ export const InspectorPage: React.FC = () => {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '0.75rem',
-          backgroundColor: '#ffffff',
-          border: '1px solid #e2e8f0',
+          backgroundColor: 'var(--bg-surface)',
+          border: '1px solid var(--border-subtle)',
           borderRadius: 'var(--radius-lg)',
           padding: '0.75rem 1rem',
-          boxShadow: '0 1px 2px rgba(15, 23, 42, 0.03)',
+          boxShadow: 'none',
         }}
       >
         {/* Search Bar */}
@@ -576,7 +576,7 @@ export const InspectorPage: React.FC = () => {
               left: '0.75rem',
               top: '50%',
               transform: 'translateY(-50%)',
-              color: '#94a3b8',
+              color: 'var(--text-subtle)',
             }}
           />
           <input
@@ -588,11 +588,11 @@ export const InspectorPage: React.FC = () => {
               width: '100%',
               padding: '0.45rem 2rem 0.45rem 2.25rem',
               fontSize: '0.8125rem',
-              border: '1px solid #cbd5e1',
+              border: '1px solid var(--border-medium)',
               borderRadius: 'var(--radius-md)',
               outline: 'none',
-              backgroundColor: '#f8fafc',
-              color: '#0f172a',
+              backgroundColor: 'var(--bg-app)',
+              color: 'var(--text-main)',
             }}
           />
           {searchQuery && (
@@ -607,7 +607,7 @@ export const InspectorPage: React.FC = () => {
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                color: '#94a3b8',
+                color: 'var(--text-subtle)',
                 padding: '2px',
               }}
             >
@@ -620,7 +620,7 @@ export const InspectorPage: React.FC = () => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
           {/* Channel Filters */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-            <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500, marginRight: '0.25rem' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500, marginRight: '0.25rem' }}>
               Channel:
             </span>
             {(['all', 'web', 'mobile', 'call'] as const).map((ch) => (
@@ -635,9 +635,9 @@ export const InspectorPage: React.FC = () => {
                   borderRadius: '9999px',
                   border: '1px solid',
                   cursor: 'pointer',
-                  backgroundColor: channelFilter === ch ? '#0f172a' : '#f8fafc',
-                  borderColor: channelFilter === ch ? '#0f172a' : '#e2e8f0',
-                  color: channelFilter === ch ? '#ffffff' : '#64748b',
+                  backgroundColor: channelFilter === ch ? 'var(--text-main)' : 'var(--bg-app)',
+                  borderColor: channelFilter === ch ? 'var(--text-main)' : 'var(--border-subtle)',
+                  color: channelFilter === ch ? 'var(--bg-surface)' : 'var(--text-muted)',
                   textTransform: 'capitalize',
                   transition: 'all 0.15s ease',
                 }}
@@ -647,11 +647,11 @@ export const InspectorPage: React.FC = () => {
             ))}
           </div>
 
-          <div style={{ width: '1px', height: '18px', backgroundColor: '#e2e8f0', margin: '0 0.25rem' }} />
+          <div style={{ width: '1px', height: '18px', backgroundColor: 'var(--border-subtle)', margin: '0 0.25rem' }} />
 
           {/* Identity State Filters */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-            <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500, marginRight: '0.25rem' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500, marginRight: '0.25rem' }}>
               Identity:
             </span>
             {(['all', 'orphan', 'resolved'] as const).map((st) => (
@@ -666,9 +666,9 @@ export const InspectorPage: React.FC = () => {
                   borderRadius: '9999px',
                   border: '1px solid',
                   cursor: 'pointer',
-                  backgroundColor: identityFilter === st ? '#0f172a' : '#f8fafc',
-                  borderColor: identityFilter === st ? '#0f172a' : '#e2e8f0',
-                  color: identityFilter === st ? '#ffffff' : '#64748b',
+                  backgroundColor: identityFilter === st ? 'var(--text-main)' : 'var(--bg-app)',
+                  borderColor: identityFilter === st ? 'var(--text-main)' : 'var(--border-subtle)',
+                  color: identityFilter === st ? 'var(--bg-surface)' : 'var(--text-muted)',
                   textTransform: 'capitalize',
                   transition: 'all 0.15s ease',
                 }}
@@ -682,8 +682,8 @@ export const InspectorPage: React.FC = () => {
           <span
             style={{
               fontSize: '0.75rem',
-              color: '#64748b',
-              backgroundColor: '#f1f5f9',
+              color: 'var(--text-muted)',
+              backgroundColor: 'var(--bg-surface-hover)',
               padding: '0.25rem 0.5rem',
               borderRadius: 'var(--radius-sm)',
               fontWeight: 500,
@@ -695,7 +695,7 @@ export const InspectorPage: React.FC = () => {
       </div>
 
       {/* 4. Table & Side-by-Side Envelope Inspector Layout */}
-      <div
+      <div className="event-workspace"
         style={{
           display: 'grid',
           gridTemplateColumns: selectedEvent && !isExpanded ? 'minmax(0, 1fr) 500px' : '1fr',
@@ -706,31 +706,31 @@ export const InspectorPage: React.FC = () => {
         {/* Table Container */}
         <div
           style={{
-            backgroundColor: '#ffffff',
-            border: '1px solid #e2e8f0',
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-lg)',
-            boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.04)',
+            boxShadow: 'none',
             overflow: 'hidden',
           }}
         >
           <div
             style={{
               padding: '1rem 1.5rem',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-subtle)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Activity size={16} color="#059669" />
-              <span style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9375rem' }}>
+              <Activity size={16} color="var(--color-primary)" />
+              <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.9375rem' }}>
                 Event Log Feed
               </span>
               <span
                 style={{
-                  backgroundColor: '#f1f5f9',
-                  color: '#475569',
+                  backgroundColor: 'var(--bg-surface-hover)',
+                  color: 'var(--text-secondary)',
                   padding: '0.125rem 0.45rem',
                   borderRadius: '9999px',
                   fontSize: '0.6875rem',
@@ -742,19 +742,19 @@ export const InspectorPage: React.FC = () => {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <span style={{ fontSize: '0.75rem', color: '#64748b', fontFamily: 'var(--font-mono)' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
                 POST /api/v1/events
               </span>
             </div>
           </div>
 
           {events.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', color: '#64748b' }}>
-              <Layers size={36} style={{ margin: '0 auto 0.75rem auto', color: '#cbd5e1' }} />
-              <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.25rem' }}>
+            <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', color: 'var(--text-muted)' }}>
+              <Layers size={36} style={{ margin: '0 auto 0.75rem auto', color: 'var(--border-medium)' }} />
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
                 No events emitted yet
               </h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b', maxWidth: '420px', margin: '0 auto 1.25rem auto' }}>
+              <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', maxWidth: '420px', margin: '0 auto 1.25rem auto' }}>
                 Touchpoints in the portal or simulation emit canonical CJEP envelopes here. Test the inspector now:
               </p>
               <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem' }}>
@@ -767,12 +767,12 @@ export const InspectorPage: React.FC = () => {
               </div>
             </div>
           ) : filteredEvents.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '3rem 1.5rem', color: '#64748b' }}>
-              <Filter size={32} style={{ margin: '0 auto 0.5rem auto', color: '#cbd5e1' }} />
-              <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#0f172a' }}>
+            <div style={{ textAlign: 'center', padding: '3rem 1.5rem', color: 'var(--text-muted)' }}>
+              <Filter size={32} style={{ margin: '0 auto 0.5rem auto', color: 'var(--border-medium)' }} />
+              <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-main)' }}>
                 No events match your active filters
               </h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.25rem' }}>
+              <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
                 Try clearing search terms or selecting 'All' channels.
               </p>
               <Button
@@ -802,11 +802,11 @@ export const InspectorPage: React.FC = () => {
                 <thead>
                   <tr
                     style={{
-                      borderBottom: '1px solid #e2e8f0',
-                      color: '#64748b',
+                      borderBottom: '1px solid var(--border-subtle)',
+                      color: 'var(--text-muted)',
                       fontSize: '0.75rem',
                       fontWeight: 600,
-                      backgroundColor: '#f8fafc',
+                      backgroundColor: 'var(--bg-app)',
                     }}
                   >
                     <th scope="col" style={{ padding: '0.625rem 1.25rem' }}>
@@ -849,22 +849,22 @@ export const InspectorPage: React.FC = () => {
                           }
                         }}
                         style={{
-                          borderBottom: '1px solid #f1f5f9',
-                          backgroundColor: isSelected ? '#eff6ff' : '#ffffff',
-                          borderLeft: isSelected ? '3px solid #2563eb' : '3px solid transparent',
+                          borderBottom: '1px solid var(--bg-surface-hover)',
+                          backgroundColor: isSelected ? 'var(--color-primary-light)' : 'var(--bg-surface)',
+                          borderLeft: isSelected ? '3px solid var(--color-primary)' : '3px solid transparent',
                           cursor: 'pointer',
                           transition: 'background-color 0.15s ease',
                         }}
                         className="hover:bg-slate-50"
                       >
                         <td style={{ padding: '0.875rem 1.25rem' }}>
-                          <div style={{ fontWeight: 600, color: '#0f172a', fontFamily: 'var(--font-mono)' }}>
+                          <div style={{ fontWeight: 600, color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>
                             {evt.envelope.event_type}
                           </div>
                           <div
                             style={{
                               fontSize: '0.6875rem',
-                              color: '#94a3b8',
+                              color: 'var(--text-subtle)',
                               fontFamily: 'var(--font-mono)',
                               marginTop: '0.1rem',
                             }}
@@ -878,12 +878,12 @@ export const InspectorPage: React.FC = () => {
                         </td>
 
                         <td style={{ padding: '0.875rem 1rem' }}>
-                          <Badge identityState={evt.envelope.subject.identity_state} size="sm" />
+                          <Badge identityState={evt.currentIdentityState || evt.envelope.subject.identity_state} size="sm" />
                         </td>
 
-                        <td style={{ padding: '0.875rem 1rem', color: '#475569' }}>
+                        <td style={{ padding: '0.875rem 1rem', color: 'var(--text-secondary)' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <Clock size={12} color="#94a3b8" />
+                            <Clock size={12} color="var(--text-subtle)" />
                             <span>{new Date(evt.envelope.valid_time).toLocaleTimeString()}</span>
                           </div>
                         </td>
@@ -899,9 +899,9 @@ export const InspectorPage: React.FC = () => {
                                 fontWeight: 500,
                                 padding: '0.15rem 0.45rem',
                                 borderRadius: '4px',
-                                backgroundColor: '#fffbeb',
-                                color: '#b45309',
-                                border: '1px solid #fde68a',
+                                backgroundColor: 'var(--state-orphan-bg)',
+                                color: 'var(--state-orphan)',
+                                border: '1px solid var(--state-orphan-border)',
                               }}
                             >
                               Queued Offline
@@ -916,9 +916,9 @@ export const InspectorPage: React.FC = () => {
                                 fontWeight: 500,
                                 padding: '0.15rem 0.45rem',
                                 borderRadius: '4px',
-                                backgroundColor: '#ecfdf5',
-                                color: '#047857',
-                                border: '1px solid #a7f3d0',
+                                backgroundColor: 'var(--color-primary-light)',
+                                color: 'var(--color-primary-hover)',
+                                border: '1px solid var(--color-primary-border)',
                               }}
                             >
                               <CheckCircle2 size={11} /> Ingested
@@ -974,7 +974,7 @@ export const InspectorPage: React.FC = () => {
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.65)',
+            backgroundColor: 'var(--overlay)',
             backdropFilter: 'blur(4px)',
             display: 'flex',
             alignItems: 'center',

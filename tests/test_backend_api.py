@@ -14,6 +14,9 @@ class TestWagerBitemporalSystem(unittest.TestCase):
         # Create a fresh isolated store for testing
         self.store = BitemporalStore()
 
+    def tearDown(self):
+        self.store.db.close()
+
     def test_canonical_envelope_validation(self):
         """Invariant: Raw events are validated against CJEP v1 schema and stored immutably."""
         env = EventEnvelope(
@@ -64,11 +67,11 @@ class TestWagerBitemporalSystem(unittest.TestCase):
             protocol_version="1.0",
             event_id="evt_mon_1047_login",
             event_type="web.login.completed",
-            source=EventSource(channel="web", application="customer-web", instance_id="ses_2"),
+            source=EventSource(channel="web", application="customer-web", instance_id="ses_1"),
             valid_time="2026-09-28T10:47:00Z",
             ingest_time="2026-09-28T10:47:00Z",
             identifiers=EventIdentifiers(
-                session_id="ses_2",
+                session_id="ses_1",
                 device_id="tok_dev_41e",
                 ip_hash="tok_ip_9c",
                 customer_id="C1041",
@@ -123,10 +126,10 @@ class TestWagerBitemporalSystem(unittest.TestCase):
             EventEnvelope(
                 event_id="e_login",
                 event_type="web.login.completed",
-                source=EventSource(channel="web", application="customer-web", instance_id="s2"),
+                source=EventSource(channel="web", application="customer-web", instance_id="s1"),
                 valid_time="2026-09-28T10:47:00Z",
                 ingest_time="2026-09-28T10:47:00Z",
-                identifiers=EventIdentifiers(session_id="s2", device_id=device, ip_hash="ip1", customer_id=customer),
+                identifiers=EventIdentifiers(session_id="s1", device_id=device, ip_hash="ip1", customer_id=customer),
                 subject=EventSubject(customer_id=customer, identity_state="resolved"),
             )
         )

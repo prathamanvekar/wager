@@ -8,12 +8,12 @@ interface SupportPageProps {
 
 export const SupportPage: React.FC<SupportPageProps> = ({ onStartInquiry }) => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+    <div className="portal-page support-page" style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       <div>
-        <h1 style={{ fontSize: '1.625rem', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>
+        <h1 style={{ fontSize: '1.625rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
           Support Center
         </h1>
-        <p style={{ fontSize: '0.875rem', color: '#64748b', marginTop: '0.25rem' }}>
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
           Initiate new account inquiries and support communications across partitioned intent threads.
         </p>
       </div>
@@ -23,21 +23,21 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onStartInquiry }) => {
         style={{
           padding: '1rem 1.25rem',
           borderRadius: 'var(--radius-lg)',
-          backgroundColor: '#f8fafc',
-          border: '1px solid #e2e8f0',
+          backgroundColor: 'var(--bg-app)',
+          border: '1px solid var(--border-subtle)',
           display: 'flex',
           alignItems: 'flex-start',
           gap: '1rem',
         }}
       >
-        <div style={{ padding: '0.375rem', borderRadius: '6px', backgroundColor: '#f1f5f9', color: '#475569' }}>
+        <div style={{ padding: '0.375rem', borderRadius: '6px', backgroundColor: 'var(--bg-surface-hover)', color: 'var(--text-secondary)' }}>
           <Layers size={18} />
         </div>
         <div>
-          <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.875rem' }}>
+          <div style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.875rem' }}>
             Multi-Intent Disentanglement Engine
           </div>
-          <p style={{ fontSize: '0.8125rem', color: '#475569', marginTop: '0.25rem', lineHeight: 1.5 }}>
+          <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginTop: '0.25rem', lineHeight: 1.5 }}>
             In traditional systems, filing a dispute and contacting support simultaneously collapses both into one issue, triggering false repeat-contact alerts. Wager partitions concurrent user intents into isolated thread streams without crosstalk.
           </p>
         </div>
@@ -57,8 +57,8 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onStartInquiry }) => {
                     width: '32px',
                     height: '32px',
                     borderRadius: '8px',
-                    backgroundColor: '#eff6ff',
-                    color: '#2563eb',
+                    backgroundColor: 'var(--bg-surface-hover)',
+                    color: 'var(--color-primary)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -67,28 +67,28 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onStartInquiry }) => {
                   <CreditCard size={17} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                     Credit Line
                   </div>
-                  <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#0f172a' }}>
+                  <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-main)' }}>
                     Credit Limit Request
                   </div>
                 </div>
               </div>
-              <ArrowRight size={16} color="#94a3b8" />
+              <ArrowRight size={16} color="var(--text-subtle)" />
             </div>
           }
           subtitle="Intent: credit_inquiry · Entity: account_credit"
           footer={
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
               <span>Independent thread</span>
-              <span style={{ fontWeight: 600, color: '#2563eb', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span style={{ fontWeight: 600, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 Open inquiry →
               </span>
             </div>
           }
         >
-          <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.55 }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
             Submit a request to adjust your credit card limit from $10,000 to $25,000. Creates a concurrent thread separate from any billing disputes.
           </p>
         </Card>
@@ -105,8 +105,8 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onStartInquiry }) => {
                     width: '32px',
                     height: '32px',
                     borderRadius: '8px',
-                    backgroundColor: '#fffbeb',
-                    color: '#d97706',
+                    backgroundColor: 'var(--state-orphan-bg)',
+                    color: 'var(--color-primary)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -115,28 +115,28 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onStartInquiry }) => {
                   <ShieldAlert size={17} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                     Card Services
                   </div>
-                  <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#0f172a' }}>
+                  <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-main)' }}>
                     Card Replacement
                   </div>
                 </div>
               </div>
-              <ArrowRight size={16} color="#94a3b8" />
+              <ArrowRight size={16} color="var(--text-subtle)" />
             </div>
           }
           subtitle="Intent: card_replacement · Entity: card_token"
           footer={
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
               <span>Expedited mailing</span>
-              <span style={{ fontWeight: 600, color: '#d97706', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span style={{ fontWeight: 600, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 Request card →
               </span>
             </div>
           }
         >
-          <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.55 }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
             Report physical debit or credit card issues and request an expedited replacement to your registered mailing address.
           </p>
         </Card>
@@ -153,8 +153,8 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onStartInquiry }) => {
                     width: '32px',
                     height: '32px',
                     borderRadius: '8px',
-                    backgroundColor: '#ecfdf5',
-                    color: '#059669',
+                    backgroundColor: 'var(--bg-surface-hover)',
+                    color: 'var(--color-primary)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -163,28 +163,28 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onStartInquiry }) => {
                   <MessageSquare size={17} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                     Live Support
                   </div>
-                  <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#0f172a' }}>
+                  <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-main)' }}>
                     General Assistance
                   </div>
                 </div>
               </div>
-              <ArrowRight size={16} color="#94a3b8" />
+              <ArrowRight size={16} color="var(--text-subtle)" />
             </div>
           }
           subtitle="Intent: general_support · Interactive Chat"
           footer={
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
               <span>Real-time channel</span>
-              <span style={{ fontWeight: 600, color: '#059669', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span style={{ fontWeight: 600, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 Start chat →
               </span>
             </div>
           }
         >
-          <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.55 }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
             Open a direct secure chat channel with an Apex support specialist. Emits real-time support message events into the CJEP stream.
           </p>
         </Card>

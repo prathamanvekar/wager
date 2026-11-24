@@ -22,6 +22,8 @@ import { useSession } from '../context/SessionContext';
 import { useEvents } from '../context/EventContext';
 import { Button } from '../design-system/Button';
 import { LoginModal } from './LoginModal';
+import { MobileHandoff } from '../components/MobileHandoff';
+import { ThemeControl } from '../design-system/ThemeControl';
 import { IdentifiersBar } from './IdentifiersBar';
 import type { ActiveTab } from './Navigation';
 
@@ -39,7 +41,8 @@ export const Shell: React.FC<ShellProps> = ({
   onNavigateToLanding,
 }) => {
   const { session, isLoggedIn, logout, openAuthModal } = useSession();
-  const { isBackendConnected, orphanCount, events } = useEvents();
+  const { isBackendConnected, orphanCount, events, syncError } = useEvents();
+  const { connectionError, reconnect } = useSession();
   const [isInspectorDrawerOpen, setIsInspectorDrawerOpen] = useState(false);
   const [isArchSpecsExpanded, setIsArchSpecsExpanded] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
@@ -60,13 +63,13 @@ export const Shell: React.FC<ShellProps> = ({
       badge: (
         <span
           style={{
-            backgroundColor: '#ecfdf5',
-            color: '#065f46',
+            backgroundColor: 'var(--color-primary-light)',
+            color: 'var(--color-primary-hover)',
             fontSize: '0.6875rem',
             padding: '0.125rem 0.5rem',
             borderRadius: '9999px',
             fontWeight: 600,
-            border: '1px solid #a7f3d0',
+            border: '1px solid var(--color-primary-border)',
           }}
         >
           Active
@@ -88,13 +91,13 @@ export const Shell: React.FC<ShellProps> = ({
       badge: (
         <span
           style={{
-            backgroundColor: orphanCount > 0 ? '#fffbeb' : '#ecfdf5',
-            color: orphanCount > 0 ? '#b45309' : '#047857',
+            backgroundColor: orphanCount > 0 ? 'var(--state-orphan-bg)' : 'var(--color-primary-light)',
+            color: orphanCount > 0 ? 'var(--state-orphan)' : 'var(--color-primary-hover)',
             fontSize: '0.6875rem',
             padding: '0.125rem 0.45rem',
             borderRadius: '9999px',
             fontWeight: 600,
-            border: `1px solid ${orphanCount > 0 ? '#fde68a' : '#a7f3d0'}`,
+            border: `1px solid ${orphanCount > 0 ? 'var(--state-orphan-border)' : 'var(--color-primary-border)'}`,
           }}
         >
           {events.length}
@@ -117,13 +120,13 @@ export const Shell: React.FC<ShellProps> = ({
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+    <div className="app-shell" style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--bg-app)' }}>
       {/* 1. Left Sidebar Navigation (Workflex Style) */}
       <aside
         style={{
-          width: '260px',
-          backgroundColor: '#ffffff',
-          borderRight: '1px solid #e2e8f0',
+          width: '232px',
+          backgroundColor: 'var(--bg-surface)',
+          borderRight: '1px solid var(--border-subtle)',
           display: 'flex',
           flexDirection: 'column',
           position: 'sticky',
@@ -132,7 +135,7 @@ export const Shell: React.FC<ShellProps> = ({
           zIndex: 30,
           flexShrink: 0,
         }}
-        className="hidden-mobile"
+        className="app-sidebar hidden-mobile"
       >
         {/* Brand header */}
         <div
@@ -141,7 +144,7 @@ export const Shell: React.FC<ShellProps> = ({
             display: 'flex',
             alignItems: 'center',
             gap: '0.75rem',
-            borderBottom: '1px solid #f1f5f9',
+            borderBottom: '1px solid var(--bg-surface-hover)',
           }}
         >
           <div
@@ -149,34 +152,35 @@ export const Shell: React.FC<ShellProps> = ({
               width: '2rem',
               height: '2rem',
               borderRadius: '8px',
-              backgroundColor: '#059669', // Workflex emerald
+              backgroundColor: 'var(--color-primary)', // Workflex emerald
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#ffffff',
-              boxShadow: '0 1px 3px 0 rgba(5, 150, 105, 0.2)',
+              color: 'var(--bg-surface)',
+              boxShadow: 'none',
             }}
           >
             <Shield size={17} strokeWidth={2.4} />
           </div>
           <div style={{ lineHeight: 1.2 }}>
-            <div style={{ fontWeight: 700, fontSize: '1.0625rem', color: '#0f172a', letterSpacing: '-0.02em' }}>
+            <div style={{ fontWeight: 700, fontSize: '1.0625rem', color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
               Wager
             </div>
-            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Apex Customer Portal</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Apex Customer Portal</div>
           </div>
         </div>
 
         {/* Navigation list */}
         <div style={{ padding: '1rem 0.75rem', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.25rem', overflowY: 'auto' }}>
-          <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#94a3b8', padding: '0.375rem 0.625rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Workspaces
+          <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-subtle)', padding: '0.375rem 0.625rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Workspace
           </div>
           {navItems.map((item) => {
             const isActive = activeTab === item.id;
             return (
               <button
                 key={item.id}
+                aria-current={isActive ? 'page' : undefined}
                 onClick={() => onTabChange(item.id)}
                 style={{
                   display: 'flex',
@@ -184,8 +188,8 @@ export const Shell: React.FC<ShellProps> = ({
                   justifyContent: 'space-between',
                   padding: '0.625rem 0.75rem',
                   borderRadius: 'var(--radius-md)',
-                  backgroundColor: isActive ? '#ecfdf5' : 'transparent', // Workflex active green pill
-                  color: isActive ? '#065f46' : '#475569',
+                  backgroundColor: isActive ? 'var(--color-primary-light)' : 'transparent', // Workflex active green pill
+                  color: isActive ? 'var(--color-primary-hover)' : 'var(--text-secondary)',
                   border: 'none',
                   cursor: 'pointer',
                   textAlign: 'left',
@@ -194,7 +198,7 @@ export const Shell: React.FC<ShellProps> = ({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-                  <span style={{ color: isActive ? '#059669' : '#64748b' }}>{item.icon}</span>
+                  <span style={{ color: isActive ? 'var(--color-primary)' : 'var(--text-muted)' }}>{item.icon}</span>
                   <span style={{ fontSize: '0.875rem', fontWeight: isActive ? 600 : 500 }}>
                     {item.label}
                   </span>
@@ -205,7 +209,7 @@ export const Shell: React.FC<ShellProps> = ({
           })}
 
           {/* Secondary Utilities Section */}
-          <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#94a3b8', padding: '1rem 0.625rem 0.375rem 0.625rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-subtle)', padding: '1rem 0.625rem 0.375rem 0.625rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             System Tools
           </div>
 
@@ -219,7 +223,7 @@ export const Shell: React.FC<ShellProps> = ({
               padding: '0.5625rem 0.75rem',
               borderRadius: 'var(--radius-md)',
               backgroundColor: 'transparent',
-              color: '#475569',
+              color: 'var(--text-secondary)',
               border: 'none',
               cursor: 'pointer',
               textAlign: 'left',
@@ -228,7 +232,7 @@ export const Shell: React.FC<ShellProps> = ({
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-              <Sliders size={16} color="#64748b" />
+              <Sliders size={16} color="var(--text-muted)" />
               <span>Session Inspector</span>
             </div>
             <span
@@ -236,7 +240,7 @@ export const Shell: React.FC<ShellProps> = ({
                 width: '7px',
                 height: '7px',
                 borderRadius: '50%',
-                backgroundColor: isLoggedIn ? '#10b981' : '#f59e0b',
+                backgroundColor: isLoggedIn ? 'var(--state-resolved-dot)' : 'var(--state-orphan-dot)',
               }}
             />
           </button>
@@ -251,7 +255,7 @@ export const Shell: React.FC<ShellProps> = ({
               padding: '0.5625rem 0.75rem',
               borderRadius: 'var(--radius-md)',
               backgroundColor: 'transparent',
-              color: '#475569',
+              color: 'var(--text-secondary)',
               border: 'none',
               cursor: 'pointer',
               textAlign: 'left',
@@ -260,10 +264,10 @@ export const Shell: React.FC<ShellProps> = ({
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-              <Database size={16} color="#64748b" />
+              <Database size={16} color="var(--text-muted)" />
               <span>Engine Specs</span>
             </div>
-            {isArchSpecsExpanded ? <ChevronUp size={14} color="#94a3b8" /> : <ChevronDown size={14} color="#94a3b8" />}
+            {isArchSpecsExpanded ? <ChevronUp size={14} color="var(--text-subtle)" /> : <ChevronDown size={14} color="var(--text-subtle)" />}
           </button>
         </div>
 
@@ -271,8 +275,8 @@ export const Shell: React.FC<ShellProps> = ({
         <div
           style={{
             padding: '1rem',
-            borderTop: '1px solid #f1f5f9',
-            backgroundColor: '#ffffff',
+            borderTop: '1px solid var(--bg-surface-hover)',
+            backgroundColor: 'var(--bg-surface)',
           }}
         >
           <div
@@ -289,9 +293,9 @@ export const Shell: React.FC<ShellProps> = ({
                   width: '2.25rem',
                   height: '2.25rem',
                   borderRadius: '50%',
-                  backgroundColor: isLoggedIn ? '#ecfdf5' : '#fffbeb',
-                  border: `1px solid ${isLoggedIn ? '#a7f3d0' : '#fde68a'}`,
-                  color: isLoggedIn ? '#059669' : '#b45309',
+                  backgroundColor: isLoggedIn ? 'var(--color-primary-light)' : 'var(--state-orphan-bg)',
+                  border: `1px solid ${isLoggedIn ? 'var(--color-primary-border)' : 'var(--state-orphan-border)'}`,
+                  color: isLoggedIn ? 'var(--color-primary)' : 'var(--state-orphan)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -307,7 +311,7 @@ export const Shell: React.FC<ShellProps> = ({
                   style={{
                     fontSize: '0.8125rem',
                     fontWeight: 600,
-                    color: '#0f172a',
+                    color: 'var(--text-main)',
                     whiteSpace: 'nowrap',
                     textOverflow: 'ellipsis',
                     overflow: 'hidden',
@@ -318,7 +322,7 @@ export const Shell: React.FC<ShellProps> = ({
                 <div
                   style={{
                     fontSize: '0.6875rem',
-                    color: '#64748b',
+                    color: 'var(--text-muted)',
                     whiteSpace: 'nowrap',
                     textOverflow: 'ellipsis',
                     overflow: 'hidden',
@@ -336,7 +340,7 @@ export const Shell: React.FC<ShellProps> = ({
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#94a3b8',
+                  color: 'var(--text-subtle)',
                   cursor: 'pointer',
                   padding: '0.375rem',
                   borderRadius: '4px',
@@ -351,7 +355,7 @@ export const Shell: React.FC<ShellProps> = ({
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#059669',
+                  color: 'var(--color-primary)',
                   cursor: 'pointer',
                   padding: '0.375rem',
                   borderRadius: '4px',
@@ -371,8 +375,8 @@ export const Shell: React.FC<ShellProps> = ({
           className="shell-top-header"
           style={{
             height: '60px',
-            backgroundColor: '#ffffff',
-            borderBottom: '1px solid #e2e8f0',
+            backgroundColor: 'var(--bg-surface)',
+            borderBottom: '1px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -394,7 +398,7 @@ export const Shell: React.FC<ShellProps> = ({
                 border: 'none',
                 padding: '0.375rem',
                 cursor: 'pointer',
-                color: '#0f172a',
+                color: 'var(--text-main)',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
@@ -407,25 +411,25 @@ export const Shell: React.FC<ShellProps> = ({
               <ol style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8125rem', listStyle: 'none', margin: 0, padding: 0 }}>
                 <li>
                   <span
-                    style={{ color: '#64748b', cursor: 'pointer', transition: 'color 0.15s ease' }}
+                    style={{ color: 'var(--text-muted)', cursor: 'pointer', transition: 'color 0.15s ease' }}
                     onClick={onNavigateToLanding || (() => onTabChange('overview'))}
                     title="Return to Landing Page"
                   >
                     Home
                   </span>
                 </li>
-                <li style={{ color: '#cbd5e1' }} aria-hidden="true">/</li>
+                <li style={{ color: 'var(--border-medium)' }} aria-hidden="true">/</li>
                 <li>
                   <span
-                    style={{ color: '#64748b', cursor: 'pointer' }}
+                    style={{ color: 'var(--text-muted)', cursor: 'pointer' }}
                     onClick={() => onTabChange('overview')}
                   >
                     Portal
                   </span>
                 </li>
-                <li style={{ color: '#cbd5e1' }} aria-hidden="true">/</li>
+                <li style={{ color: 'var(--border-medium)' }} aria-hidden="true">/</li>
                 <li>
-                  <span style={{ color: '#0f172a', fontWeight: 600 }} aria-current="page">
+                  <span style={{ color: 'var(--text-main)', fontWeight: 600 }} aria-current="page">
                     {getBreadcrumbTitle()}
                   </span>
                 </li>
@@ -443,7 +447,7 @@ export const Shell: React.FC<ShellProps> = ({
                 gap: '0.375rem',
                 fontSize: '0.75rem',
                 fontWeight: 500,
-                color: '#475569',
+                color: 'var(--text-secondary)',
               }}
               title={isBackendConnected ? 'FastAPI bitemporal store running at 127.0.0.1:8000' : 'Backend offline, events buffered in memory'}
             >
@@ -452,13 +456,15 @@ export const Shell: React.FC<ShellProps> = ({
                   width: '6px',
                   height: '6px',
                   borderRadius: '9999px',
-                  backgroundColor: isBackendConnected ? '#10b981' : '#f59e0b',
+                  backgroundColor: isBackendConnected ? 'var(--state-resolved-dot)' : 'var(--state-orphan-dot)',
                   flexShrink: 0,
                 }}
               />
               <span>{isBackendConnected ? 'API Live (8000)' : 'Offline Queue'}</span>
             </div>
 
+            <MobileHandoff />
+            <ThemeControl />
             {/* Session Inspector Trigger */}
             <button
               onClick={() => setIsInspectorDrawerOpen(true)}
@@ -472,21 +478,21 @@ export const Shell: React.FC<ShellProps> = ({
                 fontWeight: 500,
                 padding: '0.3rem 0.65rem',
                 borderRadius: '6px',
-                backgroundColor: '#ffffff',
-                border: '1px solid #cbd5e1',
-                color: '#475569',
+                backgroundColor: 'var(--bg-surface)',
+                border: '1px solid var(--border-medium)',
+                color: 'var(--text-secondary)',
                 cursor: 'pointer',
               }}
               title="Inspect hardware tokens and late identity binding state"
             >
-              <Sliders size={13} color="#64748b" />
+              <Sliders size={13} color="var(--text-muted)" />
               <span>Session Inspector</span>
               <span
                 style={{
                   width: '6px',
                   height: '6px',
                   borderRadius: '9999px',
-                  backgroundColor: session.identityState === 'resolved' ? '#10b981' : '#f59e0b',
+                  backgroundColor: session.identityState === 'resolved' ? 'var(--state-resolved-dot)' : 'var(--state-orphan-dot)',
                   flexShrink: 0,
                 }}
               />
@@ -521,6 +527,7 @@ export const Shell: React.FC<ShellProps> = ({
           onClose={() => setIsInspectorDrawerOpen(false)}
         />
 
+        {(connectionError || syncError) && <div role="alert" style={{padding:'12px 24px',background:'var(--state-orphan-bg)',color:'var(--state-orphan)'}}>{connectionError || syncError} <button onClick={()=>void reconnect()} style={{marginLeft:12,cursor:'pointer'}}>Reconnect</button></div>}
         {/* Page Content Container */}
         <main className="shell-main-canvas" style={{ flex: 1, padding: '2rem' }}>
           <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
@@ -532,8 +539,8 @@ export const Shell: React.FC<ShellProps> = ({
         {isArchSpecsExpanded && (
           <section
             style={{
-              backgroundColor: '#ffffff',
-              borderTop: '1px solid #e2e8f0',
+              backgroundColor: 'var(--bg-surface)',
+              borderTop: '1px solid var(--border-subtle)',
               padding: '2rem',
               animation: 'slideUp 0.2s ease',
             }}
@@ -541,10 +548,10 @@ export const Shell: React.FC<ShellProps> = ({
             <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
                 <div>
-                  <h4 style={{ fontSize: '1rem', fontWeight: 600, color: '#0f172a' }}>
+                  <h4 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)' }}>
                     Wager Bitemporal Engine Specifications (CJEP v1)
                   </h4>
-                  <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
                     Production-grade event envelope architecture supporting out-of-order ingestion and immutable journey stitching.
                   </p>
                 </div>
@@ -560,42 +567,42 @@ export const Shell: React.FC<ShellProps> = ({
                   gap: '1.25rem',
                 }}
               >
-                <div style={{ padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '1px solid #e2e8f0', backgroundColor: '#f8fafc' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: '#0f172a', marginBottom: '0.5rem' }}>
-                    <Clock size={16} color="#2563eb" />
+                <div style={{ padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-app)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                    <Clock size={16} color="var(--color-primary)" />
                     <span>Two Time Dimensions</span>
                   </div>
-                  <p style={{ fontSize: '0.8125rem', color: '#475569', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                     Tracks <code>valid_time</code> (when customer experienced the event) and <code>system_time</code> (when learned). Retractions append negative/positive pairs without in-place edits.
                   </p>
                 </div>
 
-                <div style={{ padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '1px solid #e2e8f0', backgroundColor: '#f8fafc' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: '#0f172a', marginBottom: '0.5rem' }}>
-                    <GitMerge size={16} color="#d97706" />
+                <div style={{ padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-app)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                    <GitMerge size={16} color="var(--state-orphan)" />
                     <span>Late Identity Binding (F1)</span>
                   </div>
-                  <p style={{ fontSize: '0.8125rem', color: '#475569', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                     Actions performed while logged out are stored in the pending orphan buffer. Subsequent customer authentication triggers retroactive claim of previous weak device tokens.
                   </p>
                 </div>
 
-                <div style={{ padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '1px solid #e2e8f0', backgroundColor: '#f8fafc' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: '#0f172a', marginBottom: '0.5rem' }}>
-                    <Layers size={16} color="#059669" />
+                <div style={{ padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-app)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                    <Layers size={16} color="var(--color-primary)" />
                     <span>Cross-Channel Unification</span>
                   </div>
-                  <p style={{ fontSize: '0.8125rem', color: '#475569', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                     Envelopes from Web, Mobile, Call Simulator, and Branch are ingested into a unified timeline with thread hint partitioning and intent classification.
                   </p>
                 </div>
 
-                <div style={{ padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '1px solid #e2e8f0', backgroundColor: '#f8fafc' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: '#0f172a', marginBottom: '0.5rem' }}>
-                    <Database size={16} color="#7c3aed" />
+                <div style={{ padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-app)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                    <Database size={16} color="var(--channel-mobile)" />
                     <span>Zero-Cloud Local Stack</span>
                   </div>
-                  <p style={{ fontSize: '0.8125rem', color: '#475569', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                     FastAPI ASGI backend running with in-memory fallback, live event streaming, and 100% reproducible cross-channel journey stitching.
                   </p>
                 </div>
@@ -605,13 +612,13 @@ export const Shell: React.FC<ShellProps> = ({
         )}
 
         {/* Minimalist Footer */}
-        <footer
+        <footer className="portal-footer"
           style={{
-            borderTop: '1px solid #e2e8f0',
-            backgroundColor: '#ffffff',
+            borderTop: '1px solid var(--border-subtle)',
+            backgroundColor: 'var(--bg-surface)',
             padding: '1rem 2rem',
             fontSize: '0.75rem',
-            color: '#64748b',
+            color: 'var(--text-muted)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -632,7 +639,7 @@ export const Shell: React.FC<ShellProps> = ({
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: '#2563eb',
+                color: 'var(--color-primary)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -656,7 +663,7 @@ export const Shell: React.FC<ShellProps> = ({
             position: 'fixed',
             inset: 0,
             zIndex: 60,
-            backgroundColor: 'rgba(15, 23, 42, 0.5)',
+            backgroundColor: 'var(--overlay)',
             backdropFilter: 'blur(3px)',
             display: 'flex',
           }}
@@ -667,7 +674,7 @@ export const Shell: React.FC<ShellProps> = ({
               width: '280px',
               maxWidth: '85%',
               height: '100%',
-              backgroundColor: '#ffffff',
+              backgroundColor: 'var(--bg-surface)',
               display: 'flex',
               flexDirection: 'column',
               boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
@@ -678,7 +685,7 @@ export const Shell: React.FC<ShellProps> = ({
             <div
               style={{
                 padding: '1.25rem',
-                borderBottom: '1px solid #f1f5f9',
+                borderBottom: '1px solid var(--bg-surface-hover)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -690,18 +697,18 @@ export const Shell: React.FC<ShellProps> = ({
                     width: '2rem',
                     height: '2rem',
                     borderRadius: '8px',
-                    backgroundColor: '#059669',
+                    backgroundColor: 'var(--color-primary)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#ffffff',
+                    color: 'var(--bg-surface)',
                   }}
                 >
                   <Shield size={17} strokeWidth={2.4} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: '1rem', color: '#0f172a' }}>Wager</div>
-                  <div style={{ fontSize: '0.6875rem', color: '#64748b' }}>Apex Customer Portal</div>
+                  <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-main)' }}>Wager</div>
+                  <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>Apex Customer Portal</div>
                 </div>
               </div>
               <button
@@ -711,7 +718,7 @@ export const Shell: React.FC<ShellProps> = ({
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#64748b',
+                  color: 'var(--text-muted)',
                   cursor: 'pointer',
                   padding: '0.25rem',
                 }}
@@ -722,14 +729,15 @@ export const Shell: React.FC<ShellProps> = ({
 
             {/* Nav Items */}
             <div style={{ padding: '1rem 0.75rem', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.375rem', overflowY: 'auto' }}>
-              <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#94a3b8', padding: '0.375rem 0.625rem', textTransform: 'uppercase' }}>
-                Workspaces
+              <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-subtle)', padding: '0.375rem 0.625rem', textTransform: 'uppercase' }}>
+                Workspace
               </div>
               {navItems.map((item) => {
                 const isActive = activeTab === item.id;
                 return (
                   <button
                     key={item.id}
+                aria-current={isActive ? 'page' : undefined}
                     onClick={() => {
                       onTabChange(item.id);
                       setIsMobileNavOpen(false);
@@ -740,8 +748,8 @@ export const Shell: React.FC<ShellProps> = ({
                       justifyContent: 'space-between',
                       padding: '0.625rem 0.75rem',
                       borderRadius: 'var(--radius-md)',
-                      backgroundColor: isActive ? '#ecfdf5' : 'transparent',
-                      color: isActive ? '#065f46' : '#475569',
+                      backgroundColor: isActive ? 'var(--color-primary-light)' : 'transparent',
+                      color: isActive ? 'var(--color-primary-hover)' : 'var(--text-secondary)',
                       border: 'none',
                       cursor: 'pointer',
                       textAlign: 'left',
@@ -749,7 +757,7 @@ export const Shell: React.FC<ShellProps> = ({
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-                      <span style={{ color: isActive ? '#059669' : '#64748b' }}>{item.icon}</span>
+                      <span style={{ color: isActive ? 'var(--color-primary)' : 'var(--text-muted)' }}>{item.icon}</span>
                       <span style={{ fontSize: '0.875rem', fontWeight: isActive ? 600 : 500 }}>
                         {item.label}
                       </span>
@@ -759,7 +767,7 @@ export const Shell: React.FC<ShellProps> = ({
                 );
               })}
 
-              <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#94a3b8', padding: '1rem 0.625rem 0.375rem 0.625rem', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-subtle)', padding: '1rem 0.625rem 0.375rem 0.625rem', textTransform: 'uppercase' }}>
                 System Tools
               </div>
               <button
@@ -774,7 +782,7 @@ export const Shell: React.FC<ShellProps> = ({
                   padding: '0.5625rem 0.75rem',
                   borderRadius: 'var(--radius-md)',
                   backgroundColor: 'transparent',
-                  color: '#475569',
+                  color: 'var(--text-secondary)',
                   border: 'none',
                   cursor: 'pointer',
                   textAlign: 'left',
@@ -783,7 +791,7 @@ export const Shell: React.FC<ShellProps> = ({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-                  <Sliders size={16} color="#64748b" />
+                  <Sliders size={16} color="var(--text-muted)" />
                   <span>Session Inspector</span>
                 </div>
                 <span
@@ -791,14 +799,14 @@ export const Shell: React.FC<ShellProps> = ({
                     width: '7px',
                     height: '7px',
                     borderRadius: '50%',
-                    backgroundColor: isLoggedIn ? '#10b981' : '#f59e0b',
+                    backgroundColor: isLoggedIn ? 'var(--state-resolved-dot)' : 'var(--state-orphan-dot)',
                   }}
                 />
               </button>
             </div>
 
             {/* Mobile Drawer Auth Footer */}
-            <div style={{ padding: '1rem', borderTop: '1px solid #f1f5f9' }}>
+            <div style={{ padding: '1rem', borderTop: '1px solid var(--bg-surface-hover)' }}>
               {!isLoggedIn ? (
                 <Button
                   variant="primary"
@@ -840,11 +848,11 @@ export const Shell: React.FC<ShellProps> = ({
           left: 0,
           right: 0,
           height: '60px',
-          backgroundColor: '#ffffff',
-          borderTop: '1px solid #e2e8f0',
+          backgroundColor: 'var(--bg-surface)',
+          borderTop: '1px solid var(--border-subtle)',
           alignItems: 'center',
           zIndex: 35,
-          boxShadow: '0 -2px 10px rgba(0,0,0,0.04)',
+          boxShadow: '0 -2px 10px var(--bg-surface-subtle)',
         }}
       >
         {navItems.map((item) => {
@@ -852,6 +860,7 @@ export const Shell: React.FC<ShellProps> = ({
           return (
             <button
               key={item.id}
+                aria-current={isActive ? 'page' : undefined}
               type="button"
               onClick={() => onTabChange(item.id)}
               style={{
@@ -863,7 +872,7 @@ export const Shell: React.FC<ShellProps> = ({
                 height: '100%',
                 background: 'none',
                 border: 'none',
-                color: isActive ? '#059669' : '#64748b',
+                color: isActive ? 'var(--color-primary)' : 'var(--text-muted)',
                 cursor: 'pointer',
                 padding: '0.25rem',
                 position: 'relative',
@@ -880,7 +889,7 @@ export const Shell: React.FC<ShellProps> = ({
                       width: '7px',
                       height: '7px',
                       borderRadius: '50%',
-                      backgroundColor: '#f59e0b',
+                      backgroundColor: 'var(--state-orphan-dot)',
                     }}
                   />
                 )}

@@ -33,9 +33,12 @@ export const Card: React.FC<CardProps> = ({
   return (
     <div
       onClick={onClick}
+      role={isClickable ? 'button' : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      onKeyDown={isClickable ? (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onClick?.(); } } : undefined}
       style={{
-        backgroundColor: '#ffffff',
-        border: '1px solid #e2e8f0',
+        backgroundColor: 'var(--bg-surface)',
+        border: '1px solid var(--border-subtle)',
         borderRadius: 'var(--radius-lg)',
         boxShadow: elevated
           ? '0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.03)'
@@ -45,13 +48,13 @@ export const Card: React.FC<CardProps> = ({
         overflow: 'hidden',
         ...style,
       }}
-      className={`transition-smooth ${isClickable ? 'card-interactive' : ''} ${className}`}
+      className={`ui-card ${isClickable ? 'card-interactive' : ''} ${className}`}
     >
       {(title || subtitle || badge || action) && (
         <div
           style={{
             padding: '1.125rem 1.5rem',
-            borderBottom: '1px solid #e2e8f0',
+            borderBottom: '1px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -85,8 +88,8 @@ export const Card: React.FC<CardProps> = ({
         <div
           style={{
             padding: '0.875rem 1.5rem',
-            borderTop: '1px solid #e2e8f0',
-            backgroundColor: '#f8fafc',
+            borderTop: '1px solid var(--border-subtle)',
+            backgroundColor: 'var(--bg-app)',
           }}
         >
           {footer}

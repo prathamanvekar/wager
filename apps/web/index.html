@@ -4,11 +4,30 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wager Apex Portal — Cross-Channel Journey System</title>
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f7f8f7" />
+    <script>
+      // Resolve before CSS and React load to prevent a light flash on dark startup.
+      (() => {
+        let preference = 'system';
+        try {
+          const saved = localStorage.getItem('wager.theme');
+          if (saved === 'light' || saved === 'dark') preference = saved;
+        } catch { /* Private/restricted storage falls back to the system setting. */ }
+        const theme = preference === 'system'
+          ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : preference;
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.themePreference = preference;
+        document.documentElement.style.colorScheme = theme;
+        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#202123' : '#f7f8f7';
+      })();
+    </script>
+    <title>Wager Apex Portal - Cross-Channel Journey System</title>
     <meta name="description" content="Customer portal for Wager demonstrating late identity binding, bitemporal customer journeys, and cross-channel event capture." />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   </head>
   <body>
     <div id="root"></div>

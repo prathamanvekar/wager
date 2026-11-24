@@ -33,7 +33,7 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div
+    <div className="modal-overlay"
       style={{
         position: 'fixed',
         inset: 0,
@@ -42,21 +42,22 @@ export const Modal: React.FC<ModalProps> = ({
         alignItems: 'center',
         justifyContent: 'center',
         padding: '1rem',
-        backgroundColor: 'rgba(15, 23, 42, 0.45)',
+        backgroundColor: 'var(--overlay)',
         backdropFilter: 'blur(4px)',
         WebkitBackdropFilter: 'blur(4px)',
       }}
       onClick={onClose}
     >
       <div
+        className="ui-modal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-dialog-title"
         style={{
           width: '100%',
           maxWidth,
-          backgroundColor: '#ffffff',
-          border: '1px solid #e2e8f0',
+          backgroundColor: 'var(--bg-surface)',
+          border: '1px solid var(--border-subtle)',
           borderRadius: 'var(--radius-xl)',
           boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
           overflow: 'hidden',
@@ -68,12 +69,12 @@ export const Modal: React.FC<ModalProps> = ({
         <div
           style={{
             padding: '1.25rem 1.5rem',
-            borderBottom: '1px solid #e2e8f0',
+            borderBottom: '1px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
             gap: '1rem',
-            backgroundColor: '#ffffff',
+            backgroundColor: 'var(--bg-surface)',
           }}
         >
           <div>
@@ -110,7 +111,7 @@ export const Modal: React.FC<ModalProps> = ({
         </div>
 
         {/* Content */}
-        <div style={{ padding: '1.5rem', maxHeight: '75vh', overflowY: 'auto', backgroundColor: '#ffffff' }}>
+        <div style={{ padding: '1.5rem', maxHeight: '75vh', overflowY: 'auto', backgroundColor: 'var(--bg-surface)' }}>
           {children}
         </div>
 
@@ -119,8 +120,8 @@ export const Modal: React.FC<ModalProps> = ({
           <div
             style={{
               padding: '1rem 1.5rem',
-              borderTop: '1px solid #e2e8f0',
-              backgroundColor: '#f8fafc',
+              borderTop: '1px solid var(--border-subtle)',
+              backgroundColor: 'var(--bg-app)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'flex-end',

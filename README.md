@@ -1,6 +1,34 @@
-# Wager
+<h1 align="center">Wager</h1>
 
-Cross-channel customer support with late identity binding and bitemporal event history.
+<p align="center">
+  <strong>Three channels. One customer journey. A history that remembers.</strong>
+</p>
+
+<p align="center">
+  Cross-channel customer support with late identity binding, versioned attribution<br>
+  and bitemporal event history across web, Android and a browser call simulator.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/API-FastAPI-009688?style=flat" alt="API: FastAPI">
+  <img src="https://img.shields.io/badge/Language-TypeScript-3178C6?style=flat" alt="Language: TypeScript">
+  <img src="https://img.shields.io/badge/Web-React_%2B_Vite-149ECA?style=flat" alt="Web: React and Vite">
+  <img src="https://img.shields.io/badge/Mobile-React_Native_%2B_Expo-555555?style=flat" alt="Mobile: React Native and Expo">
+  <img src="https://img.shields.io/badge/Storage-SQLite-003B57?style=flat" alt="Storage: SQLite">
+</p>
+
+<p align="center">
+  <a href="#overview">Overview</a> &middot;
+  <a href="#channels">Channels</a> &middot;
+  <a href="#architecture">Architecture</a> &middot;
+  <a href="#quickstart">Quickstart</a> &middot;
+  <a href="#try-the-shared-journey">Demo</a> &middot;
+  <a href="#verification">Verification</a>
+</p>
+
+---
+
+## Overview
 
 Wager is a local prototype that carries customer inquiries across a web portal,
 an Android app and a browser call simulator. Each channel uses the same backend
@@ -19,13 +47,21 @@ All three channels support light and dark appearances. The call channel is a
 browser IVR simulation with optional text-to-speech. It does not dial a phone
 number, use a microphone or schedule callbacks.
 
-## Technical implementation
+## Architecture
 
-A shared FastAPI service validates Canonical Customer Journey Event Protocol
+The three frontends connect to one FastAPI service through shared TypeScript
+contracts and transport. The backend builds customer cases and journey views
+from a durable event log and its attribution history.
+
+### Event history and identity
+
+The API validates Canonical Customer Journey Event Protocol
 (CJEP) envelopes with Pydantic and persists events, attribution versions,
 retractions, sessions, handoffs and calls in SQLite. Events retain valid time
 (when an action happened) and ingest time (when it reached the backend).
-Attribution changes are recorded separately rather than rewriting raw events.
+The backend assigns receipt time, deduplicates repeated event IDs and rejects
+conflicting payloads. Attribution changes are recorded separately rather than
+rewriting raw events, with retraction records describing the old and new state.
 Historical journey queries and knowledge-gap calculations compare current history
 with what was known at an earlier contact time.
 
@@ -35,11 +71,25 @@ single-use handoff. Mobile sign-in and call verification retrieve already
 attributed customer inquiries without requiring another web-session handoff.
 Identity is not inferred from a caller's phone number or an unrelated device.
 
-Shared TypeScript contracts and a transport client serve the three frontends.
-The client provides bearer-session handling, backend-specific storage and durable
-offline event retries. The API validates session ownership and scopes case access.
-Call events are server-authored, with persistent call state and idempotent action
-IDs, with restore and connection-recovery feedback.
+### Delivery and channel continuity
+
+The shared client provides bearer-session handling, backend-specific storage and
+durable offline event retries. Browser storage adapters and native AsyncStorage/
+SecureStore adapters support each platform. The API validates event ownership and
+scopes case access. SQLite transactions persist related state changes together.
+Server-sent events notify clients of updates so they can refetch authorized views.
+
+Call events are server-authored, with persistent lifecycle state and idempotent
+action IDs. The call interface restores confirmed history, retries pending call
+end requests and exposes session recovery without claiming unconfirmed saves.
+
+### Inspection and presentation
+
+The web inspector exposes event filtering, raw CJEP envelopes, attribution
+versions, retractions, copy and JSON export for the synthetic demo dataset.
+Customer-facing views share inquiry messages and timelines across channels.
+The interfaces use a consistent visual language, light/dark themes, visible focus
+states and reduced-motion handling. Call prompts always have a text alternative.
 
 ## Repository
 
@@ -53,7 +103,7 @@ packages/client/    Shared transport and storage interfaces
 tests/              Backend, cross-channel, client and theme checks
 ```
 
-## Run locally
+## Quickstart
 
 The documented setup uses Python 3.13 and Node.js 24.3+ in the 24.x series.
 Commands below use PowerShell. No cloud services are required.

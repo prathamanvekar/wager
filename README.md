@@ -1,12 +1,12 @@
 <h1 align="center">Wager</h1>
 
 <p align="center">
-  <strong>Three channels. One customer journey. A history that remembers.</strong>
+  <strong>Customer journey stitching with bitemporal event tracking.</strong>
 </p>
 
 <p align="center">
-  Cross-channel customer support with late identity binding, versioned attribution<br>
-  and bitemporal event history across web, Android and a browser call simulator.
+  A web portal, Android app and browser call simulator backed by a shared event store.<br>
+  Supports late identity binding, versioned attribution and historical journey queries.
 </p>
 
 <p align="center">
@@ -22,7 +22,7 @@
   <a href="#channels">Channels</a> &middot;
   <a href="#architecture">Architecture</a> &middot;
   <a href="#quickstart">Quickstart</a> &middot;
-  <a href="#try-the-shared-journey">Demo</a> &middot;
+  <a href="#cross-channel-demo">Demo</a> &middot;
   <a href="#verification">Verification</a>
 </p>
 
@@ -30,10 +30,14 @@
 
 ## Overview
 
-Wager is a local prototype that carries customer inquiries across a web portal,
-an Android app and a browser call simulator. Each channel uses the same backend
-and case history, so customers can continue an inquiry without starting another
-conversation or repeating information already recorded.
+Wager is a local prototype for customer support across web, mobile and simulated
+phone calls. Customers can create inquiries, exchange messages and check status
+through a shared backend. Each channel reads and updates the same case history.
+
+The backend retains anonymous events until they can be linked to a customer.
+It records identity attribution changes separately from the original events,
+allowing queries to distinguish when an action happened from when the system
+learned who it belonged to.
 
 ## Channels
 
@@ -71,7 +75,7 @@ single-use handoff. Mobile sign-in and call verification retrieve already
 attributed customer inquiries without requiring another web-session handoff.
 Identity is not inferred from a caller's phone number or an unrelated device.
 
-### Delivery and channel continuity
+### Client transport and recovery
 
 The shared client provides bearer-session handling, backend-specific storage and
 durable offline event retries. Browser storage adapters and native AsyncStorage/
@@ -81,15 +85,16 @@ Server-sent events notify clients of updates so they can refetch authorized view
 
 Call events are server-authored, with persistent lifecycle state and idempotent
 action IDs. The call interface restores confirmed history, retries pending call
-end requests and exposes session recovery without claiming unconfirmed saves.
+end requests and provides recovery when a session expires. Pending actions remain
+labelled as unconfirmed until the backend acknowledges them.
 
-### Inspection and presentation
+### Diagnostics and interface
 
 The web inspector exposes event filtering, raw CJEP envelopes, attribution
 versions, retractions, copy and JSON export for the synthetic demo dataset.
 Customer-facing views share inquiry messages and timelines across channels.
-The interfaces use a consistent visual language, light/dark themes, visible focus
-states and reduced-motion handling. Call prompts always have a text alternative.
+The interfaces share typography and color conventions, with light/dark themes,
+visible focus states and reduced-motion handling. Call prompts always have a text alternative.
 
 ## Repository
 
@@ -143,7 +148,7 @@ networking and release APKs. Development builds require Metro; release APKs do
 not. Both require the backend. See the [call guide](apps/call/README.md) for
 simulator controls and recovery.
 
-## Try the shared journey
+## Cross-channel demo
 
 1. Create a dispute on the web while signed out, then sign in as Alex Mercer
    (`C1041`). Inspect the retained events and attribution changes in the portal.
